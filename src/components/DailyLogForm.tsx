@@ -3,6 +3,10 @@ import { Sun, Dumbbell, Moon, Save } from "lucide-react";
 import { localDB, type SyncAction } from "../lib/db";
 import { useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { Input } from "./ui/Input";
+import { Select } from "./ui/Select";
+import { Slider } from "./ui/Slider";
+import { Button } from "./ui/Button";
 
 interface DailyLogFormProps {
     editItem?: SyncAction | null;
@@ -31,8 +35,33 @@ type DailyLogFormData = {
 
 export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProps) {
     const { user } = useAuth();
-    // 2. Initialize React Hook Form
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<DailyLogFormData>();
+    // 2. Initialize React Hook Form with defaults
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<DailyLogFormData>({
+        defaultValues: {
+            weight_fasting: 85,
+            sleep_hours: 7,
+            sleep_quality: "Average",
+            steps: 10000,
+            cardio_hiit_mins: 0,
+            cardio_liss_mins: 0,
+            workout_session: "",
+            gym_rpe: 5,
+            gym_energy: 5,
+            gym_mood: 5,
+            water_liters: 2,
+            salt_grams: 5,
+            digestion_rating: "Good",
+            bathroom_visits: 1,
+            stress_level: 5,
+            daily_energy: 5,
+        }
+    });
+
+    const gymRpe = watch("gym_rpe");
+    const gymEnergy = watch("gym_energy");
+    const gymMood = watch("gym_mood");
+    const dailyEnergy = watch("daily_energy");
+    const stressLevel = watch("stress_level");
 
     // If an item is passed to edit, load it into the form
     useEffect(() => {
@@ -108,35 +137,30 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Weight (kg)</label>
-                        <input
-                            type="number" step="0.1"
-                            {...register("weight_fasting", { required: true })}
-                            className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                            placeholder="e.g. 84.5"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Sleep (hrs)</label>
-                        <input
-                            type="number" step="0.5"
-                            {...register("sleep_hours")}
-                            className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                            placeholder="e.g. 7.5"
-                        />
-                    </div>
+                    <Input
+                        label="Weight (kg)"
+                        type="number" step="0.1"
+                        placeholder="e.g. 84.5"
+                        {...register("weight_fasting", { required: true })}
+                        error={errors.weight_fasting ? "Weight is required" : undefined}
+                    />
+                    <Input
+                        label="Sleep (hrs)"
+                        type="number" step="0.5"
+                        placeholder="e.g. 7.5"
+                        {...register("sleep_hours")}
+                    />
                     <div className="col-span-2">
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Sleep Quality</label>
-                        <select
+                        <Select
+                            label="Sleep Quality"
+                            options={[
+                                { label: "Select...", value: "" },
+                                { label: "Good", value: "Good" },
+                                { label: "Average", value: "Average" },
+                                { label: "Poor", value: "Poor" }
+                            ]}
                             {...register("sleep_quality")}
-                            className="w-full p-2 border border-gray-200 rounded-lg bg-white outline-none"
-                        >
-                            <option value="">Select...</option>
-                            <option value="Good">Good</option>
-                            <option value="Average">Average</option>
-                            <option value="Poor">Poor</option>
-                        </select>
+                        />
                     </div>
                 </div>
             </section>
@@ -150,76 +174,55 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
 
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1">Daily Steps</label>
-                            <input
-                                type="number"
-                                {...register("steps")}
-                                className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                                placeholder="e.g. 10000"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1">Workout Type</label>
-                            <input
-                                type="text"
-                                {...register("workout_session")}
-                                className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                                placeholder="e.g. Push Day"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1">Cardio HIIT (mins)</label>
-                            <input
-                                type="number"
-                                {...register("cardio_hiit_mins")}
-                                className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                                placeholder="e.g. 15"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1">Cardio LISS (mins)</label>
-                            <input
-                                type="number"
-                                {...register("cardio_liss_mins")}
-                                className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                                placeholder="e.g. 30"
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">
-                            RPE (Rate of Perceived Exertion: 1-10)
-                        </label>
-                        <input
-                            type="range" min="1" max="10" step="0.5"
-                            {...register("gym_rpe")}
-                            className="w-full accent-orange-500"
+                        <Input
+                            label="Daily Steps"
+                            type="number"
+                            placeholder="e.g. 10000"
+                            {...register("steps")}
+                        />
+                        <Input
+                            label="Workout Type"
+                            type="text"
+                            placeholder="e.g. Push Day"
+                            {...register("workout_session")}
                         />
                     </div>
+
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1">Gym Energy (1-10)</label>
-                            <input
-                                type="number" min="1" max="10" step="0.5"
-                                {...register("gym_energy")}
-                                className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                                placeholder="1-10"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-medium text-gray-500 mb-1">Gym Mood (1-10)</label>
-                            <input
-                                type="number" min="1" max="10" step="0.5"
-                                {...register("gym_mood")}
-                                className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                                placeholder="1-10"
-                            />
-                        </div>
+                        <Input
+                            label="Cardio HIIT (mins)"
+                            type="number"
+                            placeholder="e.g. 15"
+                            {...register("cardio_hiit_mins")}
+                        />
+                        <Input
+                            label="Cardio LISS (mins)"
+                            type="number"
+                            placeholder="e.g. 30"
+                            {...register("cardio_liss_mins")}
+                        />
+                    </div>
+
+                    <Slider
+                        label="RPE (Rate of Perceived Exertion: 1-10)"
+                        min="1" max="10" step="0.5"
+                        value={gymRpe}
+                        {...register("gym_rpe")}
+                    />
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Slider
+                            label="Gym Energy (1-10)"
+                            min="1" max="10" step="0.5"
+                            value={gymEnergy}
+                            {...register("gym_energy")}
+                        />
+                        <Slider
+                            label="Gym Mood (1-10)"
+                            min="1" max="10" step="0.5"
+                            value={gymMood}
+                            {...register("gym_mood")}
+                        />
                     </div>
                 </div>
             </section>
@@ -232,62 +235,50 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Water (Liters)</label>
-                        <input
-                            type="number" step="0.1"
-                            {...register("water_liters")}
-                            className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                            placeholder="e.g. 4.5"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Salt (Grams)</label>
-                        <input
-                            type="number" step="0.1"
-                            {...register("salt_grams")}
-                            className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                            placeholder="e.g. 5.5"
-                        />
-                    </div>
+                    <Input
+                        label="Water (Liters)"
+                        type="number" step="0.1"
+                        placeholder="e.g. 4.5"
+                        {...register("water_liters")}
+                    />
+                    <Input
+                        label="Salt (Grams)"
+                        type="number" step="0.1"
+                        placeholder="e.g. 5.5"
+                        {...register("salt_grams")}
+                    />
                     <div className="col-span-2">
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Digestion Rating</label>
-                        <select
+                        <Select
+                            label="Digestion Rating"
+                            options={[
+                                { label: "Select...", value: "" },
+                                { label: "Excellent", value: "Excellent" },
+                                { label: "Good", value: "Good" },
+                                { label: "Average", value: "Average" },
+                                { label: "Poor", value: "Poor" }
+                            ]}
                             {...register("digestion_rating")}
-                            className="w-full p-2 border border-gray-200 rounded-lg bg-white outline-none"
-                        >
-                            <option value="">Select...</option>
-                            <option value="Excellent">Excellent</option>
-                            <option value="Good">Good</option>
-                            <option value="Average">Average</option>
-                            <option value="Poor">Poor</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Bathroom Visits</label>
-                        <input
-                            type="number"
-                            {...register("bathroom_visits")}
-                            className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                            placeholder="e.g. 2"
                         />
                     </div>
-                    <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Daily Energy (1-10)</label>
-                        <input
-                            type="number" min="1" max="10" step="0.5"
-                            {...register("daily_energy")}
-                            className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                            placeholder="1-10"
-                        />
-                    </div>
-                    <div className="col-span-2">
-                        <label className="block text-xs font-medium text-gray-500 mb-1">Stress (1-10)</label>
-                        <input
-                            type="number" min="1" max="10"
+                    <Input
+                        label="Bathroom Visits"
+                        type="number"
+                        placeholder="e.g. 2"
+                        {...register("bathroom_visits")}
+                    />
+                    <Slider
+                        label="Daily Energy (1-10)"
+                        min="1" max="10" step="0.5"
+                        value={dailyEnergy}
+                        {...register("daily_energy")}
+                        className="col-span-2 sm:col-span-1"
+                    />
+                    <div className="col-span-2 sm:col-span-1">
+                        <Slider
+                            label="Stress (1-10)"
+                            min="1" max="10" step="0.5"
+                            value={stressLevel}
                             {...register("stress_level")}
-                            className="w-full p-2 border border-gray-200 rounded-lg outline-none"
-                            placeholder="1-10"
                         />
                     </div>
                 </div>
@@ -296,21 +287,23 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
             {/* Submit Button */}
             {/* Submit & Cancel Buttons */}
             <div className="flex gap-4">
-                <button
+                <Button
                     type="submit"
-                    className="flex-1 bg-blue-600 text-white font-bold py-4 rounded-xl shadow-md flex justify-center items-center gap-2 active:bg-blue-700 transition-colors"
+                    variant="primary"
+                    className="flex-1 text-sm sm:text-base gap-2"
                 >
-                    <Save size={20} />
+                    <Save size={18} />
                     {editItem ? "Update Log" : "Save Today's Log"}
-                </button>
+                </Button>
                 {editItem && (
-                    <button
+                    <Button
                         type="button"
                         onClick={onClearEdit}
-                        className="px-6 bg-gray-100 text-gray-700 font-bold py-4 rounded-xl shadow-sm flex justify-center items-center active:bg-gray-200 transition-colors"
+                        variant="secondary"
+                        className="px-6 text-sm sm:text-base"
                     >
                         Cancel
-                    </button>
+                    </Button>
                 )}
             </div>
 

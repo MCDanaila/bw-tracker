@@ -6,6 +6,7 @@ import Auth from "./components/Auth";
 import { useAuth } from "./contexts/AuthContext";
 import { type SyncAction } from "./lib/db";
 import { useState } from "react";
+import { Button } from "./components/ui/Button";
 
 function App() {
   const [editingLog, setEditingLog] = useState<SyncAction | null>(null);
@@ -28,9 +29,14 @@ function App() {
       {/* Top Header */}
       <div className="bg-white border-b border-gray-100 flex justify-between items-center px-4 py-2">
         <span className="font-bold text-gray-800">BW Tracker</span>
-        <button onClick={signOut} className="text-gray-500 hover:text-red-600 p-2 transition-colors">
+        <Button
+          onClick={signOut}
+          variant="ghost"
+          size="sm"
+          className="text-gray-500 hover:text-red-600 px-2"
+        >
           <LogOut size={18} />
-        </button>
+        </Button>
       </div>
       <SyncHeader />
 

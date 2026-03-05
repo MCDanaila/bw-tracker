@@ -1,7 +1,8 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { CloudOff, CloudUpload, CheckCircle2, Loader2 } from "lucide-react";
+import { CloudOff, CheckCircle2, RefreshCw } from "lucide-react";
 import { localDB } from "../lib/db";
 import { useSync } from "../hooks/useSync";
+import { Button } from './ui/Button';
 
 export default function SyncHeader() {
     // Watch Dexie for how many items are pending
@@ -32,18 +33,15 @@ export default function SyncHeader() {
 
             {/* Sync Button */}
             {pendingCount > 0 && (
-                <button
+                <Button
                     onClick={() => syncMutation.mutate()}
-                    disabled={syncMutation.isPending}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors disabled:opacity-50"
+                    isLoading={syncMutation.isPending}
+                    variant="primary"
+                    size="sm"
                 >
-                    {syncMutation.isPending ? (
-                        <Loader2 size={16} className="animate-spin" />
-                    ) : (
-                        <CloudUpload size={16} />
-                    )}
+                    {!syncMutation.isPending && <RefreshCw size={16} />}
                     Sync Now
-                </button>
+                </Button>
             )}
         </header>
     );

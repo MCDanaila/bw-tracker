@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Mail, Lock, Loader2, UserPlus, LogIn } from 'lucide-react';
+import { Mail, Lock, LogIn, UserPlus } from 'lucide-react';
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
 
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true);
@@ -57,55 +59,39 @@ export default function Auth() {
                 )}
 
                 <form onSubmit={handleAuth} className="space-y-5">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                <Mail size={18} />
-                            </div>
-                            <input
-                                type="email"
-                                required
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
-                                placeholder="you@example.com"
-                            />
-                        </div>
-                    </div>
+                    <Input
+                        label="Email"
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        icon={<Mail size={18} />}
+                    />
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                <Lock size={18} />
-                            </div>
-                            <input
-                                type="password"
-                                required
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
-                                placeholder="••••••••"
-                                minLength={6}
-                            />
-                        </div>
-                    </div>
+                    <Input
+                        label="Password"
+                        type="password"
+                        required
+                        minLength={6}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        icon={<Lock size={18} />}
+                    />
 
-                    <button
+                    <Button
                         type="submit"
-                        disabled={loading}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md flex justify-center items-center gap-2 transition-colors disabled:opacity-70"
+                        isLoading={loading}
+                        className="w-full"
+                        size="lg"
                     >
-                        {loading ? (
-                            <Loader2 size={20} className="animate-spin" />
-                        ) : isLogin ? (
-                            <LogIn size={20} />
+                        {isLogin ? (
+                            <><LogIn size={20} /> Sign In</>
                         ) : (
-                            <UserPlus size={20} />
+                            <><UserPlus size={20} /> Create Account</>
                         )}
-                        {isLogin ? 'Sign In' : 'Create Account'}
-                    </button>
+                    </Button>
                 </form>
 
                 <div className="mt-6 text-center">

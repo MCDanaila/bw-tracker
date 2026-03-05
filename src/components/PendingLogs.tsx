@@ -1,6 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Trash2, Edit2, AlertCircle } from "lucide-react";
 import { localDB, type SyncAction } from "../lib/db";
+import { Button } from './ui/Button';
 
 interface PendingLogsProps {
     onEdit: (action: SyncAction) => void;
@@ -42,20 +43,20 @@ export default function PendingLogs({ onEdit }: PendingLogsProps) {
                                 <p className="text-xs text-gray-500 mt-1">{weight} • {steps}</p>
                             </div>
                             <div className="flex gap-2">
-                                <button
+                                <Button
+                                    variant="outline"
+                                    size="sm"
                                     onClick={() => onEdit(log)}
-                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                    title="Edit"
                                 >
-                                    <Edit2 size={18} />
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(log.id)}
-                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                    title="Delete"
+                                    <Edit2 size={16} /> Edit
+                                </Button>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => handleDelete(log.id!)}
                                 >
-                                    <Trash2 size={18} />
-                                </button>
+                                    <Trash2 size={16} /> Delete
+                                </Button>
                             </div>
                         </div>
                     );
