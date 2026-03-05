@@ -1,0 +1,119 @@
+-- Enable the UUID extension (usually enabled by default in Supabase)
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- ==========================================
+-- 1. FOODS (Lista Alimenti)
+-- Global database of foods (Read-only for users)
+-- ==========================================
+CREATE TABLE foods (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    portion_size NUMERIC NOT NULL,
+    unit TEXT NOT NULL CHECK (unit IN ('g', 'ml', 'caps', 'compr', 'piece')),
+    calories NUMERIC NOT NULL,
+    protein NUMERIC NOT NULL,
+    carbs NUMERIC NOT NULL,
+    fats NUMERIC NOT NULL,
+    state TEXT CHECK (state IN ('Peso da Cotto', 'Peso da Crudo', 'Peso sgocciolato', 'Peso confezionato', 'Peso da sgusciato', 'N/A')),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==========================================
+-- 2. MEAL PLANS (Piano Alimentare)
+-- The assigned diet for the user
+-- ==========================================
+CREATE TABLE meal_plans (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Client can generate this UUID
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    day_of_week TEXT NOT NULL CHECK (day_of_week IN ('LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM')),
+    meal_name TEXT NOT NULL, -- e.g., 'MEAL 1 (PRE)', 'MEAL 2'
+    food_id UUID REFERENCES foods(id) ON DELETE SET NULL,
+    target_quantity NUMERIC NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ==========================================
+-- 3. DAILY LOGS (Tracker Giornaliero)
+-- Daily biometrics and metrics
+-- ==========================================
+CREATE TABLE daily_logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Client generates UUID for offline queue
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    
+    -- Morning Metrics
+    weight_fasting NUMERIC,
+    sleep_hours NUMERIC,
+    sleep_quality TEXT,
+    
+    -- Activity
+    steps INTEGER,
+    cardio_hiit_mins INTEGER,
+    cardio_liss_mins INTEGER,
+    workout_session TEXT,
+    gym_rpe NUMERIC,
+    gym_energy NUMERIC,
+    gym_mood NUMERIC,
+    
+    -- Evening/End of Day
+    water_liters NUMERIC,
+    salt_grams NUMERIC,
+    digestion_rating TEXT,
+    bathroom_visits INTEGER,
+    stress_level NUMERIC,
+    daily_energy NUMERIC,
+    
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+    -- CRUCIAL FOR OFFLINE UPSERTS:
+    -- Ensures we can uniquely identify a log to update it if it already exists
+    UNIQUE(user_id, date) 
+);
+
+-- ==========================================
+-- 4. ADHERENCE LOGS (Meal Check-offs)
+-- Tracks which meals were eaten on which day
+-- ==========================================
+CREATE TABLE meal_adherence (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Client generated
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    meal_plan_id UUID NOT NULL REFERENCES meal_plans(id) ON DELETE CASCADE,
+    is_completed BOOLEAN DEFAULT FALSE,
+    swapped_food_id UUID REFERENCES foods(id) ON DELETE SET NULL, -- If they used the Smart Swap
+    swapped_quantity NUMERIC, -- The new quantity calculated by the app
+    
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+
+    -- CRUCIAL FOR OFFLINE UPSERTS:
+    -- A user can only have one adherence record per meal per day
+    UNIQUE(user_id, date, meal_plan_id)
+);
+
+-- ==========================================
+-- ROW LEVEL SECURITY (RLS)
+-- Ensures users can only access their own data
+-- ==========================================
+
+-- Enable RLS on all tables
+ALTER TABLE foods ENABLE ROW LEVEL SECURITY;
+ALTER TABLE meal_plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE daily_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE meal_adherence ENABLE ROW LEVEL SECURITY;
+
+-- Foods: Everyone can read the food database, but only admins can edit (assuming you'll add an admin role later, for now just read)
+CREATE POLICY "Foods are viewable by everyone" ON foods FOR SELECT USING (true);
+
+-- Meal Plans: Users can only see and manage their own meal plans
+CREATE POLICY "Users manage their own meal plans" ON meal_plans
+    FOR ALL USING (auth.uid() = user_id);
+
+-- Daily Logs: Users can only see and manage their own logs
+CREATE POLICY "Users manage their own daily logs" ON daily_logs
+    FOR ALL USING (auth.uid() = user_id);
+
+-- Adherence: Users can only see and manage their own adherence
+CREATE POLICY "Users manage their own adherence logs" ON meal_adherence
+    FOR ALL USING (auth.uid() = user_id);
