@@ -1,6 +1,10 @@
-import type { MealPlan } from '../../types/database';
+import type { Food, MealPlan } from '../../types/database';
 import { calculateItemMacros, type DayOfWeek } from '../../hooks/useDietData';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { RefreshCw } from 'lucide-react';
+import FoodSearchModal from './FoodSearchModal';
+import SwapPreviewModal from './SwapPreviewModal';
+import { type SwapResult } from '../../lib/swapAlgorithm';
 
 interface DailyMealsProps {
     day: DayOfWeek;
@@ -8,6 +12,54 @@ interface DailyMealsProps {
 }
 
 export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
+    const [swapState, setSwapState] = useState<{
+        isSearchOpen: boolean;
+        isPreviewOpen: boolean;
+        activePlan: MealPlan | null;
+        selectedNewFood: Food | null;
+    }>({
+        isSearchOpen: false,
+        isPreviewOpen: false,
+        activePlan: null,
+        selectedNewFood: null,
+    });
+
+    // Local state to track confirmed swaps for the UI since we aren't saving to DB yet
+    // Record<MealPlan.id, { newFood: Food, newQuantity: number }>
+    const [localSwaps, setLocalSwaps] = useState<Record<string, { food: Food; quantity: number }>>({});
+
+    const handleOpenSwapSearch = (plan: MealPlan) => {
+        setSwapState({ ...swapState, isSearchOpen: true, activePlan: plan });
+    };
+
+    const handleSelectNewFood = (food: Food) => {
+        setSwapState({ 
+            ...swapState, 
+            isSearchOpen: false, 
+            isPreviewOpen: true, 
+            selectedNewFood: food 
+        });
+    };
+
+    const handleConfirmSwap = (result: SwapResult) => {
+        if (swapState.activePlan) {
+            setLocalSwaps(prev => ({
+                ...prev,
+                [swapState.activePlan!.id]: {
+                    food: result.newFood,
+                    quantity: result.newQuantity
+                }
+            }));
+        }
+        
+        setSwapState({
+            isSearchOpen: false,
+            isPreviewOpen: false,
+            activePlan: null,
+            selectedNewFood: null
+        });
+    };
+
     const formatNumber = (num: number, maxDecimals: number = 1) => {
         // If it's a whole number, don't show decimals. If it's not, show up to maxDecimals
         return Number.isInteger(num)
@@ -70,7 +122,11 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
 
                 // Calculate Meal Totals
                 const mealTotals = items.reduce((acc, plan) => {
-                    const macros = calculateItemMacros(plan.foods, plan.target_quantity);
+                    const localSwap = localSwaps[plan.id];
+                    const activeFood = localSwap ? localSwap.food : plan.foods;
+                    const activeQuantity = localSwap ? localSwap.quantity : plan.target_quantity;
+                    
+                    const macros = calculateItemMacros(activeFood, activeQuantity);
                     return {
                         kcal: acc.kcal + macros.kcal,
                         p: acc.p + macros.p,
@@ -97,8 +153,12 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                                 </thead>
                                 <tbody className="text-gray-700 text-center">
                                     {items.map((plan, index) => {
-                                        const food = plan.foods;
-                                        const macros = calculateItemMacros(food, plan.target_quantity);
+                                        const localSwap = localSwaps[plan.id];
+                                        const isSwapped = !!localSwap;
+                                        
+                                        const food = isSwapped ? localSwap.food : plan.foods;
+                                        const quantity = isSwapped ? localSwap.quantity : plan.target_quantity;
+                                        const macros = calculateItemMacros(food, quantity);
 
                                         // Row style: light pink for the meal name column to match screenshot
                                         return (
@@ -113,9 +173,26 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                                                 {/* Note: the screenshot shows "INTEGRAZIONE" header rows. We'll simplify by just rendering items. 
                                                     If integration is heavily mixed, we'd need more complex grouping. */}
                                                 <td className="p-2 border-r border-gray-100 font-medium text-left">
-                                                    {food?.name || 'Unknown Food'}
+                                                    <div className="flex items-center justify-between gap-2">
+                                                        <span className={isSwapped ? "text-[#8b76c8]" : ""}>
+                                                            {food?.name || 'Unknown Food'}
+                                                        </span>
+                                                        <button 
+                                                            onClick={() => handleOpenSwapSearch(plan)}
+                                                            className={`p-1.5 rounded-full transition-colors ${
+                                                                isSwapped 
+                                                                    ? "bg-[#8b76c8]/10 text-[#8b76c8] hover:bg-[#8b76c8]/20" 
+                                                                    : "text-gray-400 hover:text-[#8b76c8] hover:bg-gray-100"
+                                                            }`}
+                                                            title="Sostituisci"
+                                                        >
+                                                            <RefreshCw size={14} className={isSwapped ? "stroke-[2.5px]" : ""} />
+                                                        </button>
+                                                    </div>
                                                 </td>
-                                                <td className="p-2 border-r border-gray-100">{plan.target_quantity}</td>
+                                                <td className="p-2 border-r border-gray-100">
+                                                    <span className={isSwapped ? "font-bold text-[#8b76c8]" : ""}>{quantity}</span>
+                                                </td>
                                                 <td className="p-2 border-r border-gray-100">{food?.unit || 'g'}</td>
                                                 <td className="p-2 border-r border-gray-100">{formatNumber(macros.kcal)}</td>
                                                 <td className="p-2 border-r border-gray-100">{formatNumber(macros.p)}</td>
@@ -141,6 +218,21 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                     </div>
                 );
             })}
+            {/* Modals placed outside the mapping */}
+            <FoodSearchModal 
+                isOpen={swapState.isSearchOpen} 
+                onClose={() => setSwapState(s => ({ ...s, isSearchOpen: false }))}
+                onSelectFood={handleSelectNewFood}
+            />
+            
+            <SwapPreviewModal
+                isOpen={swapState.isPreviewOpen}
+                onClose={() => setSwapState(s => ({ ...s, isPreviewOpen: false }))}
+                originalFood={swapState.activePlan?.foods || null}
+                originalQuantity={swapState.activePlan?.target_quantity || 0}
+                newFood={swapState.selectedNewFood}
+                onConfirmSwap={handleConfirmSwap}
+            />
         </div>
     );
 }
