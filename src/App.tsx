@@ -3,12 +3,16 @@ import DailyLogForm from "./components/DailyLogForm";
 import SyncHeader from "./components/SyncHeader";
 import PendingLogs from "./components/PendingLogs";
 import Auth from "./components/Auth";
+import DietView from "./components/diet/DietView";
 import { useAuth } from "./contexts/AuthContext";
 import { type SyncAction } from "./lib/db";
 import { useState } from "react";
 import { Button } from "./components/ui/Button";
 
+type Tab = 'tracker' | 'diet' | 'stats';
+
 function App() {
+  const [currentTab, setCurrentTab] = useState<Tab>('tracker');
   const [editingLog, setEditingLog] = useState<SyncAction | null>(null);
   const { session, loading, signOut } = useAuth();
 
@@ -41,25 +45,47 @@ function App() {
       <SyncHeader />
 
       {/* Main Content Area */}
-      <main className="p-4">
-        {/* Render the Form here */}
-        <DailyLogForm editItem={editingLog} onClearEdit={() => setEditingLog(null)} />
+      <main className="p-4 pb-24">
+        {currentTab === 'tracker' && (
+          <>
+            <DailyLogForm editItem={editingLog} onClearEdit={() => setEditingLog(null)} />
+            <PendingLogs onEdit={setEditingLog} />
+          </>
+        )}
 
-        {/* Render Pending Logs below the form */}
-        <PendingLogs onEdit={setEditingLog} />
+        {currentTab === 'diet' && (
+          <DietView />
+        )}
+
+        {currentTab === 'stats' && (
+          <div className="flex flex-col items-center justify-center p-12 text-gray-400 text-center h-[60vh]">
+            <LayoutDashboard size={48} className="mb-4 opacity-50" />
+            <h2 className="text-xl font-medium text-gray-800 mb-2">Statistiche</h2>
+            <p>Le statistiche avanzate non sono ancora disponibili nella versione MVP.</p>
+          </div>
+        )}
       </main>
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 w-full bg-white border-t border-gray-200 flex justify-around p-3 pb-safe z-10">
-        <button className="flex flex-col items-center text-blue-600">
+        <button
+          onClick={() => setCurrentTab('tracker')}
+          className={`flex flex-col items-center ${currentTab === 'tracker' ? 'text-blue-600' : 'text-gray-400 hover:text-gray-900'}`}
+        >
           <Activity size={24} />
           <span className="text-xs mt-1 font-medium">Tracker</span>
         </button>
-        <button className="flex flex-col items-center text-gray-400 hover:text-gray-900">
+        <button
+          onClick={() => setCurrentTab('diet')}
+          className={`flex flex-col items-center ${currentTab === 'diet' ? 'text-blue-600' : 'text-gray-400 hover:text-gray-900'}`}
+        >
           <Apple size={24} />
           <span className="text-xs mt-1 font-medium">Diet</span>
         </button>
-        <button className="flex flex-col items-center text-gray-400 hover:text-gray-900">
+        <button
+          onClick={() => setCurrentTab('stats')}
+          className={`flex flex-col items-center ${currentTab === 'stats' ? 'text-blue-600' : 'text-gray-400 hover:text-gray-900'}`}
+        >
           <LayoutDashboard size={24} />
           <span className="text-xs mt-1 font-medium">Stats</span>
         </button>
