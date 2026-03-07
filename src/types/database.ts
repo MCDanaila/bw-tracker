@@ -40,16 +40,19 @@ export interface DailyLog {
     id: string;
     user_id: string;
     date: string;
+
+    // Morning
     weight_fasting: number | null;
     measurement_time: string | null;
     sleep_hours: number | null;
     sleep_quality: number | null;
-    time_asleep: string | null;
-    time_awake: string | null;
     hrv: number | null;
-    blood_glucose: number | null;
     sleep_score: number | null;
+
+    // Activity
     steps: number | null;
+    steps_goal: number | null;
+    active_kcal: number | null;
     cardio_hiit_mins: number | null;
     cardio_liss_mins: number | null;
     workout_session: string | null;
@@ -57,7 +60,10 @@ export interface DailyLog {
     workout_duration: number | null;
     gym_rpe: number | null;
     gym_energy: number | null;
-    workout_feel: number | null;
+    gym_mood: number | null;
+    soreness_level: number | null;
+
+    // Evening/Day & Biofeedback
     water_liters: number | null;
     salt_grams: number | null;
     cheat_meals: boolean | null;
@@ -69,10 +75,14 @@ export interface DailyLog {
     hunger_level: number | null;
     libido: number | null;
     mood: number | null;
-    spo2: number | null;
+    cycle_day: number | null;
+
+    // Weekly Check-ins
+    blood_glucose: number | null;
     sys_bp: number | null;
     dia_bp: number | null;
     general_notes: string | null;
+
     created_at: string;
     updated_at: string;
 }

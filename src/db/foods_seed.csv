@@ -1,146 +1,146 @@
-name,portion_size,unit,calories,protein,carbs,fats,state
-Petto di Pollo (cotto),100.0,g,145.0,32.0,0.0,1.9,Peso da Cotto
-Petto di Pollo (crudo),100.0,g,106.0,24.0,0.0,1.1,Peso da Crudo
-Cane Rossa Magra (cotta),100.0,g,137.0,24.7,0.0,4.2,Peso da Cotto
-Carne Rossa Magra (cruda),100.0,g,125.0,21.9,0.0,4.2,Peso da Crudo
-Salmone (cotto),100.0,g,239.0,24.6,0.0,15.6,Peso da Cotto
-Salmone (crudo),100.0,g,179.0,22.1,0.0,10.1,Peso da Crudo
-Filetto di Carne Rossa (cotto),100.0,g,188.0,29.1,0.0,8.0,Peso da Cotto
-Filetto di Carne Rossa (crudo),100.0,g,140.0,21.2,0.0,6.1,Peso da Crudo
-Merluzzo (cotto),100.0,g,106.0,24.6,0.0,0.8,Peso da Cotto
-Merluzzo (crudo),100.0,g,75.0,17.5,0.0,0.6,Peso da Crudo
-Pesce Spada (Crudo),100.0,g,109.0,17.0,0.0,4.2,Peso da Crudo
-Pesce Spada (Cotto),100.0,g,172.0,23.0,0.0,8.0,Peso da Cotto
-Gamberi (cotti),100.0,g,70.0,15.4,0.0,0.9,Peso da Cotto
-Gamberi (crudi),100.0,g,62.0,14.1,0.0,0.5,Peso da Crudo
-Tonno,100.0,g,109.0,25.0,0.0,1.0,Peso sgocciolato
-Uova Intere,1.0,piece,72.0,6.0,0.4,4.8,Peso da Crudo
-Albume,100.0,g,43.0,10.8,0.0,0.0,Peso da Crudo
-Yogurt Greco 0%,100.0,g,58.0,10.6,3.9,0.0,Peso da Crudo
-Yogurt Greco Intero,100.0,g,117.0,9.8,3.8,7.0,Peso da Crudo
-Yogurt di Soia,100.0,g,47.0,4.1,2.4,2.3,Peso da Crudo
-Whey Protein,100.0,g,379.0,90.0,1.4,1.5,Peso da Crudo
-Vegan Protein,100.0,g,358.0,66.0,10.3,6.1,Peso da Crudo
-Proteine della Soia,100.0,g,387.0,88.0,1.4,3.3,Peso da Crudo
-Caseine,100.0,g,377.0,90.0,1.4,1.3,Peso da Crudo
-Lenticchie,100.0,g,103.0,8.8,15.4,0.7,Peso sgocciolato
-Ceci,100.0,g,114.0,7.2,14.7,2.9,Peso sgocciolato
-Mix di fagioli,100.0,g,104.0,7.3,16.2,1.1,Peso sgocciolato
-Cannellini,100.0,g,79.0,5.2,13.3,0.6,Peso sgocciolato
-Fagioli bianchi,100.0,g,93.0,7.4,14.4,0.6,Peso sgocciolato
-Fagioli Rossi,100.0,g,102.0,8.4,16.0,0.5,Peso sgocciolato
-Tofu,100.0,g,83.0,8.1,2.0,4.8,Peso da Crudo
-Petto di Tacchino (Cotto),100.0,g,155.0,35.0,0.0,1.7,Peso da Cotto
-Petto di Tacchino (Crudo),100.0,g,105.0,22.6,0.0,1.6,Peso da Crudo
-Vanilla Protein Milk,100.0,ml,50.0,5.4,4.8,1.0,Peso da Crudo
-Chocolate Protein Milk,100.0,ml,53.0,5.4,5.7,1.0,Peso da Crudo
-Gold Protein Milk,100.0,ml,59.0,6.6,5.8,1.0,Peso da Crudo
-Blueberry Protein MIlk,100.0,ml,51.0,5.4,5.1,1.0,Peso da Crudo
-Protein Milk,100.0,ml,49.0,5.1,4.8,1.0,Peso da Crudo
-Slimline Milk,100.0,ml,39.0,3.8,5.3,0.3,Peso da Crudo
-Latte Scremato,100.0,ml,42.0,3.3,5.0,1.0,Peso da Crudo
-Latte Intero,100.0,ml,64.0,3.4,4.9,3.5,Peso da Crudo
-Latte d'Avena,100.0,ml,44.0,1.0,6.6,1.5,Peso da Crudo
-Latte D'Avanea Senza Zuccheri,100.0,ml,36.0,1.0,6.3,0.7,Peso da Crudo
-Latte di Soia,100.0,ml,26.0,2.4,0.5,1.6,Peso da Crudo
-Latte di Soia Senza Zuccheri,100.0,ml,44.0,3.1,2.5,2.4,Peso da Crudo
-Latte di Mandorla,100.0,ml,21.0,0.5,2.4,1.1,Peso da Crudo
-Latte di Mandorla Senza Zuccheri,100.0,ml,12.0,0.4,0.0,1.1,Peso da Crudo
-Latte di Anacardi,100.0,ml,22.0,0.5,2.6,1.1,Peso da Crudo
-Latte di Nocciola,100.0,ml,30.0,0.6,0.3,2.9,Peso da Crudo
-Riso Jasmine,100.0,g,349.0,7.5,78.0,0.7,Peso sgocciolato
-Riso Integrale,100.0,g,343.0,10.0,70.0,2.5,Peso sgocciolato
-Pasta,100.0,g,338.0,11.9,68.0,2.0,Peso sgocciolato
-Wholemeal Pasta,100.0,g,322.0,13.3,61.0,2.8,Peso sgocciolato
-Patate,100.0,g,80.0,1.9,17.9,0.1,Peso da Crudo
-Patate Dolci,100.0,g,86.0,1.2,19.7,0.3,Peso da Crudo
-Avena,100.0,g,374.0,10.9,64.0,8.1,Peso sgocciolato
-Plain Bagel,1.0,piece,224.0,8.5,43.8,1.2,Peso confezionato
-English Muffin,1.0,piece,158.0,6.0,30.0,1.1,Peso confezionato
-Date Syrup,100.0,g,285.0,1.2,70.0,0.2,Peso confezionato
-Crema di Riso,100.0,g,362.0,7.9,80.5,0.1,Peso sgocciolato
-Crema di Riso Baby,100.0,g,384.0,7.7,86.0,1.2,Peso sgocciolato
-Coco Pops,100.0,g,378.0,6.3,84.0,1.9,Peso sgocciolato
-Rice Krispies,100.0,g,383.0,7.0,86.0,1.2,Peso sgocciolato
-Gallette di Riso,1.0,piece,30.0,0.6,6.3,0.2,Peso confezionato
-Gallette di Mais,1.0,piece,26.0,6.0,0.5,0.0,Peso confezionato
-Marmellata,100.0,g,274.0,0.3,66.0,0.0,Peso confezionato
-Sciroppo D'Acero,100.0,g,260.0,0.0,65.0,0.2,Peso confezionato
-Miele,100.0,g,307.0,0.4,76.0,0.0,Peso confezionato
-Scotch Pancakes,100.0,g,270.0,5.6,40.0,9.6,Peso confezionato
-Pane con Lievito Madre,100.0,g,279.0,11.8,54.0,1.8,Peso confezionato
-Brown Soda Bread,100.0,g,215.0,8.9,37.0,3.5,Peso confezionato
-Tortilla Wrap,100.0,g,279.0,7.8,49.0,5.7,Peso confezionato
-Noodles d'Uovo,100.0,g,330.0,12.0,66.0,2.0,Peso sgocciolato
-Brioche Buns,100.0,g,316.0,8.8,49.0,9.5,Peso confezionato
-Pasta di Cacao,100.0,g,586.0,10.0,24.0,50.0,Peso confezionato
-Cioccolata Fondente (70%),100.0,g,558.0,9.1,36.0,42.0,Peso confezionato
-Burro di Mandorla,100.0,g,579.0,20.7,7.0,52.0,Peso confezionato
-Burro d'Arachidi,100.0,g,606.0,22.8,12.2,52.0,Peso confezionato
-Olio EVO,100.0,g,899.0,0.0,0.0,100.0,Peso confezionato
-Olio di Cocco,100.0,g,899.0,0.0,0.0,100.0,Peso confezionato
-Olio di Noci di Macadamia,100.0,g,375.0,0.0,0.0,93.3,Peso confezionato
-Arachidi,100.0,g,602.0,24.7,15.5,49.0,Peso da sgusciato
-Noci Pecan,100.0,g,731.0,10.1,5.2,72.0,Peso da sgusciato
-Pistacchi,100.0,g,601.0,17.9,7.7,55.0,Peso da sgusciato
-Noci  ,100.0,g,688.0,14.7,3.1,69.0,Peso da sgusciato
-Mandorle,100.0,g,584.0,20.9,7.0,53.0,Peso da sgusciato
-Granola,100.0,g,431.0,8.7,60.0,15.1,Peso confezionato
-Anacardi,100.0,g,571.0,17.7,16.7,48.0,Peso da sgusciato
-Burro Ghee,100.0,g,745.0,0.6,0.6,82.0,Peso confezionato
-Formaggio,100.0,g,416.0,25.4,0.1,34.9,Peso confezionato
-Avocado,100.0,g,191.0,1.9,1.9,19.5,Peso da Crudo
-Frutti Rossi Congelati,100.0,g,33.0,1.0,6.5,0.3,Peso da Crudo
-Ananas,100.0,g,43.0,0.4,9.9,0.2,Peso da Crudo
-Kiwi,100.0,g,51.0,1.1,10.5,0.5,Peso da Crudo
-Mela,100.0,g,53.0,0.6,11.5,0.5,Peso da Crudo
-Banana,100.0,g,86.0,1.2,20.0,0.1,Peso da Crudo
-Frutti della Passione,100.0,g,37.0,2.6,5.7,0.4,Peso da Crudo
-Uva,100.0,g,69.0,0.7,16.1,0.2,Peso da Crudo
-Datteri,100.0,g,287.0,3.3,68.0,0.2,Peso da Crudo
-Arancia,100.0,g,37.0,0.8,8.0,0.2,Peso da Crudo
-Pera,100.0,g,45.0,0.3,10.8,0.1,Peso da Crudo
-Lamponi,100.0,g,27.0,1.4,4.6,0.3,Peso da Crudo
-Mirtilli,100.0,g,42.0,0.9,9.1,0.2,Peso da Crudo
-Minestrone (solo verdura),100.0,g,36.0,2.7,4.9,0.6,Peso da Crudo
-Peperoni,100.0,g,26.0,1.0,4.8,0.3,Peso da Crudo
-Broccoli,100.0,g,35.0,4.3,3.1,0.6,Peso da Crudo
-Cavoletti di Bruxelles,100.0,g,33.0,4.4,1.8,0.9,Peso da Crudo
-Cavolfiore,100.0,g,31.0,2.5,4.4,0.4,Peso da Crudo
-Fagiolini,100.0,g,24.0,2.1,3.0,0.4,Peso da Crudo
-Asparagi,100.0,g,25.0,2.9,2.0,0.6,Peso da Crudo
-Cavolo nero,100.0,g,43.0,3.5,4.0,1.4,Peso da Crudo
-Carote,100.0,g,34.0,0.5,7.7,0.4,Peso da Crudo
-Piselli,100.0,g,68.0,5.3,10.0,0.7,Peso da Crudo
-Zucchine,100.0,g,18.0,1.8,1.8,0.4,Peso da Crudo
-Cipolla,100.0,g,37.0,1.0,7.9,0.1,Peso da Crudo
-Pomodoro,100.0,g,15.0,0.5,3.0,0.1,Peso da Crudo
-Sugo,100.0,g,26.0,1.7,4.3,0.2,Peso da Crudo
-Zucca,100.0,g,37.0,1.1,7.9,0.1,Peso da Crudo
-Parsnips,100.0,g,64.0,1.8,11.7,1.1,Peso da Crudo
-Barbabietole,100.0,g,37.0,1.7,7.2,0.1,Peso sgocciolato
-Funghi,100.0,g,22.0,2.1,2.6,0.4,Peso da Crudo
-Mix di Verdure,100.0,g,89.0,2.2,10.6,4.2,Peso da Crudo
-Gerogli di Soia,100.0,g,31.0,2.9,3.8,0.5,Peso da Crudo
-Creatine Monohydrate,100.0,g,0.0,0.0,0.0,0.0,Peso sgocciolato
-Ciclodestrine (HBCD),100.0,g,381.0,0.0,97.0,0.0,Peso sgocciolato
-Essential Amino Acids,100.0,g,0.0,0.0,0.0,0.0,N/A
-Magnesio Bisglicinato,1.0,caps,0.0,0.0,0.0,0.0,N/A
-Vitamina C,100.0,g,0.0,0.0,0.0,0.0,N/A
-Probiotici,100.0,g,0.0,0.0,0.0,0.0,N/A
-Multivitaminico,100.0,g,0.0,0.0,0.0,0.0,N/A
-Omega 3,100.0,g,900.0,0.0,0.0,9.0,N/A
-Liver Stack,100.0,g,0.0,0.0,0.0,0.0,N/A
-Bergamotto,100.0,g,0.0,0.0,0.0,0.0,N/A
-Carne di Cavallo,100.0,g,102.0,21.0,0.0,2.0,Peso da Crudo
-Verdura (generico),100.0,g,18.0,1.8,1.8,0.4,N/A
-Hydra Performance,30.0,g,69.0,0.0,17.2,0.0,N/A
-inTSUlin,1.0,caps,0.0,0.0,0.0,0.0,N/A
-Sleep AID,1.0,caps,0.0,0.0,0.0,0.0,N/A
-Berberina,1.0,caps,0.0,0.0,0.0,0.0,N/A
-Probiotic Plus,1.0,compr,0.0,0.0,0.0,0.0,N/A
-Greens,1.0,g,0.0,0.0,0.0,0.0,N/A
-Mueslei,100.0,g,369.0,12.0,63.0,5.8,N/A
-Fighi Secchi,100.0,g,282.0,3.5,58.0,2.7,N/A
-Lecitina di soia,100.0,g,766.0,0.0,7.7,81.7,N/A
-Seitan,100.0,g,183.0,34.0,1.5,4.5,N/A
+id,name,portion_size,unit,calories,protein,carbs,fats,state
+petto-di-pollo-cotto-cotto,Petto di Pollo (cotto),100.0,g,145.0,32.0,0.0,1.9,Peso da Cotto
+petto-di-pollo-crudo-crudo,Petto di Pollo (crudo),100.0,g,106.0,24.0,0.0,1.1,Peso da Crudo
+cane-rossa-magra-cotta-cotto,Cane Rossa Magra (cotta),100.0,g,137.0,24.7,0.0,4.2,Peso da Cotto
+carne-rossa-magra-cruda-crudo,Carne Rossa Magra (cruda),100.0,g,125.0,21.9,0.0,4.2,Peso da Crudo
+salmone-cotto-cotto,Salmone (cotto),100.0,g,239.0,24.6,0.0,15.6,Peso da Cotto
+salmone-crudo-crudo,Salmone (crudo),100.0,g,179.0,22.1,0.0,10.1,Peso da Crudo
+filetto-di-carne-rossa-cotto-cotto,Filetto di Carne Rossa (cotto),100.0,g,188.0,29.1,0.0,8.0,Peso da Cotto
+filetto-di-carne-rossa-crudo-crudo,Filetto di Carne Rossa (crudo),100.0,g,140.0,21.2,0.0,6.1,Peso da Crudo
+merluzzo-cotto-cotto,Merluzzo (cotto),100.0,g,106.0,24.6,0.0,0.8,Peso da Cotto
+merluzzo-crudo-crudo,Merluzzo (crudo),100.0,g,75.0,17.5,0.0,0.6,Peso da Crudo
+pesce-spada-crudo-crudo,Pesce Spada (Crudo),100.0,g,109.0,17.0,0.0,4.2,Peso da Crudo
+pesce-spada-cotto-cotto,Pesce Spada (Cotto),100.0,g,172.0,23.0,0.0,8.0,Peso da Cotto
+gamberi-cotti-cotto,Gamberi (cotti),100.0,g,70.0,15.4,0.0,0.9,Peso da Cotto
+gamberi-crudi-crudo,Gamberi (crudi),100.0,g,62.0,14.1,0.0,0.5,Peso da Crudo
+tonno-sgocciolato,Tonno,100.0,g,109.0,25.0,0.0,1.0,Peso sgocciolato
+uova-intere-crudo,Uova Intere,1.0,piece,72.0,6.0,0.4,4.8,Peso da Crudo
+albume-crudo,Albume,100.0,g,43.0,10.8,0.0,0.0,Peso da Crudo
+yogurt-greco-0-crudo,Yogurt Greco 0%,100.0,g,58.0,10.6,3.9,0.0,Peso da Crudo
+yogurt-greco-intero-crudo,Yogurt Greco Intero,100.0,g,117.0,9.8,3.8,7.0,Peso da Crudo
+yogurt-di-soia-crudo,Yogurt di Soia,100.0,g,47.0,4.1,2.4,2.3,Peso da Crudo
+whey-protein-crudo,Whey Protein,100.0,g,379.0,90.0,1.4,1.5,Peso da Crudo
+vegan-protein-crudo,Vegan Protein,100.0,g,358.0,66.0,10.3,6.1,Peso da Crudo
+proteine-della-soia-crudo,Proteine della Soia,100.0,g,387.0,88.0,1.4,3.3,Peso da Crudo
+caseine-crudo,Caseine,100.0,g,377.0,90.0,1.4,1.3,Peso da Crudo
+lenticchie-sgocciolato,Lenticchie,100.0,g,103.0,8.8,15.4,0.7,Peso sgocciolato
+ceci-sgocciolato,Ceci,100.0,g,114.0,7.2,14.7,2.9,Peso sgocciolato
+mix-di-fagioli-sgocciolato,Mix di fagioli,100.0,g,104.0,7.3,16.2,1.1,Peso sgocciolato
+cannellini-sgocciolato,Cannellini,100.0,g,79.0,5.2,13.3,0.6,Peso sgocciolato
+fagioli-bianchi-sgocciolato,Fagioli bianchi,100.0,g,93.0,7.4,14.4,0.6,Peso sgocciolato
+fagioli-rossi-sgocciolato,Fagioli Rossi,100.0,g,102.0,8.4,16.0,0.5,Peso sgocciolato
+tofu-crudo,Tofu,100.0,g,83.0,8.1,2.0,4.8,Peso da Crudo
+petto-di-tacchino-cotto-cotto,Petto di Tacchino (Cotto),100.0,g,155.0,35.0,0.0,1.7,Peso da Cotto
+petto-di-tacchino-crudo-crudo,Petto di Tacchino (Crudo),100.0,g,105.0,22.6,0.0,1.6,Peso da Crudo
+vanilla-protein-milk-crudo,Vanilla Protein Milk,100.0,ml,50.0,5.4,4.8,1.0,Peso da Crudo
+chocolate-protein-milk-crudo,Chocolate Protein Milk,100.0,ml,53.0,5.4,5.7,1.0,Peso da Crudo
+gold-protein-milk-crudo,Gold Protein Milk,100.0,ml,59.0,6.6,5.8,1.0,Peso da Crudo
+blueberry-protein-milk-crudo,Blueberry Protein MIlk,100.0,ml,51.0,5.4,5.1,1.0,Peso da Crudo
+protein-milk-crudo,Protein Milk,100.0,ml,49.0,5.1,4.8,1.0,Peso da Crudo
+slimline-milk-crudo,Slimline Milk,100.0,ml,39.0,3.8,5.3,0.3,Peso da Crudo
+latte-scremato-crudo,Latte Scremato,100.0,ml,42.0,3.3,5.0,1.0,Peso da Crudo
+latte-intero-crudo,Latte Intero,100.0,ml,64.0,3.4,4.9,3.5,Peso da Crudo
+latte-d-avena-crudo,Latte d'Avena,100.0,ml,44.0,1.0,6.6,1.5,Peso da Crudo
+latte-d-avanea-senza-zuccheri-crudo,Latte D'Avanea Senza Zuccheri,100.0,ml,36.0,1.0,6.3,0.7,Peso da Crudo
+latte-di-soia-crudo,Latte di Soia,100.0,ml,26.0,2.4,0.5,1.6,Peso da Crudo
+latte-di-soia-senza-zuccheri-crudo,Latte di Soia Senza Zuccheri,100.0,ml,44.0,3.1,2.5,2.4,Peso da Crudo
+latte-di-mandorla-crudo,Latte di Mandorla,100.0,ml,21.0,0.5,2.4,1.1,Peso da Crudo
+latte-di-mandorla-senza-zuccheri-crudo,Latte di Mandorla Senza Zuccheri,100.0,ml,12.0,0.4,0.0,1.1,Peso da Crudo
+latte-di-anacardi-crudo,Latte di Anacardi,100.0,ml,22.0,0.5,2.6,1.1,Peso da Crudo
+latte-di-nocciola-crudo,Latte di Nocciola,100.0,ml,30.0,0.6,0.3,2.9,Peso da Crudo
+riso-jasmine-sgocciolato,Riso Jasmine,100.0,g,349.0,7.5,78.0,0.7,Peso sgocciolato
+riso-integrale-sgocciolato,Riso Integrale,100.0,g,343.0,10.0,70.0,2.5,Peso sgocciolato
+pasta-sgocciolato,Pasta,100.0,g,338.0,11.9,68.0,2.0,Peso sgocciolato
+wholemeal-pasta-sgocciolato,Wholemeal Pasta,100.0,g,322.0,13.3,61.0,2.8,Peso sgocciolato
+patate-crudo,Patate,100.0,g,80.0,1.9,17.9,0.1,Peso da Crudo
+patate-dolci-crudo,Patate Dolci,100.0,g,86.0,1.2,19.7,0.3,Peso da Crudo
+avena-sgocciolato,Avena,100.0,g,374.0,10.9,64.0,8.1,Peso sgocciolato
+plain-bagel-confezionato,Plain Bagel,1.0,piece,224.0,8.5,43.8,1.2,Peso confezionato
+english-muffin-confezionato,English Muffin,1.0,piece,158.0,6.0,30.0,1.1,Peso confezionato
+date-syrup-confezionato,Date Syrup,100.0,g,285.0,1.2,70.0,0.2,Peso confezionato
+crema-di-riso-sgocciolato,Crema di Riso,100.0,g,362.0,7.9,80.5,0.1,Peso sgocciolato
+crema-di-riso-baby-sgocciolato,Crema di Riso Baby,100.0,g,384.0,7.7,86.0,1.2,Peso sgocciolato
+coco-pops-sgocciolato,Coco Pops,100.0,g,378.0,6.3,84.0,1.9,Peso sgocciolato
+rice-krispies-sgocciolato,Rice Krispies,100.0,g,383.0,7.0,86.0,1.2,Peso sgocciolato
+gallette-di-riso-confezionato,Gallette di Riso,1.0,piece,30.0,0.6,6.3,0.2,Peso confezionato
+gallette-di-mais-confezionato,Gallette di Mais,1.0,piece,26.0,6.0,0.5,0.0,Peso confezionato
+marmellata-confezionato,Marmellata,100.0,g,274.0,0.3,66.0,0.0,Peso confezionato
+sciroppo-d-acero-confezionato,Sciroppo D'Acero,100.0,g,260.0,0.0,65.0,0.2,Peso confezionato
+miele-confezionato,Miele,100.0,g,307.0,0.4,76.0,0.0,Peso confezionato
+scotch-pancakes-confezionato,Scotch Pancakes,100.0,g,270.0,5.6,40.0,9.6,Peso confezionato
+pane-con-lievito-madre-confezionato,Pane con Lievito Madre,100.0,g,279.0,11.8,54.0,1.8,Peso confezionato
+brown-soda-bread-confezionato,Brown Soda Bread,100.0,g,215.0,8.9,37.0,3.5,Peso confezionato
+tortilla-wrap-confezionato,Tortilla Wrap,100.0,g,279.0,7.8,49.0,5.7,Peso confezionato
+noodles-d-uovo-sgocciolato,Noodles d'Uovo,100.0,g,330.0,12.0,66.0,2.0,Peso sgocciolato
+brioche-buns-confezionato,Brioche Buns,100.0,g,316.0,8.8,49.0,9.5,Peso confezionato
+pasta-di-cacao-confezionato,Pasta di Cacao,100.0,g,586.0,10.0,24.0,50.0,Peso confezionato
+cioccolata-fondente-70-confezionato,Cioccolata Fondente (70%),100.0,g,558.0,9.1,36.0,42.0,Peso confezionato
+burro-di-mandorla-confezionato,Burro di Mandorla,100.0,g,579.0,20.7,7.0,52.0,Peso confezionato
+burro-d-arachidi-confezionato,Burro d'Arachidi,100.0,g,606.0,22.8,12.2,52.0,Peso confezionato
+olio-evo-confezionato,Olio EVO,100.0,g,899.0,0.0,0.0,100.0,Peso confezionato
+olio-di-cocco-confezionato,Olio di Cocco,100.0,g,899.0,0.0,0.0,100.0,Peso confezionato
+olio-di-noci-di-macadamia-confezionato,Olio di Noci di Macadamia,100.0,g,375.0,0.0,0.0,93.3,Peso confezionato
+arachidi-sgusciato,Arachidi,100.0,g,602.0,24.7,15.5,49.0,Peso da sgusciato
+noci-pecan-sgusciato,Noci Pecan,100.0,g,731.0,10.1,5.2,72.0,Peso da sgusciato
+pistacchi-sgusciato,Pistacchi,100.0,g,601.0,17.9,7.7,55.0,Peso da sgusciato
+noci-sgusciato,Noci  ,100.0,g,688.0,14.7,3.1,69.0,Peso da sgusciato
+mandorle-sgusciato,Mandorle,100.0,g,584.0,20.9,7.0,53.0,Peso da sgusciato
+granola-confezionato,Granola,100.0,g,431.0,8.7,60.0,15.1,Peso confezionato
+anacardi-sgusciato,Anacardi,100.0,g,571.0,17.7,16.7,48.0,Peso da sgusciato
+burro-ghee-confezionato,Burro Ghee,100.0,g,745.0,0.6,0.6,82.0,Peso confezionato
+formaggio-confezionato,Formaggio,100.0,g,416.0,25.4,0.1,34.9,Peso confezionato
+avocado-crudo,Avocado,100.0,g,191.0,1.9,1.9,19.5,Peso da Crudo
+frutti-rossi-congelati-crudo,Frutti Rossi Congelati,100.0,g,33.0,1.0,6.5,0.3,Peso da Crudo
+ananas-crudo,Ananas,100.0,g,43.0,0.4,9.9,0.2,Peso da Crudo
+kiwi-crudo,Kiwi,100.0,g,51.0,1.1,10.5,0.5,Peso da Crudo
+mela-crudo,Mela,100.0,g,53.0,0.6,11.5,0.5,Peso da Crudo
+banana-crudo,Banana,100.0,g,86.0,1.2,20.0,0.1,Peso da Crudo
+frutti-della-passione-crudo,Frutti della Passione,100.0,g,37.0,2.6,5.7,0.4,Peso da Crudo
+uva-crudo,Uva,100.0,g,69.0,0.7,16.1,0.2,Peso da Crudo
+datteri-crudo,Datteri,100.0,g,287.0,3.3,68.0,0.2,Peso da Crudo
+arancia-crudo,Arancia,100.0,g,37.0,0.8,8.0,0.2,Peso da Crudo
+pera-crudo,Pera,100.0,g,45.0,0.3,10.8,0.1,Peso da Crudo
+lamponi-crudo,Lamponi,100.0,g,27.0,1.4,4.6,0.3,Peso da Crudo
+mirtilli-crudo,Mirtilli,100.0,g,42.0,0.9,9.1,0.2,Peso da Crudo
+minestrone-solo-verdura-crudo,Minestrone (solo verdura),100.0,g,36.0,2.7,4.9,0.6,Peso da Crudo
+peperoni-crudo,Peperoni,100.0,g,26.0,1.0,4.8,0.3,Peso da Crudo
+broccoli-crudo,Broccoli,100.0,g,35.0,4.3,3.1,0.6,Peso da Crudo
+cavoletti-di-bruxelles-crudo,Cavoletti di Bruxelles,100.0,g,33.0,4.4,1.8,0.9,Peso da Crudo
+cavolfiore-crudo,Cavolfiore,100.0,g,31.0,2.5,4.4,0.4,Peso da Crudo
+fagiolini-crudo,Fagiolini,100.0,g,24.0,2.1,3.0,0.4,Peso da Crudo
+asparagi-crudo,Asparagi,100.0,g,25.0,2.9,2.0,0.6,Peso da Crudo
+cavolo-nero-crudo,Cavolo nero,100.0,g,43.0,3.5,4.0,1.4,Peso da Crudo
+carote-crudo,Carote,100.0,g,34.0,0.5,7.7,0.4,Peso da Crudo
+piselli-crudo,Piselli,100.0,g,68.0,5.3,10.0,0.7,Peso da Crudo
+zucchine-crudo,Zucchine,100.0,g,18.0,1.8,1.8,0.4,Peso da Crudo
+cipolla-crudo,Cipolla,100.0,g,37.0,1.0,7.9,0.1,Peso da Crudo
+pomodoro-crudo,Pomodoro,100.0,g,15.0,0.5,3.0,0.1,Peso da Crudo
+sugo-crudo,Sugo,100.0,g,26.0,1.7,4.3,0.2,Peso da Crudo
+zucca-crudo,Zucca,100.0,g,37.0,1.1,7.9,0.1,Peso da Crudo
+parsnips-crudo,Parsnips,100.0,g,64.0,1.8,11.7,1.1,Peso da Crudo
+barbabietole-sgocciolato,Barbabietole,100.0,g,37.0,1.7,7.2,0.1,Peso sgocciolato
+funghi-crudo,Funghi,100.0,g,22.0,2.1,2.6,0.4,Peso da Crudo
+mix-di-verdure-crudo,Mix di Verdure,100.0,g,89.0,2.2,10.6,4.2,Peso da Crudo
+gerogli-di-soia-crudo,Gerogli di Soia,100.0,g,31.0,2.9,3.8,0.5,Peso da Crudo
+creatine-monohydrate-sgocciolato,Creatine Monohydrate,100.0,g,0.0,0.0,0.0,0.0,Peso sgocciolato
+ciclodestrine-hbcd-sgocciolato,Ciclodestrine (HBCD),100.0,g,381.0,0.0,97.0,0.0,Peso sgocciolato
+essential-amino-acids,Essential Amino Acids,100.0,g,0.0,0.0,0.0,0.0,N/A
+magnesio-bisglicinato,Magnesio Bisglicinato,1.0,caps,0.0,0.0,0.0,0.0,N/A
+vitamina-c,Vitamina C,100.0,g,0.0,0.0,0.0,0.0,N/A
+probiotici,Probiotici,100.0,g,0.0,0.0,0.0,0.0,N/A
+multivitaminico,Multivitaminico,100.0,g,0.0,0.0,0.0,0.0,N/A
+omega-3,Omega 3,100.0,g,900.0,0.0,0.0,9.0,N/A
+liver-stack,Liver Stack,100.0,g,0.0,0.0,0.0,0.0,N/A
+bergamotto,Bergamotto,100.0,g,0.0,0.0,0.0,0.0,N/A
+carne-di-cavallo-crudo,Carne di Cavallo,100.0,g,102.0,21.0,0.0,2.0,Peso da Crudo
+verdura-generico,Verdura (generico),100.0,g,18.0,1.8,1.8,0.4,N/A
+hydra-performance,Hydra Performance,30.0,g,69.0,0.0,17.2,0.0,N/A
+intsulin,inTSUlin,1.0,caps,0.0,0.0,0.0,0.0,N/A
+sleep-aid,Sleep AID,1.0,caps,0.0,0.0,0.0,0.0,N/A
+berberina,Berberina,1.0,caps,0.0,0.0,0.0,0.0,N/A
+probiotic-plus,Probiotic Plus,1.0,compr,0.0,0.0,0.0,0.0,N/A
+greens,Greens,1.0,g,0.0,0.0,0.0,0.0,N/A
+mueslei,Mueslei,100.0,g,369.0,12.0,63.0,5.8,N/A
+fighi-secchi,Fighi Secchi,100.0,g,282.0,3.5,58.0,2.7,N/A
+lecitina-di-soia,Lecitina di soia,100.0,g,766.0,0.0,7.7,81.7,N/A
+seitan,Seitan,100.0,g,183.0,34.0,1.5,4.5,N/A

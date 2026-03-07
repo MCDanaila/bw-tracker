@@ -1,12 +1,18 @@
 -- Enable the UUID extension (usually enabled by default in Supabase)
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Drop ONLY daily_logs allowing you to cleanly update its schema without losing food data
+DROP TABLE IF EXISTS meal_adherence CASCADE;
+DROP TABLE IF EXISTS daily_logs CASCADE;
+DROP TABLE IF EXISTS meal_plans CASCADE;
+DROP TABLE IF EXISTS foods CASCADE; 
+
 -- ==========================================
 -- 1. FOODS (Lista Alimenti)
 -- Global database of foods (Read-only for users)
 -- ==========================================
-CREATE TABLE foods (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+CREATE TABLE IF NOT EXISTS foods (
+    id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     portion_size NUMERIC NOT NULL,
     unit TEXT NOT NULL CHECK (unit IN ('g', 'ml', 'caps', 'compr', 'piece')),
@@ -22,12 +28,12 @@ CREATE TABLE foods (
 -- 2. MEAL PLANS (Piano Alimentare)
 -- The assigned diet for the user
 -- ==========================================
-CREATE TABLE meal_plans (
+CREATE TABLE IF NOT EXISTS meal_plans (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Client can generate this UUID
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     day_of_week TEXT NOT NULL CHECK (day_of_week IN ('LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM')),
     meal_name TEXT NOT NULL, -- e.g., 'MEAL 1 (PRE)', 'MEAL 2'
-    food_id UUID REFERENCES foods(id) ON DELETE SET NULL,
+    food_id TEXT REFERENCES foods(id) ON DELETE SET NULL,
     target_quantity NUMERIC NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -46,14 +52,13 @@ CREATE TABLE daily_logs (
     measurement_time TEXT,
     sleep_hours NUMERIC,
     sleep_quality NUMERIC,
-    time_asleep TEXT,
-    time_awake TEXT,
     hrv NUMERIC,
-    blood_glucose NUMERIC,
     sleep_score NUMERIC,
     
     -- Activity
     steps INTEGER,
+    steps_goal INTEGER, -- Store the target if it changes over time
+    active_kcal INTEGER,
     cardio_hiit_mins INTEGER,
     cardio_liss_mins INTEGER,
     workout_session TEXT,
@@ -61,7 +66,8 @@ CREATE TABLE daily_logs (
     workout_duration INTEGER,
     gym_rpe NUMERIC,
     gym_energy NUMERIC,
-    workout_feel NUMERIC,
+    gym_mood NUMERIC,
+    soreness_level NUMERIC,
     
     -- Evening/End of Day & Biofeedback
     water_liters NUMERIC,
@@ -75,7 +81,10 @@ CREATE TABLE daily_logs (
     hunger_level NUMERIC,
     libido NUMERIC,
     mood NUMERIC,
-    spo2 NUMERIC,
+    cycle_day INTEGER,
+    
+    -- Weekly Check-ins (Optional)
+    blood_glucose NUMERIC,
     sys_bp INTEGER,
     dia_bp INTEGER,
     general_notes TEXT,
@@ -92,13 +101,13 @@ CREATE TABLE daily_logs (
 -- 4. ADHERENCE LOGS (Meal Check-offs)
 -- Tracks which meals were eaten on which day
 -- ==========================================
-CREATE TABLE meal_adherence (
+CREATE TABLE IF NOT EXISTS meal_adherence (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Client generated
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     date DATE NOT NULL,
     meal_plan_id UUID NOT NULL REFERENCES meal_plans(id) ON DELETE CASCADE,
     is_completed BOOLEAN DEFAULT FALSE,
-    swapped_food_id UUID REFERENCES foods(id) ON DELETE SET NULL, -- If they used the Smart Swap
+    swapped_food_id TEXT REFERENCES foods(id) ON DELETE SET NULL, -- If they used the Smart Swap
     swapped_quantity NUMERIC, -- The new quantity calculated by the app
     
     created_at TIMESTAMPTZ DEFAULT NOW(),

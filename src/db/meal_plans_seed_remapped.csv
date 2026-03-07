@@ -1,0 +1,126 @@
+user_id,day_of_week,meal_name,food_id,target_quantity
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 1 (PRE),whey-protein-crudo,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 1 (PRE),avena-sgocciolato,60.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 1 (PRE),mirtilli-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 1 (PRE),pasta-di-cacao-confezionato,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 1 (PRE),hydra-performance,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 1 (PRE),greens,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,INTRA,ciclodestrine-hbcd-sgocciolato,40.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,INTRA,essential-amino-acids,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,INTRA,creatine-monohydrate-sgocciolato,5.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 2 (POST),riso-jasmine-sgocciolato,80.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 2 (POST),petto-di-pollo-crudo-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 2 (POST),verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 2 (POST),magnesio-bisglicinato,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 3,yogurt-greco-0-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 3,mela-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 4,carne-rossa-magra-cruda-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 4,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 4,olio-evo-confezionato,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 5,whey-protein-crudo,50.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,LUN,MEAL 5,sleep-aid,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 1 (PRE),uova-intere-crudo,3.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 1 (PRE),avena-sgocciolato,60.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 1 (PRE),mirtilli-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 1 (PRE),albume-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 1 (PRE),hydra-performance,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 1 (PRE),greens,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,INTRA,ciclodestrine-hbcd-sgocciolato,40.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,INTRA,essential-amino-acids,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,INTRA,creatine-monohydrate-sgocciolato,5.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 2 (POST),pasta-sgocciolato,80.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 2 (POST),petto-di-pollo-crudo-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 2 (POST),verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 2 (POST),magnesio-bisglicinato,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 3,albume-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 3,mela-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 4,petto-di-pollo-crudo-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 4,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 4,olio-evo-confezionato,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 5,whey-protein-crudo,50.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MAR,MEAL 5,sleep-aid,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 1 (PRE),whey-protein-crudo,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 1 (PRE),crema-di-riso-sgocciolato,60.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 1 (PRE),mirtilli-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 1 (PRE),burro-d-arachidi-confezionato,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 1 (PRE),hydra-performance,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 1 (PRE),greens,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,INTRA,ciclodestrine-hbcd-sgocciolato,40.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,INTRA,essential-amino-acids,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,INTRA,creatine-monohydrate-sgocciolato,5.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 2 (POST),riso-jasmine-sgocciolato,80.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 2 (POST),merluzzo-crudo-crudo,140.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 2 (POST),verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 2 (POST),magnesio-bisglicinato,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 3,whey-protein-crudo,20.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 3,ananas-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 4,seitan,70.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 4,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 4,olio-evo-confezionato,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 5,whey-protein-crudo,50.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,MER,MEAL 5,sleep-aid,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 1,whey-protein-crudo,40.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 1,pane-con-lievito-madre-confezionato,60.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 1,mirtilli-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 1,avocado-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 1,hydra-performance,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 1,greens,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 2,riso-jasmine-sgocciolato,50.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 2,petto-di-pollo-crudo-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 2,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 2,olio-evo-confezionato,20.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 3,uova-intere-crudo,3.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 3,mela-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 4,salmone-crudo-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 4,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,GIO,MEAL 4,intsulin,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 1,whey-protein-crudo,40.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 1,pane-con-lievito-madre-confezionato,60.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 1,mirtilli-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 1,avocado-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 1,hydra-performance,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 1,greens,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 2,riso-jasmine-sgocciolato,50.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 2,petto-di-pollo-crudo-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 2,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 2,olio-evo-confezionato,20.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 3,uova-intere-crudo,3.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 3,mela-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 4,salmone-crudo-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 4,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,VEN,MEAL 4,intsulin,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 1 (PRE),whey-protein-crudo,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 1 (PRE),avena-sgocciolato,60.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 1 (PRE),mirtilli-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 1 (PRE),pasta-di-cacao-confezionato,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 1 (PRE),hydra-performance,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 1 (PRE),greens,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,INTRA,ciclodestrine-hbcd-sgocciolato,40.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,INTRA,essential-amino-acids,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,INTRA,creatine-monohydrate-sgocciolato,5.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 2 (POST),riso-jasmine-sgocciolato,80.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 2 (POST),petto-di-pollo-crudo-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 2 (POST),verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 2 (POST),magnesio-bisglicinato,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 3,albume-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 3,mela-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 4,seitan,70.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 4,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 4,olio-evo-confezionato,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 5,whey-protein-crudo,50.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,SAB,MEAL 5,sleep-aid,2.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 1,whey-protein-crudo,40.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 1,pane-con-lievito-madre-confezionato,60.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 1,mirtilli-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 1,avocado-crudo,100.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 1,hydra-performance,30.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 1,greens,10.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 2,riso-jasmine-sgocciolato,50.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 2,petto-di-pollo-crudo-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 2,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 2,olio-evo-confezionato,20.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 3,uova-intere-crudo,3.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 3,mela-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 4,salmone-crudo-crudo,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 4,verdura-generico,200.0
+3b8f612d-1dbf-4d3e-a7fd-473495c1ff17,DOM,MEAL 4,intsulin,2.0
