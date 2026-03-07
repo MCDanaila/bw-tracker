@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Sun, Dumbbell, Moon, Save } from "lucide-react";
+import { Sun, Dumbbell, Moon, Save, Activity, Heart, Stethoscope } from "lucide-react";
 import { localDB, type SyncAction } from "../lib/db";
 import { useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
@@ -13,84 +13,163 @@ interface DailyLogFormProps {
     onClearEdit?: () => void;
 }
 
-// 1. Define the shape of our data
+// 1. Define the shape of our data (35 fields)
 type DailyLogFormData = {
+    // Base (Morning)
     weight_fasting: number;
+    measurement_time: string;
     sleep_hours: number;
-    sleep_quality: string;
+    water_liters: number;
+    salt_grams: number;
+
+    // Digestione & Evacuazioni
+    cheat_meals: boolean;
+    digestion_rating: string;
+    bathroom_visits: number;
+    digestion_comments: string;
+
+    // Recupero (Recovery)
+    time_asleep: string;
+    time_awake: string;
+    hrv: number;
+    blood_glucose: number;
+    sleep_score: number;
+    sleep_quality: number;
+
+    // Attività (Activity)
     steps: number;
     cardio_hiit_mins: number;
     cardio_liss_mins: number;
     workout_session: string;
-    gym_rpe: number;
+    workout_start_time: string;
+    workout_duration: number;
+    workout_feel: number;
     gym_energy: number;
-    gym_mood: number;
-    water_liters: number;
-    salt_grams: number;
-    digestion_rating: string;
-    bathroom_visits: number;
-    stress_level: number;
+    gym_rpe: number;
+
+    // Bio Feedback
+    hunger_level: number;
     daily_energy: number;
+    stress_level: number;
+    libido: number;
+    mood: number;
+
+    // Notes & Health
+    spo2: number;
+    sys_bp: number;
+    dia_bp: number;
+    general_notes: string;
 };
 
 export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProps) {
     const { user } = useAuth();
-    // 2. Initialize React Hook Form with defaults
+
     const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<DailyLogFormData>({
         defaultValues: {
             weight_fasting: 85,
+            measurement_time: "",
             sleep_hours: 7,
-            sleep_quality: "Average",
+            water_liters: 2,
+            salt_grams: 5,
+
+            cheat_meals: false,
+            digestion_rating: "Good",
+            bathroom_visits: 1,
+            digestion_comments: "",
+
+            time_asleep: "",
+            time_awake: "",
+            hrv: 0,
+            blood_glucose: 0,
+            sleep_score: 0,
+            sleep_quality: 5,
+
             steps: 10000,
             cardio_hiit_mins: 0,
             cardio_liss_mins: 0,
             workout_session: "",
-            gym_rpe: 5,
+            workout_start_time: "",
+            workout_duration: 0,
+            workout_feel: 5,
             gym_energy: 5,
-            gym_mood: 5,
-            water_liters: 2,
-            salt_grams: 5,
-            digestion_rating: "Good",
-            bathroom_visits: 1,
-            stress_level: 5,
+            gym_rpe: 5,
+
+            hunger_level: 5,
             daily_energy: 5,
+            stress_level: 5,
+            libido: 5,
+            mood: 5,
+
+            spo2: 0,
+            sys_bp: 120,
+            dia_bp: 80,
+            general_notes: "",
         }
     });
 
-    const gymRpe = watch("gym_rpe");
+    const sleepQuality = watch("sleep_quality");
+    const workoutFeel = watch("workout_feel");
     const gymEnergy = watch("gym_energy");
-    const gymMood = watch("gym_mood");
+    const gymRpe = watch("gym_rpe");
+    const hungerLevel = watch("hunger_level");
     const dailyEnergy = watch("daily_energy");
     const stressLevel = watch("stress_level");
+    const libido = watch("libido");
+    const mood = watch("mood");
 
-    // If an item is passed to edit, load it into the form
     useEffect(() => {
         if (editItem && editItem.payload) {
             reset(editItem.payload as DailyLogFormData);
         } else {
-            reset(); // Clear form if editItem is null
+            reset();
         }
     }, [editItem, reset]);
 
     const onSubmit = async (data: DailyLogFormData) => {
         try {
-            // 1. Prepare the payload for Supabase
-            // Sanitize input to ensure empty strings from HTML inputs are sent as null, not '', avoiding postgres errors
+            const parseNum = (val: any) => {
+                const parsed = Number(val);
+                if (String(val) === "" || isNaN(parsed) || parsed === 0) return null;
+                return parsed;
+            };
+
             const payload = {
                 ...data,
-                sleep_hours: String(data.sleep_hours) === "" || isNaN(Number(data.sleep_hours)) ? null : Number(data.sleep_hours),
-                steps: String(data.steps) === "" || isNaN(Number(data.steps)) ? null : Number(data.steps),
-                cardio_hiit_mins: String(data.cardio_hiit_mins) === "" || isNaN(Number(data.cardio_hiit_mins)) ? null : Number(data.cardio_hiit_mins),
-                cardio_liss_mins: String(data.cardio_liss_mins) === "" || isNaN(Number(data.cardio_liss_mins)) ? null : Number(data.cardio_liss_mins),
-                gym_rpe: String(data.gym_rpe) === "" || isNaN(Number(data.gym_rpe)) ? null : Number(data.gym_rpe),
-                gym_energy: String(data.gym_energy) === "" || isNaN(Number(data.gym_energy)) ? null : Number(data.gym_energy),
-                gym_mood: String(data.gym_mood) === "" || isNaN(Number(data.gym_mood)) ? null : Number(data.gym_mood),
-                water_liters: String(data.water_liters) === "" || isNaN(Number(data.water_liters)) ? null : Number(data.water_liters),
-                salt_grams: String(data.salt_grams) === "" || isNaN(Number(data.salt_grams)) ? null : Number(data.salt_grams),
-                bathroom_visits: String(data.bathroom_visits) === "" || isNaN(Number(data.bathroom_visits)) ? null : Number(data.bathroom_visits),
-                stress_level: String(data.stress_level) === "" || isNaN(Number(data.stress_level)) ? null : Number(data.stress_level),
-                daily_energy: String(data.daily_energy) === "" || isNaN(Number(data.daily_energy)) ? null : Number(data.daily_energy),
-                // Automatically set today's date if no date was already on the payload
+                weight_fasting: data.weight_fasting ? Number(data.weight_fasting) : null,
+                measurement_time: data.measurement_time || null,
+                sleep_hours: data.sleep_hours ? Number(data.sleep_hours) : null,
+                water_liters: data.water_liters ? Number(data.water_liters) : null,
+                salt_grams: data.salt_grams ? Number(data.salt_grams) : null,
+
+                cheat_meals: data.cheat_meals || false,
+                bathroom_visits: data.bathroom_visits ? Number(data.bathroom_visits) : 0,
+
+                time_asleep: data.time_asleep || null,
+                time_awake: data.time_awake || null,
+                hrv: parseNum(data.hrv),
+                blood_glucose: parseNum(data.blood_glucose),
+                sleep_score: parseNum(data.sleep_score),
+                sleep_quality: parseNum(data.sleep_quality),
+
+                steps: parseNum(data.steps),
+                cardio_hiit_mins: parseNum(data.cardio_hiit_mins),
+                cardio_liss_mins: parseNum(data.cardio_liss_mins),
+                workout_start_time: data.workout_start_time || null,
+                workout_duration: parseNum(data.workout_duration),
+                workout_feel: parseNum(data.workout_feel),
+                gym_energy: parseNum(data.gym_energy),
+                gym_rpe: parseNum(data.gym_rpe),
+
+                hunger_level: parseNum(data.hunger_level),
+                daily_energy: parseNum(data.daily_energy),
+                stress_level: parseNum(data.stress_level),
+                libido: parseNum(data.libido),
+                mood: parseNum(data.mood),
+
+                spo2: parseNum(data.spo2),
+                sys_bp: parseNum(data.sys_bp),
+                dia_bp: parseNum(data.dia_bp),
+
                 date: editItem?.payload?.date || new Date().toISOString().split('T')[0],
                 user_id: user?.id,
             };
@@ -100,7 +179,6 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
                 return;
             }
 
-            // 2. Add to or update the local offline queue
             if (editItem && editItem.id) {
                 await localDB.syncQueue.update(editItem.id, {
                     payload: payload
@@ -117,7 +195,6 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
                 alert("Saved locally! Press Sync to push to the cloud.");
             }
 
-            // 3. Reset form
             reset();
 
         } catch (error) {
@@ -129,125 +206,35 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pb-24">
 
-            {/* --- MORNING METRICS --- */}
+            {/* --- 1. BASE (MORNING) --- */}
             <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex items-center gap-2 mb-4 text-blue-600">
                     <Sun size={20} />
-                    <h2 className="font-semibold text-gray-800">Morning Check-in</h2>
+                    <h2 className="font-semibold text-gray-800">1. Base (Morning)</h2>
                 </div>
-
                 <div className="grid grid-cols-2 gap-4">
-                    <Input
-                        label="Weight (kg)"
-                        type="number" step="0.1"
-                        placeholder="e.g. 84.5"
-                        {...register("weight_fasting", { required: true })}
-                        error={errors.weight_fasting ? "Weight is required" : undefined}
-                    />
-                    <Input
-                        label="Sleep (hrs)"
-                        type="number" step="0.5"
-                        placeholder="e.g. 7.5"
-                        {...register("sleep_hours")}
-                    />
-                    <div className="col-span-2">
-                        <Select
-                            label="Sleep Quality"
-                            options={[
-                                { label: "Select...", value: "" },
-                                { label: "Good", value: "Good" },
-                                { label: "Average", value: "Average" },
-                                { label: "Poor", value: "Poor" }
-                            ]}
-                            {...register("sleep_quality")}
-                        />
-                    </div>
+                    <Input label="Weight (kg)" type="number" step="0.1" {...register("weight_fasting", { required: true })} error={errors.weight_fasting ? "Required" : undefined} />
+                    <Input label="Time (ore/min)" type="time" {...register("measurement_time")} />
+                    <Input label="Sleep (hrs)" type="number" step="0.5" {...register("sleep_hours")} />
+                    <Input label="Water (Liters)" type="number" step="0.1" {...register("water_liters")} />
+                    <Input label="Salt (Grams)" type="number" step="0.1" {...register("salt_grams")} />
                 </div>
             </section>
 
-            {/* --- ACTIVITY & GYM --- */}
+            {/* --- 2. DIGESTIONE E EVACUAZIONI --- */}
             <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center gap-2 mb-4 text-orange-500">
-                    <Dumbbell size={20} />
-                    <h2 className="font-semibold text-gray-800">Activity & Gym</h2>
+                <div className="flex items-center gap-2 mb-4 text-amber-600">
+                    <Activity size={20} />
+                    <h2 className="font-semibold text-gray-800">2. Nutrizione & Digestione</h2>
                 </div>
-
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <Input
-                            label="Daily Steps"
-                            type="number"
-                            placeholder="e.g. 10000"
-                            {...register("steps")}
-                        />
-                        <Input
-                            label="Workout Type"
-                            type="text"
-                            placeholder="e.g. Push Day"
-                            {...register("workout_session")}
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <Input
-                            label="Cardio HIIT (mins)"
-                            type="number"
-                            placeholder="e.g. 15"
-                            {...register("cardio_hiit_mins")}
-                        />
-                        <Input
-                            label="Cardio LISS (mins)"
-                            type="number"
-                            placeholder="e.g. 30"
-                            {...register("cardio_liss_mins")}
-                        />
-                    </div>
-
-                    <Slider
-                        label="RPE (Rate of Perceived Exertion: 1-10)"
-                        min="1" max="10" step="0.5"
-                        value={gymRpe}
-                        {...register("gym_rpe")}
-                    />
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <Slider
-                            label="Gym Energy (1-10)"
-                            min="1" max="10" step="0.5"
-                            value={gymEnergy}
-                            {...register("gym_energy")}
-                        />
-                        <Slider
-                            label="Gym Mood (1-10)"
-                            min="1" max="10" step="0.5"
-                            value={gymMood}
-                            {...register("gym_mood")}
-                        />
-                    </div>
-                </div>
-            </section>
-
-            {/* --- EVENING METRICS --- */}
-            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center gap-2 mb-4 text-indigo-500">
-                    <Moon size={20} />
-                    <h2 className="font-semibold text-gray-800">End of Day</h2>
-                </div>
-
                 <div className="grid grid-cols-2 gap-4">
-                    <Input
-                        label="Water (Liters)"
-                        type="number" step="0.1"
-                        placeholder="e.g. 4.5"
-                        {...register("water_liters")}
-                    />
-                    <Input
-                        label="Salt (Grams)"
-                        type="number" step="0.1"
-                        placeholder="e.g. 5.5"
-                        {...register("salt_grams")}
-                    />
-                    <div className="col-span-2">
+                    <div className="col-span-2 sm:col-span-1">
+                        <label className="flex items-center gap-2 mt-8">
+                            <input type="checkbox" {...register("cheat_meals")} className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                            <span className="text-sm font-medium text-gray-700">Pasti Liberi (Cheat Meal)</span>
+                        </label>
+                    </div>
+                    <div className="col-span-2 sm:col-span-1">
                         <Select
                             label="Digestion Rating"
                             options={[
@@ -260,48 +247,99 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
                             {...register("digestion_rating")}
                         />
                     </div>
-                    <Input
-                        label="Bathroom Visits"
-                        type="number"
-                        placeholder="e.g. 2"
-                        {...register("bathroom_visits")}
-                    />
-                    <Slider
-                        label="Daily Energy (1-10)"
-                        min="1" max="10" step="0.5"
-                        value={dailyEnergy}
-                        {...register("daily_energy")}
-                        className="col-span-2 sm:col-span-1"
-                    />
                     <div className="col-span-2 sm:col-span-1">
-                        <Slider
-                            label="Stress (1-10)"
-                            min="1" max="10" step="0.5"
-                            value={stressLevel}
-                            {...register("stress_level")}
-                        />
+                        <Input label="Bathroom Visits" type="number" {...register("bathroom_visits")} />
+                    </div>
+                    <div className="col-span-2">
+                        <Input label="Digestion Comments" type="text" {...register("digestion_comments")} />
                     </div>
                 </div>
             </section>
 
-            {/* Submit Button */}
+            {/* --- 3. RECUPERO --- */}
+            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-2 mb-4 text-indigo-500">
+                    <Moon size={20} />
+                    <h2 className="font-semibold text-gray-800">3. Recupero (Recovery)</h2>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <Input label="Time Asleep" type="time" {...register("time_asleep")} />
+                    <Input label="Time Awake" type="time" {...register("time_awake")} />
+                    <Input label="HRV (ms)" type="number" {...register("hrv")} />
+                    <Input label="Blood Glucose (mg/dl)" type="number" {...register("blood_glucose")} />
+                    <Input label="Sleep Score (0-100)" type="number" {...register("sleep_score")} />
+                    <div className="col-span-2 sm:col-span-1 mt-1">
+                        <Slider label="Sleep Quality (1-10)" min="1" max="10" step="1" value={sleepQuality} {...register("sleep_quality")} />
+                    </div>
+                </div>
+            </section>
+
+            {/* --- 4. ATTIVITA --- */}
+            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-2 mb-4 text-orange-500">
+                    <Dumbbell size={20} />
+                    <h2 className="font-semibold text-gray-800">4. Attività (Activity)</h2>
+                </div>
+                <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                        <Input label="Daily Steps" type="number" {...register("steps")} />
+                        <Input label="Session Target" type="text" placeholder="e.g. Push" {...register("workout_session")} />
+                        <Input label="Workout Start" type="time" {...register("workout_start_time")} />
+                        <Input label="Workout Duration (mins)" type="number" {...register("workout_duration")} />
+                        <Input label="Cardio HIIT (mins)" type="number" {...register("cardio_hiit_mins")} />
+                        <Input label="Cardio LISS (mins)" type="number" {...register("cardio_liss_mins")} />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <Slider label="Workout Feel (1-10)" min="1" max="10" step="1" value={workoutFeel} {...register("workout_feel")} />
+                        <Slider label="Gym Energy (1-10)" min="1" max="10" step="1" value={gymEnergy} {...register("gym_energy")} />
+                        <div className="sm:col-span-2">
+                            <Slider label="Gym RPE (1-10)" min="1" max="10" step="0.5" value={gymRpe} {...register("gym_rpe")} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* --- 5. BIO FEEDBACK --- */}
+            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-2 mb-4 text-pink-500">
+                    <Heart size={20} />
+                    <h2 className="font-semibold text-gray-800">5. Bio Feedback</h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Slider label="Hunger Level (1-10)" min="1" max="10" step="1" value={hungerLevel} {...register("hunger_level")} />
+                    <Slider label="Daily Energy (1-10)" min="1" max="10" step="1" value={dailyEnergy} {...register("daily_energy")} />
+                    <Slider label="Stress Level (1-10)" min="1" max="10" step="1" value={stressLevel} {...register("stress_level")} />
+                    <Slider label="Libido (1-10)" min="1" max="10" step="1" value={libido} {...register("libido")} />
+                    <div className="sm:col-span-2">
+                        <Slider label="Mood (1-10)" min="1" max="10" step="1" value={mood} {...register("mood")} />
+                    </div>
+                </div>
+            </section>
+
+            {/* --- 6. NOTES & HEALTH --- */}
+            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-2 mb-4 text-emerald-500">
+                    <Stethoscope size={20} />
+                    <h2 className="font-semibold text-gray-800">6. Notes & Health</h2>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="col-span-2">
+                        <Input label="General Notes" type="text" {...register("general_notes")} />
+                    </div>
+                    <Input label="SpO2 (%)" type="number" {...register("spo2")} />
+                    <Input label="Systolic BP" type="number" {...register("sys_bp")} />
+                    <Input label="Diastolic BP" type="number" {...register("dia_bp")} />
+                </div>
+            </section>
+
             {/* Submit & Cancel Buttons */}
             <div className="flex gap-4">
-                <Button
-                    type="submit"
-                    variant="primary"
-                    className="flex-1 text-sm sm:text-base gap-2"
-                >
+                <Button type="submit" variant="primary" className="flex-1 text-sm sm:text-base gap-2">
                     <Save size={18} />
                     {editItem ? "Update Log" : "Save Today's Log"}
                 </Button>
                 {editItem && (
-                    <Button
-                        type="button"
-                        onClick={onClearEdit}
-                        variant="secondary"
-                        className="px-6 text-sm sm:text-base"
-                    >
+                    <Button type="button" onClick={onClearEdit} variant="secondary" className="px-6 text-sm sm:text-base">
                         Cancel
                     </Button>
                 )}

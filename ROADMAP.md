@@ -16,8 +16,8 @@
 - [v] **Logic:** Add macro warning UI for swaps that heavily alter fats or carbs.
 
 ## Phase 3: Dashboard & Full Tracking
-- [ ] DO NOT IMPLEMENT YET: (need to change schema) Expand the Daily Log to include remaining Excel columns (Biofeedback, HRV, Blood Glucose).
-- [v] Implement charting (Recharts) for 7-day weight trends and daily steps.
+- [/] Expand the Daily Log to include all Excel columns (Biofeedback, HRV, Blood Glucose, etc.).
+- [x] Implement charting (Recharts) for 7-day weight trends and daily steps.
 
 ## Phase 4: App Polish
 - [ ] Add `manifest.json` and app icons for "Add to Home Screen" functionality.

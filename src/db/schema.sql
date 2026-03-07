@@ -43,25 +43,42 @@ CREATE TABLE daily_logs (
     
     -- Morning Metrics
     weight_fasting NUMERIC,
+    measurement_time TEXT,
     sleep_hours NUMERIC,
-    sleep_quality TEXT,
+    sleep_quality NUMERIC,
+    time_asleep TEXT,
+    time_awake TEXT,
+    hrv NUMERIC,
+    blood_glucose NUMERIC,
+    sleep_score NUMERIC,
     
     -- Activity
     steps INTEGER,
     cardio_hiit_mins INTEGER,
     cardio_liss_mins INTEGER,
     workout_session TEXT,
+    workout_start_time TEXT,
+    workout_duration INTEGER,
     gym_rpe NUMERIC,
     gym_energy NUMERIC,
-    gym_mood NUMERIC,
+    workout_feel NUMERIC,
     
-    -- Evening/End of Day
+    -- Evening/End of Day & Biofeedback
     water_liters NUMERIC,
     salt_grams NUMERIC,
+    cheat_meals BOOLEAN DEFAULT FALSE,
     digestion_rating TEXT,
+    digestion_comments TEXT,
     bathroom_visits INTEGER,
     stress_level NUMERIC,
     daily_energy NUMERIC,
+    hunger_level NUMERIC,
+    libido NUMERIC,
+    mood NUMERIC,
+    spo2 NUMERIC,
+    sys_bp INTEGER,
+    dia_bp INTEGER,
+    general_notes TEXT,
     
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW(),
