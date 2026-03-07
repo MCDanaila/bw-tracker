@@ -14,12 +14,10 @@
 - [v] **Logic:** Implement the Swap Algorithm (e.g., `(Target Protein / New Food Protein per 1g) = New Weight`).
 - [v] **UI:** Integrate the swap feature into the "Today's Diet" view.
 - [v] **Logic:** Add macro warning UI for swaps that heavily alter fats or carbs.
-- [ ] **Database:** Save the `swapped_food_id` and `swapped_quantity` to the `meal_adherence` table.
 
 ## Phase 3: Dashboard & Full Tracking
-- [ ] Expand the Daily Log to include remaining Excel columns (Biofeedback, HRV, Blood Glucose).
-- [ ] Implement charting (Recharts) for 7-day weight trends and daily steps.
-- [ ] Add weekly diet adherence percentage calculation.
+- [ ] DO NOT IMPLEMENT YET: (need to change schema) Expand the Daily Log to include remaining Excel columns (Biofeedback, HRV, Blood Glucose).
+- [v] Implement charting (Recharts) for 7-day weight trends and daily steps.
 
 ## Phase 4: App Polish
 - [ ] Add `manifest.json` and app icons for "Add to Home Screen" functionality.

@@ -35,6 +35,10 @@ All notable changes to the BW Tracker project will be documented in this file.
   - **Swap Algorithm:** Built a utility that calculates primary macronutrient equivalency (e.g., matching the protein content of 100g Chicken with Salmon) to generate an exact new required quantity.
   - **Interactive Verification:** Added a `SwapPreviewModal` that visualizes the old vs. new food, highlights secondary macro differences, and warns users if a swap drastically alters Fats or Carbs.
   - **UI Integration:** Integrated the engine seamlessly into the Daily Meals table allowing real-time local updates.
+- **Dashboard & Analytics (Phase 3):** Developed the "Stats" tab featuring interactive charts using `recharts`:
+  - **Time Range Filtering:** Users can dynamically view data for the last 7 days, 14 days, 1 month, 3 months, or all time.
+  - **Body Weight Trend:** A responsive `LineChart` visualizing `weight_fasting` with auto-calculating tight domains to highlight micro-fluctuations. Automatically calculates and displays the net weight change across the selected period.
+  - **Daily Steps Goal:** A responsive `BarChart` displaying daily `steps` against a 10,000 step reference line, dynamically coloring bars that successfully hit the target.
 
 ### 🐛 Bug Fixes
 - **TypeScript Import Error:** Fixed `import type` errors in `db.ts` stemming from `verbatimModuleSyntax` rules.

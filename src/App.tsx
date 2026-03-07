@@ -4,6 +4,7 @@ import SyncHeader from "./components/SyncHeader";
 import PendingLogs from "./components/PendingLogs";
 import Auth from "./components/Auth";
 import DietView from "./components/diet/DietView";
+import DashboardView from "./components/dashboard/DashboardView";
 import { useAuth } from "./contexts/AuthContext";
 import { type SyncAction } from "./lib/db";
 import { useState } from "react";
@@ -58,11 +59,7 @@ function App() {
         )}
 
         {currentTab === 'stats' && (
-          <div className="flex flex-col items-center justify-center p-12 text-gray-400 text-center h-[60vh]">
-            <LayoutDashboard size={48} className="mb-4 opacity-50" />
-            <h2 className="text-xl font-medium text-gray-800 mb-2">Statistiche</h2>
-            <p>Le statistiche avanzate non sono ancora disponibili nella versione MVP.</p>
-          </div>
+          <DashboardView />
         )}
       </main>
 
