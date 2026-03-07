@@ -1,8 +1,8 @@
 import { X, ArrowRight, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import type { Food } from '../../types/database';
-import { calculateSwap, type SwapResult } from '../../lib/swapAlgorithm';
+import type { Food } from '@/types/database';
+import { calculateSwap, type SwapResult } from '@/lib/swapAlgorithm';
 import { useMemo } from 'react';
-import { Button } from '../ui/Button';
+import { Button } from '@/components/ui/Button';
 
 interface SwapPreviewModalProps {
     isOpen: boolean;

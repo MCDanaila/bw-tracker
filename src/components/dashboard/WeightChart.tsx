@@ -8,7 +8,7 @@ import {
     ResponsiveContainer
 } from 'recharts';
 import { TrendingDown, TrendingUp, Minus } from 'lucide-react';
-import type { DailyLogChartData } from '../../hooks/useDashboardData';
+import type { DailyLogChartData } from '@/hooks/useDashboardData';
 import { useMemo } from 'react';
 
 interface WeightChartProps {

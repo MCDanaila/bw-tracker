@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../lib/supabase';
-import type { Food } from '../types/database';
+import { supabase } from '@/lib/supabase';
+import type { Food } from '@/types/database';
 
 export const useFoods = () => {
     return useQuery({

@@ -1,10 +1,10 @@
-import type { Food, MealPlan } from '../../types/database';
-import { calculateItemMacros, type DayOfWeek } from '../../hooks/useDietData';
+import type { Food, MealPlan } from '@/types/database';
+import { calculateItemMacros, type DayOfWeek } from '@/hooks/useDietData';
 import { useMemo, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
-import FoodSearchModal from './FoodSearchModal';
-import SwapPreviewModal from './SwapPreviewModal';
-import { type SwapResult } from '../../lib/swapAlgorithm';
+import FoodSearchModal from '@/components/diet/FoodSearchModal';
+import SwapPreviewModal from '@/components/diet/SwapPreviewModal';
+import { type SwapResult } from '@/lib/swapAlgorithm';
 
 interface DailyMealsProps {
     day: DayOfWeek;

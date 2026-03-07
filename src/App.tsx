@@ -1,14 +1,14 @@
 import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff } from "lucide-react";
-import DailyLogForm from "./components/DailyLogForm";
-import SyncHeader from "./components/SyncHeader";
-import PendingLogs from "./components/PendingLogs";
-import Auth from "./components/Auth";
-import DietView from "./components/diet/DietView";
-import DashboardView from "./components/dashboard/DashboardView";
-import { useAuth } from "./contexts/AuthContext";
-import { type SyncAction } from "./lib/db";
+import DailyLogForm from "@/components/DailyLogForm";
+import SyncHeader from "@/components/SyncHeader";
+import PendingLogs from "@/components/PendingLogs";
+import Auth from "@/components/Auth";
+import DietView from "@/components/diet/DietView";
+import DashboardView from "@/components/dashboard/DashboardView";
+import { useAuth } from "@/contexts/AuthContext";
+import { type SyncAction } from "@/lib/db";
 import { useState } from "react";
-import { useNotifications } from './hooks/useNotifications';
+import { useNotifications } from '@/hooks/useNotifications';
 
 type Tab = 'tracker' | 'diet' | 'stats';
 

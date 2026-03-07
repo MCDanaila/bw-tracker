@@ -1,4 +1,4 @@
-import type { DayOfWeek, WeeklyMacros } from '../hooks/useDietData';
+import type { DayOfWeek, WeeklyMacros } from '@/hooks/useDietData';
 
 interface WeeklyOverviewProps {
     weeklyTotals: WeeklyMacros;

@@ -10,7 +10,7 @@ import {
     Cell
 } from 'recharts';
 import { Footprints } from 'lucide-react';
-import type { DailyLogChartData } from '../../hooks/useDashboardData';
+import type { DailyLogChartData } from '@/hooks/useDashboardData';
 
 interface StepsChartProps {
     data: DailyLogChartData[];

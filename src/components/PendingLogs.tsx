@@ -1,7 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Trash2, Edit2, AlertCircle } from "lucide-react";
-import { localDB, type SyncAction } from "../lib/db";
-import { Button } from './ui/Button';
+import { localDB, type SyncAction } from "@/lib/db";
+import { Button } from '@/components/ui/Button';
 
 interface PendingLogsProps {
     onEdit: (action: SyncAction) => void;

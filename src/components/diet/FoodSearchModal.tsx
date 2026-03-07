@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { useFoods } from '../../hooks/useFoods';
-import type { Food } from '../../types/database';
+import { useFoods } from '@/hooks/useFoods';
+import type { Food } from '@/types/database';
 import { Search, X, Loader2 } from 'lucide-react';
 
 interface FoodSearchModalProps {

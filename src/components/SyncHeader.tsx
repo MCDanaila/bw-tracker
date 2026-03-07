@@ -1,8 +1,8 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { CloudOff, CheckCircle2, RefreshCw } from "lucide-react";
-import { localDB } from "../lib/db";
-import { useSync } from "../hooks/useSync";
-import { Button } from './ui/Button';
+import { localDB } from "@/lib/db";
+import { useSync } from "@/hooks/useSync";
+import { Button } from '@/components/ui/Button';
 
 export default function SyncHeader() {
     // Watch Dexie for how many items are pending

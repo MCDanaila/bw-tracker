@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
-import { useDietData, useWeeklyOverview, type DayOfWeek } from '../../hooks/useDietData';
-import WeeklyOverview from './WeeklyOverview';
-import DailyMeals from './DailyMeals';
+import { useDietData, useWeeklyOverview, type DayOfWeek } from '@/hooks/useDietData';
+import WeeklyOverview from '@/components/diet/WeeklyOverview';
+import DailyMeals from '@/components/diet/DailyMeals';
 import { Loader2 } from 'lucide-react';
 
 export default function DietView() {

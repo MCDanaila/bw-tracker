@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useDashboardData, type TimeRange } from '../../hooks/useDashboardData';
+import { useDashboardData, type TimeRange } from '@/hooks/useDashboardData';
 import { Loader2 } from 'lucide-react';
-import WeightChart from './WeightChart';
-import StepsChart from './StepsChart';
+import WeightChart from '@/components/dashboard/WeightChart';
+import StepsChart from '@/components/dashboard/StepsChart';
 
 const TIME_RANGES: { value: TimeRange; label: string }[] = [
     { value: '7d', label: '7g' },

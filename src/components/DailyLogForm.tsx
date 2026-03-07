@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import { Sun, Dumbbell, Moon, Save, Heart, Stethoscope, Target } from "lucide-react";
-import { localDB, type SyncAction } from "../lib/db";
+import { localDB, type SyncAction } from "@/lib/db";
 import { useEffect } from "react";
-import { useAuth } from "../contexts/AuthContext";
-import { Input } from "./ui/Input";
-import { Select } from "./ui/Select";
-import { Slider } from "./ui/Slider";
-import { Button } from "./ui/Button";
+import { useAuth } from "@/contexts/AuthContext";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
+import { Slider } from "@/components/ui/Slider";
+import { Button } from "@/components/ui/Button";
 
 interface DailyLogFormProps {
     editItem?: SyncAction | null;

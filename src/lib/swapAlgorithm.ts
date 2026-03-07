@@ -1,5 +1,5 @@
-import type { Food } from '../types/database';
-import { calculateItemMacros } from '../hooks/useDietData';
+import type { Food } from '@/types/database';
+import { calculateItemMacros } from '@/hooks/useDietData';
 
 export type PrimaryMacro = 'P' | 'C' | 'G';
 

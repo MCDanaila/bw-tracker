@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { localDB } from '../lib/db';
-import { supabase } from '../lib/supabase';
+import { localDB } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 export function useSync() {
     return useMutation({
