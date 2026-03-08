@@ -2,7 +2,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { CloudOff, CheckCircle2, RefreshCw } from "lucide-react";
 import { localDB } from "@/lib/db";
 import { useSync } from "@/hooks/useSync";
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 export default function SyncHeader() {
     // Watch Dexie for how many items are pending
@@ -15,17 +15,17 @@ export default function SyncHeader() {
     const syncMutation = useSync();
 
     return (
-        <header className="bg-white p-4 shadow-sm sticky top-0 z-10 flex justify-between items-center">
+        <header className="bg-card/95 backdrop-blur border-b border-border/50 p-4 sticky top-0 z-10 flex justify-between items-center text-card-foreground">
             <div>
-                <h1 className="text-xl font-bold text-gray-900">BW Tracker</h1>
+                <h1 className="text-xl font-bold text-foreground">BW Tracker</h1>
 
                 {/* Dynamic Status Text */}
                 {pendingCount === 0 ? (
-                    <p className="text-xs text-green-600 font-medium flex items-center gap-1 mt-1">
+                    <p className="text-xs text-primary font-medium flex items-center gap-1 mt-1">
                         <CheckCircle2 size={12} /> Synced
                     </p>
                 ) : (
-                    <p className="text-xs text-orange-500 font-medium flex items-center gap-1 mt-1">
+                    <p className="text-xs text-secondary font-medium flex items-center gap-1 mt-1">
                         <CloudOff size={12} /> {pendingCount} Pending
                     </p>
                 )}
@@ -36,7 +36,7 @@ export default function SyncHeader() {
                 <Button
                     onClick={() => syncMutation.mutate()}
                     isLoading={syncMutation.isPending}
-                    variant="primary"
+                    variant="default"
                     size="sm"
                 >
                     {!syncMutation.isPending && <RefreshCw size={16} />}

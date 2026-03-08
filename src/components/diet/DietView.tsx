@@ -3,6 +3,7 @@ import { useDietData, useWeeklyOverview, type DayOfWeek } from '@/hooks/useDietD
 import WeeklyOverview from '@/components/diet/WeeklyOverview';
 import DailyMeals from '@/components/diet/DailyMeals';
 import { Loader2 } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function DietView() {
     const { data: mealPlans, isLoading, error } = useDietData();
@@ -26,7 +27,7 @@ export default function DietView() {
 
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center p-12 text-gray-400">
+            <div className="flex flex-col items-center justify-center p-12 text-muted-foreground">
                 <Loader2 className="animate-spin mb-4" size={32} />
                 <p>Caricamento piano alimentare...</p>
             </div>
@@ -42,40 +43,46 @@ export default function DietView() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
-            <h2 className="text-xl font-bold text-gray-800">Piano Alimentare</h2>
+        <div className="max-w-4xl mx-auto space-y-6 animate-fade-in text-foreground">
+            <h2 className="text-xl font-bold">Piano Alimentare</h2>
 
             <section>
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                    Weekly Overview
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                        Weekly Overview
+                    </h3>
+                </div>
                 <WeeklyOverview {...overviewData} />
             </section>
 
             <section>
                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-                        Daily View &gt; {selectedDay}
+                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                        Daily Meals
                     </h3>
-
-                    {/* Day Selector (for testing / viewing other days) */}
-                    <div className="flex gap-1 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0">
-                        {overviewData.days.map(day => (
-                            <button
-                                key={day}
-                                onClick={() => setSelectedDay(day)}
-                                className={`
-                                    px-3 py-1.5 text-xs font-medium rounded-full whitespace-nowrap transition-colors
-                                    ${selectedDay === day
-                                        ? 'bg-[#8b76c8] text-white shadow-sm'
-                                        : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-                                    }
-                                `}
-                            >
-                                {day}
-                            </button>
-                        ))}
-                    </div>
+                </div>
+                <div className="w-full mb-4">
+                    <Tabs
+                        value={selectedDay}
+                        onValueChange={(val) => setSelectedDay(val as DayOfWeek)}
+                        className="w-full"
+                    >
+                        <div className="w-full rounded-2xl bg-muted p-2">
+                            <TabsList className="grid w-full !h-auto grid-cols-4 md:grid-cols-7 gap-2 bg-transparent p-0">                                {overviewData.days.map((day) => (
+                                <TabsTrigger
+                                    key={day}
+                                    value={day}
+                                    className="w-full min-h-[44px] rounded-xl px-3 py-2 text-sm font-semibold
+             data-[state=active]:bg-background
+             data-[state=active]:text-foreground
+             data-[state=active]:shadow-sm"
+                                >
+                                    {day}
+                                </TabsTrigger>
+                            ))}
+                            </TabsList>
+                        </div>
+                    </Tabs>
                 </div>
 
                 <DailyMeals day={selectedDay} mealPlans={selectedDayMeals} />

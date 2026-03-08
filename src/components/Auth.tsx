@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Mail, Lock, LogIn, UserPlus } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true);
@@ -43,17 +43,17 @@ export default function Auth() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
-            <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+        <div className="min-h-screen bg-background flex flex-col justify-center items-center p-4">
+            <div className="w-full max-w-md bg-card rounded-2xl shadow-sm border border-border/50 p-8 text-card-foreground">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">BW Tracker</h1>
-                    <p className="text-gray-500">
+                    <h1 className="text-3xl font-bold text-foreground mb-2">BW Tracker</h1>
+                    <p className="text-muted-foreground">
                         {isLogin ? 'Welcome back! Please sign in.' : 'Create your account.'}
                     </p>
                 </div>
 
                 {error && (
-                    <div className="bg-red-50 text-red-600 p-4 rounded-lg text-sm mb-6 border border-red-100">
+                    <div className="bg-destructive/10 text-destructive p-4 rounded-lg text-sm mb-6 border border-destructive/20">
                         {error}
                     </div>
                 )}
@@ -100,7 +100,7 @@ export default function Auth() {
                             setIsLogin(!isLogin);
                             setError(null);
                         }}
-                        className="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+                        className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                     >
                         {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
                     </button>

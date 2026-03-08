@@ -1,10 +1,11 @@
 import type { Food, MealPlan } from '@/types/database';
 import { calculateItemMacros, type DayOfWeek } from '@/hooks/useDietData';
 import { useMemo, useState } from 'react';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, ChevronDown } from 'lucide-react';
 import FoodSearchModal from '@/components/diet/FoodSearchModal';
 import SwapPreviewModal from '@/components/diet/SwapPreviewModal';
 import { type SwapResult } from '@/lib/swapAlgorithm';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 
 interface DailyMealsProps {
     day: DayOfWeek;
@@ -33,11 +34,11 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
     };
 
     const handleSelectNewFood = (food: Food) => {
-        setSwapState({ 
-            ...swapState, 
-            isSearchOpen: false, 
-            isPreviewOpen: true, 
-            selectedNewFood: food 
+        setSwapState({
+            ...swapState,
+            isSearchOpen: false,
+            isPreviewOpen: true,
+            selectedNewFood: food
         });
     };
 
@@ -51,7 +52,7 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                 }
             }));
         }
-        
+
         setSwapState({
             isSearchOpen: false,
             isPreviewOpen: false,
@@ -103,19 +104,14 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
 
     if (mealPlans.length === 0) {
         return (
-            <div className="text-center p-8 bg-white rounded-xl shadow-sm border border-gray-100">
-                <p className="text-gray-500">Nessun piano alimentare per {day}</p>
+            <div className="text-center p-8 bg-card rounded-xl shadow-sm border border-border/50 text-card-foreground">
+                <p className="text-muted-foreground">Nessun piano alimentare per {day}</p>
             </div>
         );
     }
 
     return (
         <div className="flex flex-col gap-6">
-            {/* Header Title */}
-            <div className="bg-[#8b76c8] text-white text-center py-2 rounded-t-xl font-bold uppercase tracking-wider shadow-sm">
-                {day}
-            </div>
-
             {/* Render Each Meal Group */}
             {mealNames.map((mealName) => {
                 const items = mealsByGroup[mealName];
@@ -125,7 +121,7 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                     const localSwap = localSwaps[plan.id];
                     const activeFood = localSwap ? localSwap.food : plan.foods;
                     const activeQuantity = localSwap ? localSwap.quantity : plan.target_quantity;
-                    
+
                     const macros = calculateItemMacros(activeFood, activeQuantity);
                     return {
                         kcal: acc.kcal + macros.kcal,
@@ -136,95 +132,82 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                 }, { kcal: 0, p: 0, c: 0, g: 0 });
 
                 return (
-                    <div key={mealName} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm text-left">
-                                <thead>
-                                    <tr className="bg-[#8b76c8] text-white text-xs text-center border-b border-[#9b88d2]">
-                                        <th className="p-2 w-24 border-r border-[#9b88d2] font-semibold">{mealName.toUpperCase()}</th>
-                                        <th className="p-2 border-r border-[#9b88d2] font-semibold border-b border-b-white/20">ALIMENTO</th>
-                                        <th className="p-2 border-r border-[#9b88d2] font-semibold border-b border-b-white/20">QUANTITÀ</th>
-                                        <th className="p-2 border-r border-[#9b88d2] font-semibold text-[10px] leading-tight border-b border-b-white/20">UNITÀ DI<br />MISURA</th>
-                                        <th className="p-2 border-r border-[#9b88d2] font-semibold border-b border-b-white/20">KCAL</th>
-                                        <th className="p-2 border-r border-[#9b88d2] font-semibold border-b border-b-white/20">P</th>
-                                        <th className="p-2 border-r border-[#9b88d2] font-semibold border-b border-b-white/20">C</th>
-                                        <th className="p-2 font-semibold border-b border-b-white/20">G</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="text-gray-700 text-center">
-                                    {items.map((plan, index) => {
+                    <Collapsible key={mealName} defaultOpen className="bg-card rounded-xl shadow-sm border border-border/50 overflow-hidden text-card-foreground">
+                        <div className="p-4 sm:p-5">
+                            {/* Header row */}
+                            <div className="flex justify-between items-start mb-2">
+                                <div className="flex items-center gap-2">
+                                    <h3 className="font-bold text-foreground text-lg capitalize">
+                                        {mealName.toLowerCase()}
+                                    </h3>
+                                    <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                        {mealName}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Macros summary */}
+                            <div className="text-sm font-medium text-muted-foreground mb-4 flex gap-2 flex-wrap items-center">
+                                <span>C {formatNumber(mealTotals.c, 0)}g</span>
+                                <span className="opacity-30">|</span>
+                                <span>P {formatNumber(mealTotals.p, 0)}g</span>
+                                <span className="opacity-30">|</span>
+                                <span>G {formatNumber(mealTotals.g, 0)}g</span>
+                                <span className="opacity-50 ml-1">•</span>
+                                <span className="text-primary ml-1">{formatNumber(mealTotals.kcal, 0)} kcal</span>
+                            </div>
+
+                            {/* Separator & Trigger */}
+                            <div className="border-t border-border/50 pt-3">
+                                <CollapsibleTrigger className="flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary w-full text-left transition-colors group outline-none">
+                                    <ChevronDown size={16} className="text-muted-foreground group-data-[state=open]:rotate-180 transition-transform duration-200" />
+                                    Alimenti
+                                </CollapsibleTrigger>
+                            </div>
+
+                            {/* Expanded Content */}
+                            <CollapsibleContent className="CollapsibleContent">
+                                <div className="space-y-4 mt-4">
+                                    {items.map(plan => {
                                         const localSwap = localSwaps[plan.id];
                                         const isSwapped = !!localSwap;
-                                        
                                         const food = isSwapped ? localSwap.food : plan.foods;
                                         const quantity = isSwapped ? localSwap.quantity : plan.target_quantity;
-                                        const macros = calculateItemMacros(food, quantity);
 
-                                        // Row style: light pink for the meal name column to match screenshot
                                         return (
-                                            <tr key={plan.id} className="border-b border-gray-50">
-                                                {/* Meal name column only on first row, with styling */}
-                                                {index === 0 ? (
-                                                    <td rowSpan={items.length + 2} className="p-2 bg-[#d797ab] text-white font-bold text-center border-r border-white align-middle">
-                                                        {mealName.toUpperCase()}
-                                                    </td>
-                                                ) : null}
-
-                                                {/* Note: the screenshot shows "INTEGRAZIONE" header rows. We'll simplify by just rendering items. 
-                                                    If integration is heavily mixed, we'd need more complex grouping. */}
-                                                <td className="p-2 border-r border-gray-100 font-medium text-left">
-                                                    <div className="flex items-center justify-between gap-2">
-                                                        <span className={isSwapped ? "text-[#8b76c8]" : ""}>
-                                                            {food?.name || 'Unknown Food'}
-                                                        </span>
-                                                        <button 
-                                                            onClick={() => handleOpenSwapSearch(plan)}
-                                                            className={`p-1.5 rounded-full transition-colors ${
-                                                                isSwapped 
-                                                                    ? "bg-[#8b76c8]/10 text-[#8b76c8] hover:bg-[#8b76c8]/20" 
-                                                                    : "text-gray-400 hover:text-[#8b76c8] hover:bg-gray-100"
-                                                            }`}
-                                                            title="Sostituisci"
-                                                        >
-                                                            <RefreshCw size={14} className={isSwapped ? "stroke-[2.5px]" : ""} />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td className="p-2 border-r border-gray-100">
-                                                    <span className={isSwapped ? "font-bold text-[#8b76c8]" : ""}>{quantity}</span>
-                                                </td>
-                                                <td className="p-2 border-r border-gray-100">{food?.unit || 'g'}</td>
-                                                <td className="p-2 border-r border-gray-100">{formatNumber(macros.kcal)}</td>
-                                                <td className="p-2 border-r border-gray-100">{formatNumber(macros.p)}</td>
-                                                <td className="p-2 border-r border-gray-100">{formatNumber(macros.c)}</td>
-                                                <td className="p-2">{formatNumber(macros.g)}</td>
-                                            </tr>
+                                            <div key={plan.id} className="flex justify-between items-center group/item pl-6">
+                                                <div className="flex items-baseline gap-2">
+                                                    <span className={`text-sm font-medium ${isSwapped ? 'text-primary' : 'text-foreground'}`}>
+                                                        {food?.name || 'Unknown Food'}
+                                                    </span>
+                                                    <span className="text-sm text-muted-foreground">
+                                                        {quantity}{food?.unit || 'g'}
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleOpenSwapSearch(plan)}
+                                                    className={`p-1.5 rounded-full transition-colors shrink-0 ${isSwapped ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-primary hover:bg-muted/50 sm:opacity-0 group-hover/item:opacity-100"
+                                                        }`}
+                                                    title="Sostituisci"
+                                                >
+                                                    <RefreshCw size={14} className={isSwapped ? "stroke-[2.5px]" : ""} />
+                                                </button>
+                                            </div>
                                         );
                                     })}
-
-                                    {/* MEAL TOTAL ROW */}
-                                    <tr className="bg-[#f2d0db] font-semibold text-[#8a1c40]">
-                                        <td colSpan={3} className="p-2 text-center border-r border-white uppercase text-xs tracking-wider">
-                                            MEAL TOTAL
-                                        </td>
-                                        <td className="p-2 border-r border-white">{formatNumber(mealTotals.kcal, 0)}</td>
-                                        <td className="p-2 border-r border-white">{formatNumber(mealTotals.p, 0)}</td>
-                                        <td className="p-2 border-r border-white">{formatNumber(mealTotals.c, 0)}</td>
-                                        <td className="p-2">{formatNumber(mealTotals.g, 0)}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                </div>
+                            </CollapsibleContent>
                         </div>
-                    </div>
+                    </Collapsible>
                 );
             })}
             {/* Modals placed outside the mapping */}
-            <FoodSearchModal 
-                isOpen={swapState.isSearchOpen} 
+            <FoodSearchModal
+                isOpen={swapState.isSearchOpen}
                 onClose={() => setSwapState(s => ({ ...s, isSearchOpen: false }))}
                 onSelectFood={handleSelectNewFood}
             />
-            
+
             <SwapPreviewModal
                 isOpen={swapState.isPreviewOpen}
                 onClose={() => setSwapState(s => ({ ...s, isPreviewOpen: false }))}

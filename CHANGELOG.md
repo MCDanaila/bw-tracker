@@ -5,6 +5,31 @@ All notable changes to the BW Tracker project will be documented in this file.
 ## [Unreleased] - Current State
 
 ### ✨ Features
+- **Shadcn UI Integration:** Replaced the legacy custom `src/components/ui/` with official `shadcn/ui` components for better consistency, accessibility, and theming:
+  - `Button`, `Input`, `Select`, `Slider`, `Card`, `Table`, `Tabs`, `Dialog`, `ScrollArea`, `Badge`, `Collapsible`, and `Chart`.
+- **Shadcn Charts Architecture:** Refactored `WeightChart.tsx` and `StepsChart.tsx` to utilize the modern Shadcn Chart wrapper, which provides a cleaner API over Recharts and automatically syncs with the application's CSS variables.
+- **Weekly Overview Redesign:** 
+  - Created a dual-view system for the Weekly Diet Overview: 
+    - **Charts Mode:** Visualizes weekly calorie and macro averages using interactive BarCharts.
+    - **Table Mode:** Transposes the 8-column data grid into a vertical list, perfecting the experience for mobile users without horizontal scrolling.
+  - Implemented a unified `Tabs` toggle in the header to switch between "Grafici" and "Tabella" views.
+- **Diet Tab Enhancements:** 
+  - Refactored "Daily Meals" day-of-week selection into a responsive 2-row grid for better mobile ergonomics.
+  - Improved meal card aesthetics with cleaner spacing, backgrounds, and integrated Lucide icons.
+- **Theme Standardization:** Standardized all UI elements to use the default Shadcn "Zinc" theme variables, ensuring unified dark/light support across charts and components.
+
+### 🐛 Bug Fixes
+- **Chart Color Visibility:** Resolved an issue where chart lines and columns were rendering black by stripping redundant `hsl()` wrappers around CSS variables that already contained their own color space declarations.
+- **Theme Inconsistency:** Removed hardcoded light-mode background classes (`bg-white`, `bg-gray-50`) from core layout files (`App.tsx`, `Auth.tsx`, `DailyLogForm.tsx`, etc.) to fix dark mode visual bugs.
+- **Mobile Overflow:** Fixed a visual overlap bug where the daily tabs were clipping into the meal cards by introducing a padded grid container with optimized row spacing.
+
+### 💅 Polish / Architecture
+- **Component Cleanup:** Deleted obsolete prototype components (`WeeklyOverviewCharts`, `WeeklyOverviewCards`, etc.) and the old `ui-old` folder.
+- **Improved Performance:** Optimized `Recharts` rendering by moving domains and averages into `useMemo` hooks.
+
+## [0.1.0] - Initial MVP
+
+### ✨ Features
 - **Application Setup:** Initialized an offline-first responsive React app using Vite, TypeScript, and Tailwind CSS.
 - **Offline Storage (`Dexie.js`):** Implemented an IndexedDB local queue (`syncQueue`) to save logs even without an internet connection.
 - **Daily Log Form:** Created a comprehensive form with three distinct sections:

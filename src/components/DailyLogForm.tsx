@@ -3,10 +3,10 @@ import { Sun, Dumbbell, Moon, Save, Heart, Stethoscope, Target } from "lucide-re
 import { localDB, type SyncAction } from "@/lib/db";
 import { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
-import { Slider } from "@/components/ui/Slider";
-import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
 
 interface DailyLogFormProps {
     editItem?: SyncAction | null;
@@ -208,36 +208,36 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pb-24">
 
             {/* --- DAILY GOALS OVERVIEW --- */}
-            <section className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl shadow-sm border border-blue-100 mb-6">
-                <div className="flex items-center gap-2 mb-3 text-blue-800">
+            <section className="bg-gradient-to-r from-primary/10 to-secondary/10 p-4 rounded-xl shadow-sm border border-primary/20 mb-6 text-card-foreground">
+                <div className="flex items-center gap-2 mb-3 text-primary font-bold">
                     <Target size={20} />
                     <h2 className="font-semibold">Daily Goals Overview</h2>
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
-                    <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-50 text-center">
-                        <div className="text-gray-500 font-medium mb-1">Acqua / Sale</div>
-                        <div className="text-blue-700 font-semibold">4-6 L / 6g</div>
+                    <div className="bg-card p-3 rounded-lg shadow-sm border border-border/50 text-center">
+                        <div className="text-muted-foreground font-medium mb-1">Acqua / Sale</div>
+                        <div className="text-primary font-semibold">4-6 L / 6g</div>
                     </div>
-                    <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-50 text-center">
-                        <div className="text-gray-500 font-medium mb-1">Sonno (Sleep)</div>
-                        <div className="text-blue-700 font-semibold">&gt; 8 hours</div>
+                    <div className="bg-card p-3 rounded-lg shadow-sm border border-border/50 text-center">
+                        <div className="text-muted-foreground font-medium mb-1">Sonno (Sleep)</div>
+                        <div className="text-primary font-semibold">&gt; 8 hours</div>
                     </div>
-                    <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-50 text-center">
-                        <div className="text-gray-500 font-medium mb-1">Passi (Steps)</div>
-                        <div className="text-blue-700 font-semibold">10k / day</div>
+                    <div className="bg-card p-3 rounded-lg shadow-sm border border-border/50 text-center">
+                        <div className="text-muted-foreground font-medium mb-1">Passi (Steps)</div>
+                        <div className="text-primary font-semibold">10k / day</div>
                     </div>
-                    <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-50 text-center">
-                        <div className="text-gray-500 font-medium mb-1">Cardio</div>
-                        <div className="text-blue-700 font-semibold">150' / week</div>
+                    <div className="bg-card p-3 rounded-lg shadow-sm border border-border/50 text-center">
+                        <div className="text-muted-foreground font-medium mb-1">Cardio</div>
+                        <div className="text-primary font-semibold">150' / week</div>
                     </div>
                 </div>
             </section>
 
             {/* --- 1. MORNING CHECK-IN --- */}
-            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center gap-2 mb-4 text-amber-500">
+            <section className="bg-card text-card-foreground p-5 rounded-xl shadow-sm border border-border/50">
+                <div className="flex items-center gap-2 mb-4 text-accent">
                     <Sun size={20} />
-                    <h2 className="font-semibold text-gray-800">1. Morning Check-In</h2>
+                    <h2 className="font-semibold text-foreground">1. Morning Check-In</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <Input label="Weight (kg)" type="number" step="0.1" {...register("weight_fasting", { required: true })} error={errors.weight_fasting ? "Required" : undefined} />
@@ -249,10 +249,10 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
             </section>
 
             {/* --- 2. MORNING BIOFEEDBACK --- */}
-            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center gap-2 mb-4 text-pink-500">
+            <section className="bg-card text-card-foreground p-5 rounded-xl shadow-sm border border-border/50">
+                <div className="flex items-center gap-2 mb-4 text-secondary">
                     <Heart size={20} />
-                    <h2 className="font-semibold text-gray-800">2. Morning Biofeedback</h2>
+                    <h2 className="font-semibold text-foreground">2. Morning Biofeedback</h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Slider label="Sleep Quality (1-10)" min="1" max="10" step="1" value={sleepQuality} {...register("sleep_quality")} />
@@ -268,10 +268,10 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
             </section>
 
             {/* --- 3. TRAINING LOG --- */}
-            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center gap-2 mb-4 text-orange-500">
+            <section className="bg-card text-card-foreground p-5 rounded-xl shadow-sm border border-border/50">
+                <div className="flex items-center gap-2 mb-4 text-primary">
                     <Dumbbell size={20} />
-                    <h2 className="font-semibold text-gray-800">3. Training Log</h2>
+                    <h2 className="font-semibold text-foreground">3. Training Log</h2>
                 </div>
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
@@ -295,18 +295,18 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
             </section>
 
             {/* --- 4. END OF DAY --- */}
-            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center gap-2 mb-4 text-indigo-500">
+            <section className="bg-card text-card-foreground p-5 rounded-xl shadow-sm border border-border/50">
+                <div className="flex items-center gap-2 mb-4 text-accent">
                     <Moon size={20} />
-                    <h2 className="font-semibold text-gray-800">4. End of Day</h2>
+                    <h2 className="font-semibold text-foreground">4. End of Day</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <Input label="Water (Liters)" type="number" step="0.1" {...register("water_liters")} />
                     <Input label="Salt (Grams)" type="number" step="0.1" {...register("salt_grams")} />
                     <div className="col-span-2 sm:col-span-1 flex items-center mt-2">
-                        <label className="flex items-center gap-2">
-                            <input type="checkbox" {...register("cheat_meals")} className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                            <span className="text-sm font-medium text-gray-700">Pasti Liberi (Cheat Meal)</span>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" {...register("cheat_meals")} className="w-5 h-5 rounded border-border text-primary focus:ring-primary accent-primary" />
+                            <span className="text-sm font-medium text-foreground">Pasti Liberi (Cheat Meal)</span>
                         </label>
                     </div>
                     <div className="col-span-2 sm:col-span-1">
@@ -335,10 +335,10 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
             </section>
 
             {/* --- 5. WEEKLY CHECK-INS (OPTIONAL) --- */}
-            <section className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div className="flex items-center gap-2 mb-4 text-emerald-500">
+            <section className="bg-card text-card-foreground p-5 rounded-xl shadow-sm border border-border/50">
+                <div className="flex items-center gap-2 mb-4 text-primary">
                     <Stethoscope size={20} />
-                    <h2 className="font-semibold text-gray-800">5. Weekly Check-In (Optional)</h2>
+                    <h2 className="font-semibold text-foreground">5. Weekly Check-In (Optional)</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <Input label="Fasting Blood Glucose (mg/dl)" type="number" {...register("blood_glucose")} />
@@ -352,7 +352,7 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
 
             {/* Submit & Cancel Buttons */}
             <div className="flex gap-4">
-                <Button type="submit" variant="primary" className="flex-1 text-sm sm:text-base gap-2">
+                <Button type="submit" variant="default" className="flex-1 text-sm sm:text-base gap-2">
                     <Save size={18} />
                     {editItem ? "Update Log" : "Save Today's Log"}
                 </Button>

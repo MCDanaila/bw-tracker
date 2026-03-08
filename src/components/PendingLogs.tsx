@@ -1,7 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { Trash2, Edit2, AlertCircle } from "lucide-react";
 import { localDB, type SyncAction } from "@/lib/db";
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 interface PendingLogsProps {
     onEdit: (action: SyncAction) => void;
@@ -24,8 +24,8 @@ export default function PendingLogs({ onEdit }: PendingLogsProps) {
 
     return (
         <div className="mt-8 mb-24 space-y-4">
-            <h2 className="font-bold text-gray-800 flex items-center gap-2">
-                <AlertCircle size={20} className="text-orange-500" />
+            <h2 className="font-bold text-foreground flex items-center gap-2">
+                <AlertCircle size={20} className="text-secondary" />
                 Pending Logs ({pendingLogs.length})
             </h2>
 
@@ -37,10 +37,10 @@ export default function PendingLogs({ onEdit }: PendingLogsProps) {
                     const steps = log.payload?.steps ? `${log.payload.steps} steps` : 'No steps';
 
                     return (
-                        <div key={log.id} className="bg-white p-4 rounded-xl shadow-sm border border-orange-100 flex justify-between items-center">
+                        <div key={log.id} className="bg-card p-4 rounded-xl shadow-sm border border-border/50 flex justify-between items-center text-card-foreground">
                             <div>
-                                <p className="font-medium text-gray-800">{displayDate}</p>
-                                <p className="text-xs text-gray-500 mt-1">{weight} • {steps}</p>
+                                <p className="font-medium text-foreground">{displayDate}</p>
+                                <p className="text-xs text-muted-foreground mt-1">{weight} • {steps}</p>
                             </div>
                             <div className="flex gap-2">
                                 <Button
