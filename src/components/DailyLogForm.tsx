@@ -215,15 +215,15 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
                     <div className="bg-card p-3 rounded-lg shadow-sm border border-border/50 text-center">
-                        <div className="text-muted-foreground font-medium mb-1">Acqua / Sale</div>
+                        <div className="text-muted-foreground font-medium mb-1">Water / Salt</div>
                         <div className="text-primary font-semibold">4-6 L / 6g</div>
                     </div>
                     <div className="bg-card p-3 rounded-lg shadow-sm border border-border/50 text-center">
-                        <div className="text-muted-foreground font-medium mb-1">Sonno (Sleep)</div>
+                        <div className="text-muted-foreground font-medium mb-1">Sleep</div>
                         <div className="text-primary font-semibold">&gt; 8 hours</div>
                     </div>
                     <div className="bg-card p-3 rounded-lg shadow-sm border border-border/50 text-center">
-                        <div className="text-muted-foreground font-medium mb-1">Passi (Steps)</div>
+                        <div className="text-muted-foreground font-medium mb-1">Steps</div>
                         <div className="text-primary font-semibold">10k / day</div>
                     </div>
                     <div className="bg-card p-3 rounded-lg shadow-sm border border-border/50 text-center">
@@ -241,7 +241,7 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <Input label="Weight (kg)" type="number" step="0.1" {...register("weight_fasting", { required: true })} error={errors.weight_fasting ? "Required" : undefined} />
-                    <Input label="Time (ore/min)" type="time" {...register("measurement_time")} />
+                    <Input label="Time" type="time" {...register("measurement_time")} />
                     <Input label="Sleep (hrs)" type="number" step="0.5" {...register("sleep_hours")} />
                     <Input label="Sleep Score (0-100)" type="number" {...register("sleep_score")} />
                     <Input label="HRV (ms)" type="number" {...register("hrv")} />
@@ -306,7 +306,7 @@ export default function DailyLogForm({ editItem, onClearEdit }: DailyLogFormProp
                     <div className="col-span-2 sm:col-span-1 flex items-center mt-2">
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" {...register("cheat_meals")} className="w-5 h-5 rounded border-border text-primary focus:ring-primary accent-primary" />
-                            <span className="text-sm font-medium text-foreground">Pasti Liberi (Cheat Meal)</span>
+                            <span className="text-sm font-medium text-foreground">Cheat Meals</span>
                         </label>
                     </div>
                     <div className="col-span-2 sm:col-span-1">

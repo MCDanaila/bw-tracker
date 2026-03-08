@@ -31,7 +31,7 @@ export default function StepsChart({ data, targetSteps = 10000 }: StepsChartProp
         return (
             <Card className="flex flex-col items-center justify-center h-64 mt-6">
                 <CardContent className="pt-6">
-                    <p className="text-muted-foreground text-sm">Nessun dato sui passi disponibile</p>
+                    <p className="text-muted-foreground text-sm">No step data available</p>
                 </CardContent>
             </Card>
         );
@@ -42,7 +42,7 @@ export default function StepsChart({ data, targetSteps = 10000 }: StepsChartProp
             <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-foreground">
                     <Footprints size={18} className="text-primary" />
-                    Andamento Passi
+                    Steps Trend
                 </CardTitle>
             </CardHeader>
             <CardContent>

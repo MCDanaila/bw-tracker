@@ -6,11 +6,11 @@ import StepsChart from '@/components/dashboard/StepsChart';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const TIME_RANGES: { value: TimeRange; label: string }[] = [
-    { value: '7d', label: '7g' },
-    { value: '14d', label: '14g' },
+    { value: '7d', label: '7d' },
+    { value: '14d', label: '14d' },
     { value: '1m', label: '1m' },
     { value: '3m', label: '3m' },
-    { value: 'all', label: 'Tutto' }
+    { value: 'all', label: 'All' }
 ];
 
 export default function DashboardView() {
@@ -20,7 +20,7 @@ export default function DashboardView() {
     if (error) {
         return (
             <div className="p-8 text-center text-red-500">
-                Errore nel caricamento delle statistiche.
+                Error loading statistics.
             </div>
         );
     }
@@ -29,7 +29,7 @@ export default function DashboardView() {
         <div className="w-full max-w-md mx-auto p-4 pb-24 space-y-6 animate-fade-in text-foreground">
             {/* Header & Range Selector */}
             <div className="flex flex-col gap-4">
-                <h1 className="text-2xl font-black tracking-tight">Statistiche</h1>
+                <h1 className="text-2xl font-black tracking-tight">Statistics</h1>
 
                 <Tabs value={range} onValueChange={(value) => setRange(value as TimeRange)} className="w-full">
                     <TabsList className="w-full grid grid-cols-5 h-9 bg-muted/50 text-muted-foreground p-1">
@@ -50,7 +50,7 @@ export default function DashboardView() {
             {isLoading ? (
                 <div className="flex flex-col items-center justify-center h-64 text-muted-foreground gap-3">
                     <Loader2 className="animate-spin text-primary" size={32} />
-                    <span className="text-sm font-medium">Elaborazione dati...</span>
+                    <span className="text-sm font-medium">Processing data...</span>
                 </div>
             ) : (
                 <>

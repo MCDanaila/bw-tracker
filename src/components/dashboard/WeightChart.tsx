@@ -63,7 +63,7 @@ export default function WeightChart({ data }: WeightChartProps) {
         return (
             <Card className="flex flex-col items-center justify-center h-64 mt-6">
                 <CardContent className="pt-6">
-                    <p className="text-muted-foreground text-sm">Nessun dato sul peso disponibile</p>
+                    <p className="text-muted-foreground text-sm">No weight data available</p>
                 </CardContent>
             </Card>
         );
@@ -72,7 +72,7 @@ export default function WeightChart({ data }: WeightChartProps) {
     return (
         <Card className="mt-6">
             <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2">Andamento Peso</CardTitle>
+                <CardTitle className="flex items-center gap-2">Weight Trend</CardTitle>
                 {trendStats && (
                     <CardDescription className="flex items-center gap-1 mt-1 font-medium">
                         {trendStats.isDown && <TrendingDown size={16} className="text-primary" />}

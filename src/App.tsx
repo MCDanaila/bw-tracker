@@ -1,10 +1,11 @@
-import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff } from "lucide-react";
+import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff, CalendarRange } from "lucide-react";
 import DailyLogForm from "@/components/DailyLogForm";
 import SyncHeader from "@/components/SyncHeader";
 import PendingLogs from "@/components/PendingLogs";
 import Auth from "@/components/Auth";
 import DietView from "@/components/diet/DietView";
 import DashboardView from "@/components/dashboard/DashboardView";
+import HistoryView from "@/components/history/HistoryView";
 import Onboarding from "@/components/Onboarding";
 import { useAuth } from "@/contexts/AuthContext";
 import { type SyncAction } from "@/lib/db";
@@ -12,7 +13,7 @@ import { useState, useEffect } from "react";
 import { useNotifications } from '@/hooks/useNotifications';
 import { supabase } from "@/lib/supabase";
 
-type Tab = 'tracker' | 'diet' | 'stats';
+type Tab = 'tracker' | 'diet' | 'stats' | 'history';
 
 function App() {
   const [currentTab, setCurrentTab] = useState<Tab>('tracker');
@@ -161,6 +162,10 @@ function App() {
         {currentTab === 'stats' && (
           <DashboardView />
         )}
+
+        {currentTab === 'history' && (
+          <HistoryView />
+        )}
       </main>
 
       {/* Bottom Navigation */}
@@ -170,7 +175,14 @@ function App() {
           className={`flex flex-col items-center ${currentTab === 'tracker' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'} `}
         >
           <Activity size={24} />
-          <span className="text-xs mt-1 font-medium">Tracker</span>
+          <span className="text-xs mt-1 font-medium">Log</span>
+        </button>
+        <button
+          onClick={() => setCurrentTab('history')}
+          className={`flex flex-col items-center ${currentTab === 'history' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'} `}
+        >
+          <CalendarRange size={24} />
+          <span className="text-xs mt-1 font-medium">History</span>
         </button>
         <button
           onClick={() => setCurrentTab('diet')}

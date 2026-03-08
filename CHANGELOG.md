@@ -5,6 +5,12 @@ All notable changes to the BW Tracker project will be documented in this file.
 ## [Unreleased] - Current State
 
 ### ✨ Features
+- **History & Logs View:** Added a dedicated robust tab for visualizing and analyzing past daily logs:
+  - Created a dual-mode `HeatmapCalendar`:
+    - **Month View:** A traditional, horizontally ordered calendar layout with month-to-month pagination arrows.
+    - **90 Days View:** A continuous, github-style horizontal scrolling heatmap evaluating consistency over the last 3 months.
+  - Implemented a `DailySummaryCard` to showcase detailed logging information dynamically upon selecting a day on the calendar.
+  - Integrated `useHistoryLogs` hook leveraging `@tanstack/react-query` to pull user's historical `daily_logs` from Supabase.
 - **Onboarding Profile Flow:** Created a new `Onboarding` screen forced for new users after registration.
   - Collects core demographic information required for fitness tracking: Gender, Age, Height, Current/Target Weight, Unit System preference, Activity Level, and Primary Goal.
   - Added new backend Supabase `profiles` table to securely store this data using Row Level Security (RLS).
