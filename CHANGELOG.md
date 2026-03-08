@@ -5,6 +5,10 @@ All notable changes to the BW Tracker project will be documented in this file.
 ## [Unreleased] - Current State
 
 ### ✨ Features
+- **Onboarding Profile Flow:** Created a new `Onboarding` screen forced for new users after registration.
+  - Collects core demographic information required for fitness tracking: Gender, Age, Height, Current/Target Weight, Unit System preference, Activity Level, and Primary Goal.
+  - Added new backend Supabase `profiles` table to securely store this data using Row Level Security (RLS).
+  - Automatically intercepts users without a complete profile layout in the main `App` view.
 - **Shadcn UI Integration:** Replaced the legacy custom `src/components/ui/` with official `shadcn/ui` components for better consistency, accessibility, and theming:
   - `Button`, `Input`, `Select`, `Slider`, `Card`, `Table`, `Tabs`, `Dialog`, `ScrollArea`, `Badge`, `Collapsible`, and `Chart`.
 - **Shadcn Charts Architecture:** Refactored `WeightChart.tsx` and `StepsChart.tsx` to utilize the modern Shadcn Chart wrapper, which provides a cleaner API over Recharts and automatically syncs with the application's CSS variables.
