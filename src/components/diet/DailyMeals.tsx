@@ -105,7 +105,7 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
     if (mealPlans.length === 0) {
         return (
             <div className="text-center p-8 bg-card rounded-xl shadow-sm border border-border/50 text-card-foreground">
-                <p className="text-muted-foreground">Nessun piano alimentare per {day}</p>
+                <p className="text-muted-foreground">No meal plan for {day}</p>
             </div>
         );
     }
@@ -161,7 +161,7 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                             <div className="border-t border-border/50 pt-3">
                                 <CollapsibleTrigger className="flex items-center gap-1.5 text-sm font-semibold text-foreground hover:text-primary w-full text-left transition-colors group outline-none">
                                     <ChevronDown size={16} className="text-muted-foreground group-data-[state=open]:rotate-180 transition-transform duration-200" />
-                                    Alimenti
+                                    Foods
                                 </CollapsibleTrigger>
                             </div>
 

@@ -5,10 +5,12 @@ import PendingLogs from "@/components/PendingLogs";
 import Auth from "@/components/Auth";
 import DietView from "@/components/diet/DietView";
 import DashboardView from "@/components/dashboard/DashboardView";
+import Onboarding from "@/components/Onboarding";
 import { useAuth } from "@/contexts/AuthContext";
 import { type SyncAction } from "@/lib/db";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNotifications } from '@/hooks/useNotifications';
+import { supabase } from "@/lib/supabase";
 
 type Tab = 'tracker' | 'diet' | 'stats';
 
@@ -22,7 +24,44 @@ function App() {
   const { permission, requestPermission, scheduleDailyReminder } = useNotifications();
   const [remindersEnabled, setRemindersEnabled] = useState(false);
 
-  if (loading) {
+  // Onboarding state
+  const [needsOnboarding, setNeedsOnboarding] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    async function checkProfile() {
+      if (!session?.user) {
+        setNeedsOnboarding(null);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('height, initial_weight')
+          .eq('id', session.user.id)
+          .single();
+
+        if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows found"
+          console.error('Error fetching profile:', error);
+          setNeedsOnboarding(false); // Fallback to main app on error rather than blocking
+        } else if (!data || !data.height || !data.initial_weight) {
+          // If no data, or missing key fields, they need onboarding
+          setNeedsOnboarding(true);
+        } else {
+          setNeedsOnboarding(false);
+        }
+      } catch (err) {
+        console.error('Unexpected error checking profile:', err);
+        setNeedsOnboarding(false);
+      }
+    }
+
+    if (!loading) {
+      checkProfile();
+    }
+  }, [session, loading]);
+
+  if (loading || (session && needsOnboarding === null)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="animate-spin text-primary" size={32} />
@@ -32,6 +71,10 @@ function App() {
 
   if (!session) {
     return <Auth />;
+  }
+
+  if (needsOnboarding) {
+    return <Onboarding onComplete={() => setNeedsOnboarding(false)} />;
   }
 
   return (

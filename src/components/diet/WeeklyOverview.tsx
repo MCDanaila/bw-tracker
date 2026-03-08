@@ -53,10 +53,10 @@ export default function WeeklyOverview({ weeklyTotals, weeklyAverage, days }: We
                 <Tabs value={viewMode} onValueChange={(val) => setViewMode(val as 'charts' | 'table')} className="w-auto">
                     <TabsList className="h-9">
                         <TabsTrigger value="charts" className="px-3 py-1 flex gap-2 items-center text-xs">
-                            <BarChart2 size={14} /> Grafici
+                            <BarChart2 size={14} /> Charts
                         </TabsTrigger>
                         <TabsTrigger value="table" className="px-3 py-1 flex gap-2 items-center text-xs">
-                            <TableIcon size={14} /> Tabella
+                            <TableIcon size={14} /> Table
                         </TabsTrigger>
                     </TabsList>
                 </Tabs>
@@ -69,7 +69,7 @@ export default function WeeklyOverview({ weeklyTotals, weeklyAverage, days }: We
                     <Card>
                         <CardHeader className="pb-2">
                             <CardTitle className="text-sm font-semibold flex justify-between items-center text-muted-foreground">
-                                ENERGIA
+                                ENERGY
                                 <span className="text-foreground text-lg font-bold">
                                     {formatNumber(weeklyAverage.kcal)} <span className="text-xs font-normal text-muted-foreground">kcal/avg</span>
                                 </span>
@@ -105,7 +105,7 @@ export default function WeeklyOverview({ weeklyTotals, weeklyAverage, days }: We
                     <Card>
                         <CardHeader className="pb-2">
                             <CardTitle className="text-sm font-semibold flex justify-between items-center text-muted-foreground">
-                                MACRONUTRIENTI
+                                MACRONUTRIENTS
                                 <div className="flex gap-2 text-xs">
                                     <span className="flex items-center gap-1 font-bold">
                                         <span className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-1)' }}></span> {formatNumber(weeklyAverage.protein)}g P
@@ -153,18 +153,18 @@ export default function WeeklyOverview({ weeklyTotals, weeklyAverage, days }: We
                     <Table className="w-full text-sm">
                         <TableHeader>
                             <TableRow className="bg-muted/30 border-b border-border/50">
-                                <TableHead className="p-3 w-20 font-semibold text-foreground">GIORNO</TableHead>
+                                <TableHead className="p-3 w-20 font-semibold text-foreground">DAY</TableHead>
                                 <TableHead className="p-3 font-semibold text-right text-foreground">KCAL</TableHead>
-                                <TableHead className="p-3 font-semibold text-right text-foreground"><span className="hidden sm:inline">PROTEINE</span><span className="sm:hidden">PRO</span></TableHead>
-                                <TableHead className="p-3 font-semibold text-right text-foreground"><span className="hidden sm:inline">CARBOIDRATI</span><span className="sm:hidden">CAR</span></TableHead>
-                                <TableHead className="p-3 font-semibold text-right text-foreground"><span className="hidden sm:inline">GRASSI</span><span className="sm:hidden">GR</span></TableHead>
-                                <TableHead className="p-3 font-semibold text-right text-foreground"><span className="hidden sm:inline">C:G RATIO</span><span className="sm:hidden">C:G</span></TableHead>
+                                <TableHead className="p-3 font-semibold text-right text-foreground"><span className="hidden sm:inline">PROTEIN</span><span className="sm:hidden">PRO</span></TableHead>
+                                <TableHead className="p-3 font-semibold text-right text-foreground"><span className="hidden sm:inline">CARBS</span><span className="sm:hidden">CAR</span></TableHead>
+                                <TableHead className="p-3 font-semibold text-right text-foreground"><span className="hidden sm:inline">FATS</span><span className="sm:hidden">FAT</span></TableHead>
+                                <TableHead className="p-3 font-semibold text-right text-foreground"><span className="hidden sm:inline">C:F RATIO</span><span className="sm:hidden">C:F</span></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {/* Average Row */}
                             <TableRow className="bg-primary/5 hover:bg-primary/10 border-b-2 border-primary/20">
-                                <TableCell className="p-3 font-bold text-primary">MEDIA</TableCell>
+                                <TableCell className="p-3 font-bold text-primary">AVERAGE</TableCell>
                                 <TableCell className="p-3 font-bold text-right text-foreground">{formatNumber(weeklyAverage.kcal)}</TableCell>
                                 <TableCell className="p-3 font-bold text-right text-chart-1">{formatNumber(weeklyAverage.protein)}g</TableCell>
                                 <TableCell className="p-3 font-bold text-right text-chart-4">{formatNumber(weeklyAverage.carbs)}g</TableCell>

@@ -69,7 +69,7 @@ export default function SwapPreviewModal({
                         <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 mb-3 flex items-start gap-2">
                             <CheckCircle2 size={16} className="text-primary mt-0.5 shrink-0" />
                             <p className="text-xs text-foreground">
-                                Calcolo basato sul mantenimento di <strong className="text-primary">{swapResult.targetAmount.toFixed(1)}g di {swapResult.primaryMacro === 'P' ? 'Proteine' : swapResult.primaryMacro === 'C' ? 'Carboidrati' : 'Grassi'}</strong>.
+                                Calculation based on maintaining <strong className="text-primary">{swapResult.targetAmount.toFixed(1)}g of {swapResult.primaryMacro === 'P' ? 'Protein' : swapResult.primaryMacro === 'C' ? 'Carbs' : 'Fats'}</strong>.
                             </p>
                         </div>
 
@@ -108,13 +108,13 @@ export default function SwapPreviewModal({
                 </div>
 
                 <DialogFooter className="p-4 border-t border-border/50 bg-muted/20 flex sm:justify-start gap-3 w-full sm:flex-row">
-                    <Button variant="outline" className="flex-1 mt-0 sm:mt-0" onClick={onClose}>Annulla</Button>
+                    <Button variant="outline" className="flex-1 mt-0 sm:mt-0" onClick={onClose}>Cancel</Button>
                     <Button
                         className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
                         onClick={() => onConfirmSwap(swapResult)}
                         disabled={swapResult.targetAmount === 0 || swapResult.newQuantity === 0}
                     >
-                        Conferma
+                        Confirm
                     </Button>
                 </DialogFooter>
             </DialogContent>
