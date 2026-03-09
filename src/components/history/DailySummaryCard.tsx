@@ -2,6 +2,7 @@ import { type DailyLog } from '@/types/database';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Activity, Moon, Dumbbell, Droplets, HeartPulse, Scale, Utensils } from 'lucide-react';
+import { ENERGY_OPTIONS, MOOD_OPTIONS, STRESS_OPTIONS, SLEEP_QUALITY_OPTIONS, getLabelByValue } from '@/lib/constants';
 
 interface DailySummaryCardProps {
     log: DailyLog | null;
@@ -27,10 +28,11 @@ export default function DailySummaryCard({ log, date }: DailySummaryCardProps) {
         day: 'numeric'
     });
 
-    const getScoreColor = (score: number | null) => {
+    const getScoreColor = (score: number | null, max: number = 10) => {
         if (!score) return "bg-muted text-muted-foreground";
-        if (score >= 8) return "bg-emerald-500/10 text-emerald-600 border-emerald-500/20";
-        if (score >= 5) return "bg-amber-500/10 text-amber-600 border-amber-500/20";
+        const ratio = score / max;
+        if (ratio >= 0.8) return "bg-emerald-500/10 text-emerald-600 border-emerald-500/20";
+        if (ratio >= 0.5) return "bg-amber-500/10 text-amber-600 border-amber-500/20";
         return "bg-rose-500/10 text-rose-600 border-rose-500/20";
     };
 
@@ -87,19 +89,19 @@ export default function DailySummaryCard({ log, date }: DailySummaryCardProps) {
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-wrap gap-2">
-                        <Badge variant="outline" className={getScoreColor(log.daily_energy)}>
-                            Energy: {log.daily_energy || '-'}
+                        <Badge variant="outline" className={getScoreColor(log.daily_energy, 5)}>
+                            Energy: {getLabelByValue(ENERGY_OPTIONS, log.daily_energy) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.mood)}>
-                            Mood: {log.mood || '-'}
+                        <Badge variant="outline" className={getScoreColor(log.mood, 5)}>
+                            Mood: {getLabelByValue(MOOD_OPTIONS, log.mood) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.stress_level)}>
-                            Stress: {log.stress_level || '-'}
+                        <Badge variant="outline" className={getScoreColor(log.stress_level, 5)}>
+                            Stress: {getLabelByValue(STRESS_OPTIONS, log.stress_level) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.sleep_quality)}>
-                            Sleep Quality: {log.sleep_quality || '-'}
+                        <Badge variant="outline" className={getScoreColor(log.sleep_quality, 10)}>
+                            Sleep Quality: {getLabelByValue(SLEEP_QUALITY_OPTIONS, log.sleep_quality) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.digestion_rating === 'Excellent' ? 10 : log.digestion_rating === 'Good' ? 7 : log.digestion_rating === 'Average' ? 5 : 3)}>
+                        <Badge variant="outline" className={getScoreColor(log.digestion_rating === 'Excellent' ? 10 : log.digestion_rating === 'Good' ? 7 : log.digestion_rating === 'Average' ? 5 : 3, 10)}>
                             Digestion: {log.digestion_rating || '-'}
                         </Badge>
                     </div>

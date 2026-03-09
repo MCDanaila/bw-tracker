@@ -17,7 +17,10 @@ export default function HistoryView() {
     // Find the log for the currently selected date
     const selectedLog = useMemo(() => {
         if (!logs) return null;
-        const dateStr = selectedDate.toISOString().split('T')[0];
+        const year = selectedDate.getFullYear();
+        const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+        const day = String(selectedDate.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`;
         return logs.find(log => log.date === dateStr) || null;
     }, [logs, selectedDate]);
 
@@ -37,7 +40,10 @@ export default function HistoryView() {
         const logDates = new Set(logs.map(l => l.date));
 
         for (let i = 0; i < 90; i++) {
-            const dateStr = currentDate.toISOString().split('T')[0];
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
             if (logDates.has(dateStr)) {
                 streak++;
             } else if (i > 0) {

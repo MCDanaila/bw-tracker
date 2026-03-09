@@ -1,5 +1,5 @@
 import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff, CalendarRange } from "lucide-react";
-import DailyLogForm from "@/components/DailyLogForm";
+import DailyTrackerWizard from "@/components/daily-flow/DailyTrackerWizard";
 import SyncHeader from "@/components/SyncHeader";
 import PendingLogs from "@/components/PendingLogs";
 import Auth from "@/components/Auth";
@@ -150,7 +150,7 @@ function App() {
       <main className="p-4 pb-24">
         {currentTab === 'tracker' && (
           <>
-            <DailyLogForm editItem={editingLog} onClearEdit={() => setEditingLog(null)} />
+            <DailyTrackerWizard editItem={editingLog} onClearEdit={() => setEditingLog(null)} />
             <PendingLogs onEdit={setEditingLog} />
           </>
         )}

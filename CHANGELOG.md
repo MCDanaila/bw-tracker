@@ -4,7 +4,15 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+## [0.2.0] - The Daily Flow Update
+
 ### ✨ Features
+- **The "Daily Flow" UX Pivot:** Overhauled the monolithic `DailyLogForm` into a progressive "Daily Checkpoints" wizard (`DailyTrackerWizard`).
+  - Implemented `TodayDashboardView` for home navigation.
+  - Split data entry into focused micro-interactions: `MorningFlowView`, `TrainingFlowView`, and `EndOfDayFlowView`.
+  - Saved form states incrementally using `localDB.syncQueue` after each micro-interaction finishes.
+- **Data Integrity Constraints:** Hardened the `daily_logs` Supabase table schema with robust `CHECK` constraints mapping to UI boundaries (e.g. `workout_duration <= 600`, `sleep_hours <= 24`).
+- **Shared UI Constants:** Decoupled UI option lists (Mood, Stress, Energy emojis) into a centralized `src/lib/constants.ts` file. Automatically parses numerical database values into localized emojis within the `DailySummaryCard`.
 - **History & Logs View:** Added a dedicated robust tab for visualizing and analyzing past daily logs:
   - Created a dual-mode `HeatmapCalendar`:
     - **Month View:** A traditional, horizontally ordered calendar layout with month-to-month pagination arrows.
@@ -29,6 +37,7 @@ All notable changes to the BW Tracker project will be documented in this file.
 - **Theme Standardization:** Standardized all UI elements to use the default Shadcn "Zinc" theme variables, ensuring unified dark/light support across charts and components.
 
 ### 🐛 Bug Fixes
+- **Timezone Offset Bug:** Refactored native JS `toISOString()` date generation across the entire app with a custom `getLocalDateStr()` utility. This permanently fixed the UTC timezone-shift bug where user-logged data (like `Mar 10`) was accidentally fetching data for the previous day (`Mar 9`) inside `HistoryView` and `HeatmapCalendar`.
 - **Chart Color Visibility:** Resolved an issue where chart lines and columns were rendering black by stripping redundant `hsl()` wrappers around CSS variables that already contained their own color space declarations.
 - **Theme Inconsistency:** Removed hardcoded light-mode background classes (`bg-white`, `bg-gray-50`) from core layout files (`App.tsx`, `Auth.tsx`, `DailyLogForm.tsx`, etc.) to fix dark mode visual bugs.
 - **Mobile Overflow:** Fixed a visual overlap bug where the daily tabs were clipping into the meal cards by introducing a padded grid container with optimized row spacing.

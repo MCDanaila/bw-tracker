@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import { getLocalDateStr } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 
 export type TimeRange = '7d' | '14d' | '1m' | '3m' | 'all';
@@ -28,7 +29,7 @@ export const useDashboardData = (range: TimeRange) => {
             // Apply time range filter if not 'all'
             if (range !== 'all') {
                 const limitDate = new Date();
-                
+
                 switch (range) {
                     case '7d': limitDate.setDate(limitDate.getDate() - 7); break;
                     case '14d': limitDate.setDate(limitDate.getDate() - 14); break;
@@ -37,7 +38,7 @@ export const useDashboardData = (range: TimeRange) => {
                 }
 
                 limitDate.setHours(0, 0, 0, 0); // Start of that day
-                const dateString = limitDate.toISOString().split('T')[0];
+                const dateString = getLocalDateStr(limitDate);
                 query = query.gte('date', dateString);
             }
 
@@ -54,10 +55,10 @@ export const useDashboardData = (range: TimeRange) => {
                 const dayStr = d.toLocaleDateString('it-IT', { weekday: 'short' });
                 const dayNum = d.getDate();
                 const monthNum = d.getMonth() + 1; // 0-indexed
-                
+
                 // For shorter ranges (7d, 14d), showing 'Lun 12' is nice. 
                 // For longer ranges, '12/03' might be better to save space
-                const shortDate = ['7d', '14d'].includes(range) 
+                const shortDate = ['7d', '14d'].includes(range)
                     ? `${dayStr.charAt(0).toUpperCase()}${dayStr.slice(1)} ${dayNum}`
                     : `${dayNum.toString().padStart(2, '0')}/${monthNum.toString().padStart(2, '0')}`;
 
