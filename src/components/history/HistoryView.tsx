@@ -1,11 +1,13 @@
 import { useState, useMemo } from 'react';
 import { useHistoryLogs } from '@/hooks/useHistoryLogs';
+import { useStreak } from '@/hooks/useStreak';
 import { Loader2, CalendarRange } from 'lucide-react';
 import HeatmapCalendar from './HeatmapCalendar';
 import DailySummaryCard from './DailySummaryCard';
 
 export default function HistoryView() {
     const { data: logs, isLoading, error } = useHistoryLogs();
+    const streak = useStreak();
 
     // Default to today
     const [selectedDate, setSelectedDate] = useState<Date>(() => {
@@ -26,45 +28,26 @@ export default function HistoryView() {
 
     // Simple stats
     const stats = useMemo(() => {
-        if (!logs) return { total: 0, thisMonth: 0, streak: 0 };
+        if (!logs) return { total: 0, thisMonth: 0 };
         const now = new Date();
         const currentMonth = now.getMonth();
         const currentYear = now.getFullYear();
 
         let thisMonthCount = 0;
-        let streak = 0;
-        let currentDate = new Date(now);
+        const logDates = new Set(logs.map(l => l.date));
+        const currentDate = new Date(now);
         currentDate.setHours(0, 0, 0, 0);
 
-        // Simple streak calc (if they logged yesterday, today etc)
-        const logDates = new Set(logs.map(l => l.date));
-
-        for (let i = 0; i < 90; i++) {
+        for (let i = 0; i < 31; i++) {
+            if (currentDate.getMonth() !== currentMonth || currentDate.getFullYear() !== currentYear) break;
             const year = currentDate.getFullYear();
             const month = String(currentDate.getMonth() + 1).padStart(2, '0');
             const day = String(currentDate.getDate()).padStart(2, '0');
-            const dateStr = `${year}-${month}-${day}`;
-            if (logDates.has(dateStr)) {
-                streak++;
-            } else if (i > 0) {
-                // If we miss a day (and it's not today yet to be logged), break streak
-                // A true streak calc handles timezone edge cases, keeping it simple here
-                break;
-            }
-
-            // Month count
-            if (currentDate.getMonth() === currentMonth && currentDate.getFullYear() === currentYear) {
-                if (logDates.has(dateStr)) thisMonthCount++;
-            }
-
+            if (logDates.has(`${year}-${month}-${day}`)) thisMonthCount++;
             currentDate.setDate(currentDate.getDate() - 1);
         }
 
-        return {
-            total: logs.length,
-            thisMonth: thisMonthCount,
-            streak
-        };
+        return { total: logs.length, thisMonth: thisMonthCount };
     }, [logs]);
 
 
@@ -106,7 +89,7 @@ export default function HistoryView() {
                     <div className="text-xs text-muted-foreground">Month Logs</div>
                 </div>
                 <div className="bg-card border border-border/50 rounded-xl p-3 text-center shadow-sm">
-                    <div className="text-2xl font-bold text-primary">{stats.streak} 🔥</div>
+                    <div className="text-2xl font-bold text-primary">{streak} 🔥</div>
                     <div className="text-xs text-muted-foreground">Current Streak</div>
                 </div>
                 <div className="bg-card border border-border/50 rounded-xl p-3 text-center shadow-sm">

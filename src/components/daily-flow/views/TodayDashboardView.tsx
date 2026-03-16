@@ -2,6 +2,7 @@ import type { ViewState } from "../DailyTrackerWizard";
 import { Progress } from "@/components/ui/progress";
 import { ChevronRight, CheckCircle2, Circle, Target, Flame } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useStreak } from "@/hooks/useStreak";
 
 interface TodayDashboardViewProps {
     todayLog: any;
@@ -9,6 +10,8 @@ interface TodayDashboardViewProps {
 }
 
 export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewProps) {
+    const streak = useStreak();
+
     // Determine completion statuses based on the existing DB payload
     const isMorningDone = !!todayLog?.weight_fasting && !!todayLog?.sleep_hours;
     const isTrainingDone = !!todayLog?.steps && !!todayLog?.workout_session;
@@ -69,7 +72,7 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
 
             {/* Streak & Motivation */}
             <div className="flex items-center justify-center gap-2 mt-8 mb-4 bg-orange-500/10 text-orange-500 py-3 rounded-xl font-bold shadow-sm border border-orange-500/20">
-                <Flame size={20} /> 12 Day Tracking Streak
+                <Flame size={20} /> {streak} Day Tracking Streak
             </div>
 
             {/* Dashboard Tiles (Body, Fuel, Drive) - Conceptual / Future usage */}
