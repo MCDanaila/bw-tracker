@@ -1,4 +1,4 @@
-import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff, CalendarRange } from "lucide-react";
+import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff, CalendarRange, UserCircle } from "lucide-react";
 import DailyTrackerWizard from "@/components/daily-flow/DailyTrackerWizard";
 import SyncHeader from "@/components/SyncHeader";
 import PendingLogs from "@/components/PendingLogs";
@@ -7,6 +7,7 @@ import DietView from "@/components/diet/DietView";
 import DashboardView from "@/components/dashboard/DashboardView";
 import HistoryView from "@/components/history/HistoryView";
 import Onboarding from "@/components/Onboarding";
+import ProfileView from "@/components/ProfileView";
 import { useAuth } from "@/contexts/AuthContext";
 import { type SyncAction } from "@/lib/db";
 import { useState, useEffect } from "react";
@@ -19,7 +20,8 @@ function App() {
   const [currentTab, setCurrentTab] = useState<Tab>('tracker');
   const [editingLog, setEditingLog] = useState<SyncAction | null>(null);
   const { session, loading, signOut, user } = useAuth(); // Added 'user' to destructuring
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // New state for settings menu
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   // Notification setup
   const { permission, requestPermission, scheduleDailyReminder } = useNotifications();
@@ -134,6 +136,14 @@ function App() {
               </div>
 
               <button
+                onClick={() => { setIsSettingsOpen(false); setShowProfile(true); }}
+                className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted/50 flex items-center gap-2"
+              >
+                <UserCircle size={18} />
+                Edit Profile
+              </button>
+
+              <button
                 onClick={signOut}
                 className="w-full text-left px-4 py-2 text-sm text-destructive hover:bg-destructive/10 flex items-center gap-2"
               >
@@ -148,23 +158,29 @@ function App() {
 
       {/* Main Content Area */}
       <main className="p-4 pb-24">
-        {currentTab === 'tracker' && (
+        {showProfile ? (
+          <ProfileView onBack={() => setShowProfile(false)} />
+        ) : (
           <>
-            <DailyTrackerWizard editItem={editingLog} onClearEdit={() => setEditingLog(null)} />
-            <PendingLogs onEdit={setEditingLog} />
+            {currentTab === 'tracker' && (
+              <>
+                <DailyTrackerWizard editItem={editingLog} onClearEdit={() => setEditingLog(null)} />
+                <PendingLogs onEdit={setEditingLog} />
+              </>
+            )}
+
+            {currentTab === 'diet' && (
+              <DietView />
+            )}
+
+            {currentTab === 'stats' && (
+              <DashboardView />
+            )}
+
+            {currentTab === 'history' && (
+              <HistoryView />
+            )}
           </>
-        )}
-
-        {currentTab === 'diet' && (
-          <DietView />
-        )}
-
-        {currentTab === 'stats' && (
-          <DashboardView />
-        )}
-
-        {currentTab === 'history' && (
-          <HistoryView />
         )}
       </main>
 

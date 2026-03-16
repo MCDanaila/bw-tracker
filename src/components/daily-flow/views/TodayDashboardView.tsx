@@ -3,6 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { ChevronRight, CheckCircle2, Circle, Target, Flame } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useStreak } from "@/hooks/useStreak";
+import { useProfile, STEPS_GOAL_DEFAULT, WATER_GOAL_DEFAULT } from "@/hooks/useProfile";
 
 interface TodayDashboardViewProps {
     todayLog: any;
@@ -11,6 +12,9 @@ interface TodayDashboardViewProps {
 
 export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewProps) {
     const streak = useStreak();
+    const { data: profile } = useProfile();
+    const stepsGoal = profile?.steps_goal ?? todayLog?.steps_goal ?? STEPS_GOAL_DEFAULT;
+    const waterGoal = profile?.water_goal ?? WATER_GOAL_DEFAULT;
 
     // Determine completion statuses based on the existing DB payload
     const isMorningDone = !!todayLog?.weight_fasting && !!todayLog?.sleep_hours;
@@ -30,9 +34,9 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
     const steps = todayLog?.steps || 0;
     const cardioMins = (todayLog?.cardio_hiit_mins || 0) + (todayLog?.cardio_liss_mins || 0);
 
-    const waterProgress = Math.min((waterLiters / 4) * 100, 100);
+    const waterProgress = Math.min((waterLiters / waterGoal) * 100, 100);
     const sleepProgress = Math.min((sleepHours / 8) * 100, 100);
-    const stepsProgress = Math.min((steps / (todayLog?.steps_goal || 10000)) * 100, 100);
+    const stepsProgress = Math.min((steps / stepsGoal) * 100, 100);
     const cardioProgress = Math.min((cardioMins / 150) * 100, 100);
 
     // Phase 2: Recovery Score
@@ -125,7 +129,7 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mt-4">
                         <div className="bg-background p-3 rounded-xl border border-border/50 text-center flex flex-col items-center justify-center shadow-sm">
                             <div className="text-xs text-muted-foreground font-semibold mb-1 uppercase tracking-wider">Water</div>
-                            <div className="text-primary font-black mb-2">{waterLiters}L / 4L</div>
+                            <div className="text-primary font-black mb-2">{waterLiters}L / {waterGoal}L</div>
                             <Progress value={waterProgress} className="h-2 w-full max-w-[80%]" />
                         </div>
                         <div className="bg-background p-3 rounded-xl border border-border/50 text-center flex flex-col items-center justify-center shadow-sm">

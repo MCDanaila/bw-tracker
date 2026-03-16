@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { WORKOUT_TYPES, MOOD_OPTIONS, ENERGY_OPTIONS } from "@/lib/constants";
 import { localDB } from "@/lib/db";
 import { useAuth } from "@/contexts/AuthContext";
+import { useProfile, STEPS_GOAL_DEFAULT } from "@/hooks/useProfile";
 import { toast } from "sonner";
 
 interface TrainingFlowViewProps {
@@ -21,12 +22,15 @@ interface TrainingFlowViewProps {
 
 export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }: TrainingFlowViewProps) {
     const { user } = useAuth();
+    const { data: profile } = useProfile();
+    const stepsGoalDefault = existingData?.steps_goal ?? profile?.steps_goal ?? STEPS_GOAL_DEFAULT;
 
     const { register, handleSubmit, watch, setValue, formState: { isSubmitting } } = useForm({
         defaultValues: {
             ...existingData,
             workout_session: existingData?.workout_session || "Rest",
             steps: existingData?.steps || 0,
+            steps_goal: stepsGoalDefault,
             cardio_hiit_mins: existingData?.cardio_hiit_mins || 0,
             cardio_liss_mins: existingData?.cardio_liss_mins || 0,
             gym_rpe: existingData?.gym_rpe || 5,
@@ -61,6 +65,14 @@ export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }
                 status: 'pending',
                 created_at: new Date().toISOString(),
             });
+
+            // Save smart defaults explicitly for Training fields (e.g. steps)
+            const currentDefaultsStr = localStorage.getItem("bw_tracker_smart_defaults");
+            const currentDefaults = currentDefaultsStr ? JSON.parse(currentDefaultsStr) : {};
+            localStorage.setItem("bw_tracker_smart_defaults", JSON.stringify({
+                ...currentDefaults,
+                steps: payload.steps,
+            }));
 
             toast.success("Workout logged! 🏋️‍♀️");
             onSave(payload);
@@ -102,7 +114,7 @@ export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }
                                     <p className="text-xs text-muted-foreground mt-2 ml-1">Yesterday: {yesterdayData.steps}</p>
                                 )}
                             </div>
-                            <Input label="Steps Goal" type="number" {...register("steps_goal")} defaultValue={10000} />
+                            <Input label="Steps Goal" type="number" {...register("steps_goal")} />
 
                             {!isRest && (
                                 <>

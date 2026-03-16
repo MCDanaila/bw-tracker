@@ -9,6 +9,8 @@ create table public.profiles (
   activity_level text,      -- 'sedentary', 'lightly_active', 'moderately_active', 'very_active'
   goal text,                -- 'lose_fat', 'build_muscle', 'maintain_weight'
   unit_system text default 'metric', -- 'metric' or 'imperial'
+  steps_goal integer default 10000,  -- daily step target
+  water_goal numeric default 4.0,    -- daily water target in liters
   created_at timestamp with time zone default timezone('utc'::text, now()),
   updated_at timestamp with time zone default timezone('utc'::text, now())
 );

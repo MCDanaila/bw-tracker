@@ -7,6 +7,7 @@ import { Stepper } from "@/components/ui/stepper";
 import { DIGESTION_OPTIONS } from "@/lib/constants";
 import { localDB } from "@/lib/db";
 import { useAuth } from "@/contexts/AuthContext";
+import { useProfile, WATER_GOAL_DEFAULT } from "@/hooks/useProfile";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -20,19 +21,21 @@ interface EndOfDayFlowViewProps {
 
 export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowViewProps) {
     const { user } = useAuth();
+    const { data: profile } = useProfile();
+    const waterGoal = profile?.water_goal ?? WATER_GOAL_DEFAULT;
 
     const { register, handleSubmit, watch, setValue, formState: { isSubmitting } } = useForm({
         defaultValues: {
             ...existingData,
             water_liters: existingData?.water_liters || 0,
             digestion_rating: existingData?.digestion_rating || 0,
-            cheat_meals: existingData?.cheat_meals || false,
+            diet_adherence: existingData?.diet_adherence || "perfect",
         }
     });
 
     const waterLiters = watch("water_liters");
     const digestionRating = watch("digestion_rating");
-    const cheatMeals = watch("cheat_meals");
+    const dietAdherence = watch("diet_adherence");
 
     const onSubmit = async (data: any) => {
         if (!user) {
@@ -98,8 +101,8 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
                             max={10}
                         />
                         <div className="flex justify-between items-center bg-background p-3 rounded-lg border border-border/30">
-                            <span className="text-sm font-medium text-muted-foreground">Goal: 4.0L</span>
-                            <span className="text-sm font-bold text-primary">{Math.round((waterLiters / 4) * 100)}%</span>
+                            <span className="text-sm font-medium text-muted-foreground">Goal: {waterGoal}L</span>
+                            <span className="text-sm font-bold text-primary">{Math.round((waterLiters / waterGoal) * 100)}%</span>
                         </div>
                     </div>
                 </div>
@@ -110,20 +113,29 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
 
                         <div>
                             <p className="text-sm font-semibold mb-3">Diet Adherence</p>
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-3 gap-2">
                                 <Button
                                     type="button"
-                                    variant={cheatMeals === false ? "default" : "outline"}
-                                    onClick={() => setValue("cheat_meals", false, { shouldDirty: true })}
-                                    className="rounded-xl shadow-none"
+                                    variant={dietAdherence === "perfect" ? "default" : "outline"}
+                                    onClick={() => setValue("diet_adherence", "perfect", { shouldDirty: true })}
+                                    className="rounded-xl shadow-none text-xs px-2"
                                 >
                                     Perfect
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant={cheatMeals === true ? "destructive" : "outline"}
-                                    onClick={() => setValue("cheat_meals", true, { shouldDirty: true })}
-                                    className="rounded-xl shadow-none"
+                                    variant={dietAdherence === "minor_deviation" ? "secondary" : "outline"}
+                                    onClick={() => setValue("diet_adherence", "minor_deviation", { shouldDirty: true })}
+                                    className="rounded-xl shadow-none text-xs px-2 bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 data-[variant=secondary]:bg-yellow-500 data-[variant=secondary]:text-white"
+                                    data-variant={dietAdherence === "minor_deviation" ? "secondary" : "outline"}
+                                >
+                                    Minor Deviation
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant={dietAdherence === "cheat_meal" ? "destructive" : "outline"}
+                                    onClick={() => setValue("diet_adherence", "cheat_meal", { shouldDirty: true })}
+                                    className="rounded-xl shadow-none text-xs px-2"
                                 >
                                     Cheat Meal
                                 </Button>
@@ -136,16 +148,16 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
                             value={digestionRating}
                             onChange={(v) => setValue("digestion_rating", v, { shouldDirty: true })}
                         />
-                    </div>
-                </div>
 
-                <div className="space-y-3">
-                    <h3 className="text-lg font-bold text-foreground">Journal</h3>
-                    <Textarea
-                        placeholder="Any final notes about today? How did you feel overall?"
-                        className="min-h-[120px] rounded-2xl bg-card resize-none p-4 shadow-sm border-border/50"
-                        {...register("notes")}
-                    />
+                        <div className="pt-2">
+                            <p className="text-sm font-semibold mb-3">Journal (Optional)</p>
+                            <Textarea
+                                placeholder="Any final notes about today? How did you feel overall?"
+                                className="min-h-[100px] rounded-2xl bg-background resize-none p-4 shadow-sm border-border/50"
+                                {...register("notes")}
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 <div className="pt-6">
