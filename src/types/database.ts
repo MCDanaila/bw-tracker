@@ -67,7 +67,7 @@ export interface DailyLog {
     water_liters: number | null;
     salt_grams: number | null;
     diet_adherence: 'perfect' | 'minor_deviation' | 'cheat_meal' | null;
-    digestion_rating: string | null;
+    digestion_rating: number | null;
     digestion_comments: string | null;
     bathroom_visits: number | null;
     stress_level: number | null;

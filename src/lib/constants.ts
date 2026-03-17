@@ -8,27 +8,43 @@ export const MOOD_OPTIONS = [
 
 export const ENERGY_OPTIONS = [
     { label: "🪫", value: 1, ariaLabel: "Low energy" },
-    { label: "🔋", value: 3, ariaLabel: "Moderate energy" },
-    { label: "⚡", value: 5, ariaLabel: "High energy" },
+    { label: "🔋", value: 2, ariaLabel: "Moderate energy" },
+    { label: "⚡", value: 3, ariaLabel: "High energy" },
 ];
 
 export const STRESS_OPTIONS = [
     { label: "Low", value: 1 },
-    { label: "Med", value: 3 },
-    { label: "High", value: 5 },
+    { label: "Med", value: 2 },
+    { label: "High", value: 3 },
 ];
 
 export const SLEEP_QUALITY_OPTIONS = [
     { label: "Poor", value: 1 },
-    { label: "Avg", value: 5 },
-    { label: "Good", value: 10 },
+    { label: "Average", value: 2 },
+    { label: "Good", value: 3 },
 ];
 
 export const DIGESTION_OPTIONS = [
-    { label: "Excellent", value: "Excellent" },
-    { label: "Good", value: "Good" },
-    { label: "Average", value: "Average" },
-    { label: "Poor", value: "Poor" },
+    { label: "Poor", value: 1 },
+    { label: "Average", value: 2 },
+    { label: "Good", value: 3 },
+    { label: "Excellent", value: 4 },
+];
+
+export const HUNGER_OPTIONS = [
+    { label: "No Hunger", value: 1, ariaLabel: "No hunger" },
+    { label: "Slightly Hungry", value: 2, ariaLabel: "Slightly hungry" },
+    { label: "Moderately Hungry", value: 3, ariaLabel: "Moderately hungry" },
+    { label: "Very Hungry", value: 4, ariaLabel: "Very hungry" },
+    { label: "Starving", value: 5, ariaLabel: "Starving" },
+];
+
+export const LIBIDO_OPTIONS = [
+    { label: "Very Low", value: 1, ariaLabel: "Very low" },
+    { label: "Low", value: 2, ariaLabel: "Low" },
+    { label: "Normal", value: 3, ariaLabel: "Normal" },
+    { label: "High", value: 4, ariaLabel: "High" },
+    { label: "Very High", value: 5, ariaLabel: "Very high" },
 ];
 
 export const WORKOUT_TYPES = [

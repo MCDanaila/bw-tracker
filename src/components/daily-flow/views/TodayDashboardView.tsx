@@ -6,7 +6,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { useState } from "react";
 import { useStreak } from "@/hooks/useStreak";
 import { useProfile, STEPS_GOAL_DEFAULT, WATER_GOAL_DEFAULT } from "@/hooks/useProfile";
-import DailySummaryCard from "@/components/history/DailySummaryCard";
 
 interface TodayDashboardViewProps {
     todayLog: any;
@@ -86,11 +85,6 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
                 : "Your recovery today was strong. Nice work!"
         : null;
 
-    // Parse today's date from the log for DailySummaryCard (avoid UTC shift)
-    const todayDate = todayLog?.date
-        ? new Date(todayLog.date + "T00:00:00")
-        : new Date();
-
     return (
         <div className="space-y-6 animate-in fade-in zoom-in-95 duration-200">
             {/* Header / Total Progress */}
@@ -121,15 +115,6 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
                     onClick={() => onNavigate("end_of_day")}
                 />
             </div>
-
-            {/* Summary card — shown below buttons when real data exists */}
-            {todayLog !== null && (
-                <DailySummaryCard
-                    log={todayLog}
-                    date={todayDate}
-                    onEditSection={(section) => onNavigate(section)}
-                />
-            )}
 
             {/* Streak & Motivation */}
             <div className="flex items-center justify-center gap-2 mt-8 mb-4 bg-orange-500/10 text-orange-500 py-3 rounded-xl font-bold shadow-sm border border-orange-500/20">

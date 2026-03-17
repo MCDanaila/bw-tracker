@@ -4,6 +4,20 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+## [0.4.2] - Data Integrity & Schema Alignment Pass
+
+### 🐛 Bug Fixes
+- **Digestion Rating Type Mismatch:** `digestion_rating` was stored as `TEXT` in the schema but the form saved numeric values (1–4 from `DIGESTION_OPTIONS`). `DailySummaryCard` was comparing it against hardcoded strings (`=== 'Excellent'`) which always evaluated to false, rendering digestion as `-` for every log. Fixed by changing the column to `INTEGER CHECK (1–4)`, updating the TypeScript type to `number | null`, importing `DIGESTION_OPTIONS` in `DailySummaryCard`, and replacing the broken string comparison with `getLabelByValue(DIGESTION_OPTIONS, ...)`.
+- **Wrong `getScoreColor` Max Values:** `DailySummaryCard` was calling `getScoreColor(log.daily_energy, 5)`, `getScoreColor(log.stress_level, 5)`, and `getScoreColor(log.sleep_quality, 10)` — but all three fields use 1–3 discrete scales in the UI. Badge colors were always amber/red because the ratio was always < 0.5. Corrected max to `3` for all three and `4` for digestion.
+- **Mock Data Out of Range:** `generate_mock_csv.py` generated values well outside what the app's selectors produce — `sleep_quality` 5–10 (form: 1–3), `stress_level` 1–4 (form: 1–3), `soreness_level` 1–8 (form: 1–3), `gym_energy`/`daily_energy` 3–5 (form: 1–3), `hunger_level` 4–10 (form: 1–5), `libido` 3–9 (form: 1–5), and `digestion_rating` as text strings instead of integers. All corrected to match UI selector ranges.
+- **Wrong Workout Sessions in Mock:** Mock used `"Upper"` and `"Lower"` (not present in `WORKOUT_TYPES`) and an empty string `""` as a rest sentinel. Updated to use the canonical values `["Push", "Pull", "Legs", "Cardio", "Rest"]` with rest detection via `workout == "Rest"`.
+
+### ✨ Features
+- **Hunger Level & Libido Fields:** Added `hunger_level` (1–5) and `libido` (1–5) input fields to `EndOfDayFlowView` and `EditLogModal`. Added `HUNGER_OPTIONS` and `LIBIDO_OPTIONS` constants to `src/lib/constants.ts`.
+
+### 💅 Schema / Architecture
+- **Schema CHECK Constraint Alignment:** Tightened six `daily_logs` CHECK constraints to match the actual discrete ranges used in the UI: `sleep_quality` (0–10 → 1–3), `stress_level` (1–5 → 1–3), `soreness_level` (1–10 → 1–3), `daily_energy` (1–5 → 1–3), `gym_energy` (1–5 → 1–3), `hunger_level` (1–10 → 1–5), `libido` (1–10 → 1–5).
+
 ## [0.4.1] - Bug Fix Pass
 
 ### 🐛 Bug Fixes

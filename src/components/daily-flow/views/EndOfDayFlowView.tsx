@@ -4,7 +4,7 @@ import { getLocalDateStr } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Stepper } from "@/components/ui/stepper";
-import { DIGESTION_OPTIONS } from "@/lib/constants";
+import { DIGESTION_OPTIONS, HUNGER_OPTIONS, LIBIDO_OPTIONS } from "@/lib/constants";
 import { localDB } from "@/lib/db";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile, WATER_GOAL_DEFAULT } from "@/hooks/useProfile";
@@ -30,12 +30,16 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
             water_liters: existingData?.water_liters || 0,
             digestion_rating: existingData?.digestion_rating || 0,
             diet_adherence: existingData?.diet_adherence || "perfect",
+            hunger_level: existingData?.hunger_level || 0,
+            libido: existingData?.libido || 0,
         }
     });
 
     const waterLiters = watch("water_liters");
     const digestionRating = watch("digestion_rating");
     const dietAdherence = watch("diet_adherence");
+    const hungerLevel = watch("hunger_level");
+    const libido = watch("libido");
 
     const onSubmit = async (data: any) => {
         if (!user) {
@@ -147,6 +151,20 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
                             options={DIGESTION_OPTIONS}
                             value={digestionRating}
                             onChange={(v) => setValue("digestion_rating", v, { shouldDirty: true })}
+                        />
+
+                        <ButtonGroup
+                            label="Hunger Level"
+                            options={HUNGER_OPTIONS}
+                            value={hungerLevel}
+                            onChange={(v) => setValue("hunger_level", v, { shouldDirty: true })}
+                        />
+
+                        <ButtonGroup
+                            label="Libido"
+                            options={LIBIDO_OPTIONS}
+                            value={libido}
+                            onChange={(v) => setValue("libido", v, { shouldDirty: true })}
                         />
 
                         <div className="pt-2">

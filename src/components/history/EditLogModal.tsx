@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
 import { type DailyLog } from "@/types/database";
 import { localDB } from "@/lib/db";
+import { supabase } from "@/lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -16,6 +18,8 @@ import {
     ENERGY_OPTIONS,
     WORKOUT_TYPES,
     DIGESTION_OPTIONS,
+    HUNGER_OPTIONS,
+    LIBIDO_OPTIONS,
 } from "@/lib/constants";
 import { toast } from "sonner";
 
@@ -26,6 +30,7 @@ interface EditLogModalProps {
 }
 
 export default function EditLogModal({ log, onClose, initialSection }: EditLogModalProps) {
+    const queryClient = useQueryClient();
     const { register, handleSubmit, watch, setValue, reset, formState: { isSubmitting } } = useForm({
         defaultValues: {
             weight_fasting: log?.weight_fasting ?? 0,
@@ -49,6 +54,8 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
             diet_adherence: log?.diet_adherence ?? "perfect",
             digestion_rating: log?.digestion_rating ?? "",
             daily_energy: log?.daily_energy ?? 0,
+            hunger_level: log?.hunger_level ?? 0,
+            libido: log?.libido ?? 0,
             general_notes: log?.general_notes ?? "",
         }
     });
@@ -78,6 +85,8 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                 diet_adherence: log.diet_adherence ?? "perfect",
                 digestion_rating: log.digestion_rating ?? "",
                 daily_energy: log.daily_energy ?? 0,
+                hunger_level: log.hunger_level ?? 0,
+                libido: log.libido ?? 0,
                 general_notes: log.general_notes ?? "",
             });
         }
@@ -110,6 +119,8 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
     const digestionRating = watch("digestion_rating");
     const dietAdherence = watch("diet_adherence");
     const dailyEnergy = watch("daily_energy");
+    const hungerLevel = watch("hunger_level");
+    const libido = watch("libido");
 
     const isRest = workoutSession === "Rest";
     const isCardio = workoutSession && workoutSession.toLowerCase().includes("cardio");
@@ -122,26 +133,45 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
     });
 
     const onSubmit = async (data: any) => {
-        try {
-            const merged = {
-                ...log,
-                ...data,
-                date: log.date,
-                user_id: log.user_id,
-            };
+        const merged = {
+            ...log,
+            ...data,
+            date: log.date,
+            user_id: log.user_id,
+        };
 
+        // Online path: write directly to Supabase
+        if (navigator.onLine) {
+            try {
+                const { error } = await supabase
+                    .from('daily_logs')
+                    .upsert(merged, { onConflict: 'user_id, date' });
+
+                if (error) throw error;
+
+                queryClient.invalidateQueries({ queryKey: ['historyLogs'] });
+                queryClient.invalidateQueries({ queryKey: ['dashboardData'] });
+                toast.success('Log updated');
+                onClose();
+                return;
+            } catch (error) {
+                console.error('Direct upsert failed, falling back to queue:', error);
+            }
+        }
+
+        // Offline fallback: queue for manual sync
+        try {
             await localDB.syncQueue.add({
                 mutation_type: 'UPSERT_DAILY_LOG',
                 payload: merged,
                 status: 'pending',
                 created_at: new Date().toISOString(),
             });
-
-            toast.success('Log updated');
+            toast.warning('Offline — changes queued for manual sync');
             onClose();
-        } catch (error) {
-            console.error(error);
-            toast.error('Failed to update log.');
+        } catch (queueError) {
+            console.error(queueError);
+            toast.error('Failed to save log.');
         }
     };
 
@@ -343,6 +373,20 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                             options={ENERGY_OPTIONS}
                             value={dailyEnergy}
                             onChange={(v) => setValue("daily_energy", v, { shouldDirty: true })}
+                        />
+
+                        <ButtonGroup
+                            label="Hunger Level"
+                            options={HUNGER_OPTIONS}
+                            value={hungerLevel}
+                            onChange={(v) => setValue("hunger_level", v, { shouldDirty: true })}
+                        />
+
+                        <ButtonGroup
+                            label="Libido"
+                            options={LIBIDO_OPTIONS}
+                            value={libido}
+                            onChange={(v) => setValue("libido", v, { shouldDirty: true })}
                         />
 
                         <div className="pt-2">

@@ -12,6 +12,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect, useRef } from "react";
 import { useNotifications } from '@/hooks/useNotifications';
 import { supabase } from "@/lib/supabase";
+import { localDB } from "@/lib/db";
+import { getLocalDateStr } from "@/lib/utils";
 
 type Tab = 'tracker' | 'diet' | 'stats' | 'history';
 
@@ -81,6 +83,36 @@ function App() {
       checkProfile();
     }
   }, [session, loading]);
+
+  // Default to History tab if today's log already exists
+  useEffect(() => {
+    if (!session?.user?.id || needsOnboarding !== false) return;
+    
+    const userId = session.user.id;
+
+    async function checkTodayLog() {
+      const todayDate = getLocalDateStr();
+
+      const pending = await localDB.syncQueue
+        .where('mutation_type').equals('UPSERT_DAILY_LOG')
+        .toArray();
+      if (pending.some(a => a.payload?.date === todayDate)) {
+        setCurrentTab('history');
+        return;
+      }
+
+      const { data } = await supabase
+        .from('daily_logs')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('date', todayDate)
+        .maybeSingle();
+
+      if (data) setCurrentTab('history');
+    }
+
+    checkTodayLog();
+  }, [session, needsOnboarding]);
 
   if (loading || (session && needsOnboarding === null)) {
     return (

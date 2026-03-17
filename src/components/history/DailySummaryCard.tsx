@@ -2,7 +2,7 @@ import { type DailyLog } from '@/types/database';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Activity, Moon, Dumbbell, Droplets, HeartPulse, Scale, Utensils, Pencil } from 'lucide-react';
-import { ENERGY_OPTIONS, MOOD_OPTIONS, STRESS_OPTIONS, SLEEP_QUALITY_OPTIONS, getLabelByValue } from '@/lib/constants';
+import { ENERGY_OPTIONS, MOOD_OPTIONS, STRESS_OPTIONS, SLEEP_QUALITY_OPTIONS, DIGESTION_OPTIONS, HUNGER_OPTIONS, LIBIDO_OPTIONS, getLabelByValue } from '@/lib/constants';
 
 interface DailySummaryCardProps {
     log: DailyLog | null;
@@ -92,11 +92,11 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                 </Card>
             </div>
 
-            {/* Wellbeing & Biofeedback */}
+            {/* Morning Check-In */}
             <Card>
                 <CardHeader className="pb-2">
                     <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
-                        <HeartPulse size={16} /> Biofeedback
+                        <HeartPulse size={16} /> Morning Check-In
                         {(onEdit || onEditSection) && (
                             <button
                                 onClick={() => onEditSection ? onEditSection('morning') : onEdit!(log, 'morning')}
@@ -109,31 +109,33 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-wrap gap-2">
-                        <Badge variant="outline" className={getScoreColor(log.daily_energy, 5)}>
-                            Energy: {getLabelByValue(ENERGY_OPTIONS, log.daily_energy) || '-'}
+                        <Badge variant="outline" className={getScoreColor(log.sleep_quality, 3)}>
+                            Sleep Quality: {getLabelByValue(SLEEP_QUALITY_OPTIONS, log.sleep_quality) || '-'}
                         </Badge>
                         <Badge variant="outline" className={getScoreColor(log.mood, 5)}>
                             Mood: {getLabelByValue(MOOD_OPTIONS, log.mood) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.stress_level, 5)}>
+                        <Badge variant="outline" className={getScoreColor(log.stress_level, 3)}>
                             Stress: {getLabelByValue(STRESS_OPTIONS, log.stress_level) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.sleep_quality, 10)}>
-                            Sleep Quality: {getLabelByValue(SLEEP_QUALITY_OPTIONS, log.sleep_quality) || '-'}
+                        <Badge variant="outline" className={getScoreColor(log.soreness_level, 3)}>
+                            Soreness: {getLabelByValue(STRESS_OPTIONS, log.soreness_level) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.digestion_rating === 'Excellent' ? 10 : log.digestion_rating === 'Good' ? 7 : log.digestion_rating === 'Average' ? 5 : 3, 10)}>
-                            Digestion: {log.digestion_rating || '-'}
-                        </Badge>
+                        {log.hrv ? (
+                            <Badge variant="outline" className="bg-muted text-muted-foreground">
+                                HRV: {log.hrv} ms
+                            </Badge>
+                        ) : null}
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Workout Details (If they worked out) */}
-            {(log.workout_session || log.workout_duration || log.cardio_liss_mins || log.cardio_hiit_mins) && (
+            {/* Workout Log */}
+            {(log.workout_session || log.workout_duration || log.cardio_liss_mins || log.cardio_hiit_mins || log.active_kcal) && (
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm flex items-center gap-2 text-primary">
-                            <Dumbbell size={16} /> Workout
+                            <Dumbbell size={16} /> Workout Log
                             {(onEdit || onEditSection) && (
                                 <button
                                     onClick={() => onEditSection ? onEditSection('training') : onEdit!(log, 'training')}
@@ -152,16 +154,38 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                                     <span className="font-semibold">{log.workout_session}</span>
                                 </div>
                             )}
+                            {log.workout_start_time ? (
+                                <div className="flex justify-between items-center text-sm">
+                                    <span className="text-muted-foreground">Start Time:</span>
+                                    <span className="font-semibold">{log.workout_start_time}</span>
+                                </div>
+                            ) : null}
                             {log.workout_duration ? (
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="text-muted-foreground">Duration:</span>
                                     <span className="font-semibold">{log.workout_duration} min</span>
                                 </div>
                             ) : null}
-                            <div className="flex gap-2 mt-2">
-                                {log.gym_rpe && (
+                            {log.active_kcal ? (
+                                <div className="flex justify-between items-center text-sm">
+                                    <span className="text-muted-foreground">Active Kcal:</span>
+                                    <span className="font-semibold">{log.active_kcal} kcal</span>
+                                </div>
+                            ) : null}
+                            <div className="flex flex-wrap gap-2 mt-1">
+                                {log.gym_rpe ? (
                                     <Badge variant="secondary" className="bg-secondary/20">RPE: {log.gym_rpe}</Badge>
-                                )}
+                                ) : null}
+                                {log.gym_energy ? (
+                                    <Badge variant="secondary" className="bg-secondary/20">
+                                        Gym Energy: {getLabelByValue(ENERGY_OPTIONS, log.gym_energy)}
+                                    </Badge>
+                                ) : null}
+                                {log.gym_mood ? (
+                                    <Badge variant="secondary" className="bg-secondary/20">
+                                        Gym Mood: {getLabelByValue(MOOD_OPTIONS, log.gym_mood)}
+                                    </Badge>
+                                ) : null}
                                 {log.cardio_liss_mins ? (
                                     <Badge variant="secondary" className="bg-secondary/20">LISS: {log.cardio_liss_mins}m</Badge>
                                 ) : null}
@@ -174,12 +198,12 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                 </Card>
             )}
 
-            {/* End of Day Notes / Details */}
-            {(log.diet_adherence || log.general_notes || log.active_kcal) && (
+            {/* End of Day */}
+            {(log.diet_adherence || log.general_notes || log.digestion_rating || log.daily_energy || log.hunger_level || log.libido) && (
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
-                            <Utensils size={16} /> Notes and Details
+                            <Utensils size={16} /> End of Day
                             {(onEdit || onEditSection) && (
                                 <button
                                     onClick={() => onEditSection ? onEditSection('end_of_day') : onEdit!(log, 'end_of_day')}
@@ -191,20 +215,36 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="space-y-2 text-sm">
-                            {log.active_kcal ? (
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Active Kcal:</span>
-                                    <span>{log.active_kcal} kcal</span>
-                                </div>
-                            ) : null}
+                        <div className="space-y-3">
                             {log.diet_adherence && log.diet_adherence !== 'perfect' && (
-                                <div className="flex items-center gap-2 text-amber-600 font-medium">
+                                <div className="flex items-center gap-2 text-amber-600 font-medium text-sm">
                                     <span>🍔 Diet: {log.diet_adherence.replace('_', ' ')}</span>
                                 </div>
                             )}
+                            <div className="flex flex-wrap gap-2">
+                                {log.daily_energy ? (
+                                    <Badge variant="outline" className={getScoreColor(log.daily_energy, 3)}>
+                                        Energy: {getLabelByValue(ENERGY_OPTIONS, log.daily_energy) || '-'}
+                                    </Badge>
+                                ) : null}
+                                {log.digestion_rating ? (
+                                    <Badge variant="outline" className={getScoreColor(log.digestion_rating, 4)}>
+                                        Digestion: {getLabelByValue(DIGESTION_OPTIONS, log.digestion_rating) || '-'}
+                                    </Badge>
+                                ) : null}
+                                {log.hunger_level ? (
+                                    <Badge variant="outline" className="bg-muted text-muted-foreground">
+                                        Hunger: {getLabelByValue(HUNGER_OPTIONS, log.hunger_level) || '-'}
+                                    </Badge>
+                                ) : null}
+                                {log.libido ? (
+                                    <Badge variant="outline" className="bg-muted text-muted-foreground">
+                                        Libido: {getLabelByValue(LIBIDO_OPTIONS, log.libido) || '-'}
+                                    </Badge>
+                                ) : null}
+                            </div>
                             {log.general_notes && (
-                                <div className="mt-2 text-muted-foreground bg-muted/50 p-3 rounded-md italic">
+                                <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md italic">
                                     "{log.general_notes}"
                                 </div>
                             )}

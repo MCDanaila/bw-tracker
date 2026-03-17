@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="100" fill="#0B0F19"></rect>
+
+  <!-- BW Pulse (dominant for branding) -->
+  <path d="M100 256 L180 256 L220 160 L260 360 L310 200 L360 300 L420 256" stroke="#22C5FF" stroke-width="18" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+
+  <!-- Subtle barbell ends -->
+  <rect x="60" y="220" width="20" height="72" rx="6" fill="#FFFFFF"></rect>
+  <rect x="432" y="220" width="20" height="72" rx="6" fill="#FFFFFF"></rect>
+</svg>
