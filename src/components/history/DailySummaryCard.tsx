@@ -1,15 +1,17 @@
 import { type DailyLog } from '@/types/database';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Activity, Moon, Dumbbell, Droplets, HeartPulse, Scale, Utensils } from 'lucide-react';
+import { Activity, Moon, Dumbbell, Droplets, HeartPulse, Scale, Utensils, Pencil } from 'lucide-react';
 import { ENERGY_OPTIONS, MOOD_OPTIONS, STRESS_OPTIONS, SLEEP_QUALITY_OPTIONS, getLabelByValue } from '@/lib/constants';
 
 interface DailySummaryCardProps {
     log: DailyLog | null;
     date: Date;
+    onEdit?: (log: DailyLog, section?: 'morning' | 'training' | 'end_of_day') => void;
+    onEditSection?: (section: 'morning' | 'training' | 'end_of_day') => void;
 }
 
-export default function DailySummaryCard({ log, date }: DailySummaryCardProps) {
+export default function DailySummaryCard({ log, date, onEdit, onEditSection }: DailySummaryCardProps) {
     if (!log) {
         return (
             <Card className="mt-6 border-dashed bg-muted/30">
@@ -41,6 +43,16 @@ export default function DailySummaryCard({ log, date }: DailySummaryCardProps) {
             {/* Header / Date */}
             <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold capitalize">{formattedDate}</h3>
+                {onEdit && (
+                    <button
+                        onClick={() => onEdit(log)}
+                        className="flex items-center gap-1 px-2 py-1 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                    >
+                        <Pencil size={14} />
+                        Edit
+                    </button>
+                )}
+
             </div>
 
             {/* Core Metrics Grid */}
@@ -85,6 +97,14 @@ export default function DailySummaryCard({ log, date }: DailySummaryCardProps) {
                 <CardHeader className="pb-2">
                     <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
                         <HeartPulse size={16} /> Biofeedback
+                        {(onEdit || onEditSection) && (
+                            <button
+                                onClick={() => onEditSection ? onEditSection('morning') : onEdit!(log, 'morning')}
+                                className="ml-auto p-1 rounded-md hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                                <Pencil size={14} />
+                            </button>
+                        )}
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -114,6 +134,14 @@ export default function DailySummaryCard({ log, date }: DailySummaryCardProps) {
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm flex items-center gap-2 text-primary">
                             <Dumbbell size={16} /> Workout
+                            {(onEdit || onEditSection) && (
+                                <button
+                                    onClick={() => onEditSection ? onEditSection('training') : onEdit!(log, 'training')}
+                                    className="ml-auto p-1 rounded-md hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                    <Pencil size={14} />
+                                </button>
+                            )}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -152,6 +180,14 @@ export default function DailySummaryCard({ log, date }: DailySummaryCardProps) {
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
                             <Utensils size={16} /> Notes and Details
+                            {(onEdit || onEditSection) && (
+                                <button
+                                    onClick={() => onEditSection ? onEditSection('end_of_day') : onEdit!(log, 'end_of_day')}
+                                    className="ml-auto p-1 rounded-md hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                    <Pencil size={14} />
+                                </button>
+                            )}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>

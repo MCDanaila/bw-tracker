@@ -4,6 +4,28 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+## [0.4.1] - Bug Fix Pass
+
+### 🐛 Bug Fixes
+- **Calendar Cell Overlays Sticky Header:** The selected day cell in `HeatmapCalendar` used `z-10 scale-110`, matching the `z-10` on `SyncHeader`. Same z-index with the calendar cell later in DOM order caused it to paint on top of the sticky header when scrolling. Fixed by bumping `SyncHeader` to `z-20`.
+- **Today Dashboard Shows 0% After Sync:** `DailyLogHub` only read today's log from `localDB.syncQueue`. Once entries were synced and removed from the queue, `todayLog` was always `null` — leaving the Today dashboard at 0% with no summary card despite Supabase having full data. Fixed by adding a Supabase query for today's date as a fallback when no pending queue entry exists.
+- **Editing Pending Log Shows Wrong/Incomplete Data:** Each section save (Morning, Workout, EOD) creates a separate `syncQueue` entry. Editing from `PendingLogs` opened one specific entry, which was often missing data from later saves. Fixed by merging all pending entries for the same date (oldest → newest) before populating the `EditLogModal`, so the form always shows the complete accumulated state.
+
+## [0.4.0] - Dashboard UX Overhaul
+
+### ✨ Features & UX Improvements
+- **Unified Today View:** `TodayDashboardView` now renders a full `DailySummaryCard` (reusing the History tab component) in place of the three checkpoint menu buttons once the user has logged any data for today — providing a single, consistent read view across the app.
+- **Inline Section Editing:** `DailySummaryCard` gains two new optional edit props: `onEdit` (full-log edit, used by History) and `onEditSection` (section-level navigation, used by Today). Pencil icon buttons appear in the Biofeedback, Workout, and Notes section headers, routing the user directly to the relevant flow form.
+- **Edit Past Entries from History:** Tapping "Edit" on any `DailySummaryCard` in the History tab now wraps the selected log into a `SyncAction`, switches to the Tracker tab, and opens `DailyTrackerWizard` pre-filled with that day's data — completing the full round-trip edit flow.
+- **Goal Progress Icons:** The Goals Progress collapsible widget now shows matching Lucide icons on each tile (`Droplets` for Water, `Moon` for Sleep, `Activity` for Steps, `Timer` for Cardio), consistent with the icons used in the History summary card.
+- **Robust Recovery Score:** Replaced the 2-signal recovery score (sleep quality + stress) with a weighted 5-signal formula covering `sleep_quality` (30%), `sleep_hours` (20%), `stress_level` (25%), `mood` (15%), and `soreness_level` (10%). Available signals are re-weighted proportionally when fields are missing. Score now displays whenever at least one sleep signal is present.
+- **Field-Based Completion Tracking:** Section completion in `TodayDashboardView` is now calculated from the actual percentage of fields filled (Morning: 7 fields, Training: 8 fields, End of Day: 6 fields) rather than a binary check on two key fields. A section is marked done at ≥60% filled. Each checkpoint button shows an `"X / Y fields"` subtitle. The top progress bar reflects the average of the three section percentages.
+
+### 💅 Polish / Architecture
+- **`onEditSection` / `onEdit` Props on `DailySummaryCard`:** Clean dual-prop design — `onEdit(log)` for history-level editing, `onEditSection(section)` for today's section-level navigation. Section pencil buttons prefer `onEditSection` when available, falling back to `onEdit`.
+- **`buildSyncAction` Helper in `App.tsx`:** Extracted a `buildSyncAction(log: DailyLog): SyncAction` helper to consistently wrap synced logs into the local queue format when opening the edit wizard from History.
+- **`HistoryView` accepts `onEditLog` prop:** `HistoryView` now forwards an optional `onEditLog` callback from `App.tsx` to `DailySummaryCard`, keeping history-level edit wiring in the top-level `App` component.
+
 ## [0.3.0] - Bug Fix & Quality Pass
 
 ### 🐛 Bug Fixes

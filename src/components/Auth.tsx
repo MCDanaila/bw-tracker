@@ -32,9 +32,8 @@ export default function Auth() {
                 // Sometimes signUp returns success but needs email confirmation.
                 // For local development or if email confirmation is off, it logs in automatically.
                 if (signUpError) throw signUpError;
-                if (!isLogin) {
-                    toast.success('Registration successful! Please check your email to verify if required, or simply log in.');
-                }
+                toast.success('Account created! Sign in below.');
+                setIsLogin(true);
             }
         } catch (err: any) {
             setError(err.message || 'An error occurred during authentication.');

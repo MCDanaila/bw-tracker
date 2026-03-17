@@ -25,7 +25,7 @@ export default function SyncHeader() {
     }, [syncMutation]);
 
     return (
-        <header className="bg-card/95 backdrop-blur border-b border-border/50 p-4 sticky top-0 z-10 flex justify-between items-center text-card-foreground">
+        <header className="bg-card/95 backdrop-blur border-b border-border/50 p-4 sticky top-0 z-20 flex justify-between items-center text-card-foreground">
             <div>
                 <h1 className="text-xl font-bold text-foreground">BW Tracker</h1>
 

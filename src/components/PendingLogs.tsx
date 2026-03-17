@@ -1,24 +1,19 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Trash2, Edit2, AlertCircle } from "lucide-react";
-import { localDB, type SyncAction } from "@/lib/db";
+import { localDB } from "@/lib/db";
 import { Button } from '@/components/ui/button';
+import EditLogModal from "@/components/history/EditLogModal";
+import { type DailyLog } from "@/types/database";
 
-interface PendingLogsProps {
-    onEdit: (action: SyncAction) => void;
-}
+export default function PendingLogs() {
+    const [editingLog, setEditingLog] = useState<DailyLog | null>(null);
+    const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
-export default function PendingLogs({ onEdit }: PendingLogsProps) {
     const pendingLogs = useLiveQuery(
         () => localDB.syncQueue.where('status').equals('pending').toArray(),
         []
     );
-
-    const handleDelete = async (id?: number) => {
-        if (!id) return;
-        if (window.confirm("Are you sure you want to delete this log?")) {
-            await localDB.syncQueue.delete(id);
-        }
-    };
 
     if (!pendingLogs || pendingLogs.length === 0) return null;
 
@@ -43,25 +38,66 @@ export default function PendingLogs({ onEdit }: PendingLogsProps) {
                                 <p className="text-xs text-muted-foreground mt-1">{weight} • {steps}</p>
                             </div>
                             <div className="flex gap-2">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => onEdit(log)}
-                                >
-                                    <Edit2 size={16} /> Edit
-                                </Button>
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() => handleDelete(log.id!)}
-                                >
-                                    <Trash2 size={16} /> Delete
-                                </Button>
+                                {confirmDeleteId === log.id ? (
+                                    <>
+                                        <Button
+                                            variant="destructive"
+                                            size="sm"
+                                            onClick={async () => {
+                                                await localDB.syncQueue.delete(log.id!);
+                                                setConfirmDeleteId(null);
+                                            }}
+                                        >
+                                            Confirm Delete
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => setConfirmDeleteId(null)}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => {
+                                                const date = log.payload?.date;
+                                                if (date && pendingLogs) {
+                                                    // Merge all entries for this date (oldest→newest) so form shows complete data
+                                                    const merged = pendingLogs
+                                                        .filter(l => l.payload?.date === date)
+                                                        .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+                                                        .reduce((acc, l) => ({ ...acc, ...l.payload }), {} as DailyLog);
+                                                    setEditingLog(merged);
+                                                } else {
+                                                    setEditingLog(log.payload as DailyLog);
+                                                }
+                                            }}
+                                        >
+                                            <Edit2 size={16} /> Edit
+                                        </Button>
+                                        <Button
+                                            variant="destructive"
+                                            size="sm"
+                                            onClick={() => setConfirmDeleteId(log.id!)}
+                                        >
+                                            <Trash2 size={16} /> Delete
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     );
                 })}
             </div>
+
+            <EditLogModal
+                log={editingLog}
+                onClose={() => setEditingLog(null)}
+            />
         </div>
     );
 }

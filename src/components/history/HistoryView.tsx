@@ -4,6 +4,8 @@ import { useStreak } from '@/hooks/useStreak';
 import { Loader2, CalendarRange } from 'lucide-react';
 import HeatmapCalendar from './HeatmapCalendar';
 import DailySummaryCard from './DailySummaryCard';
+import EditLogModal from './EditLogModal';
+import { type DailyLog } from '@/types/database';
 
 export default function HistoryView() {
     const { data: logs, isLoading, error } = useHistoryLogs();
@@ -15,6 +17,9 @@ export default function HistoryView() {
         today.setHours(0, 0, 0, 0);
         return today;
     });
+
+    const [editingLog, setEditingLog] = useState<DailyLog | null>(null);
+    const [editSection, setEditSection] = useState<'morning' | 'training' | 'end_of_day' | undefined>(undefined);
 
     // Find the log for the currently selected date
     const selectedLog = useMemo(() => {
@@ -108,8 +113,23 @@ export default function HistoryView() {
             </div>
 
             {/* Details Region */}
-            <DailySummaryCard log={selectedLog} date={selectedDate} />
+            <DailySummaryCard
+                log={selectedLog}
+                date={selectedDate}
+                onEdit={(log, section) => {
+                    setEditingLog(log);
+                    setEditSection(section);
+                }}
+            />
 
+            <EditLogModal
+                log={editingLog}
+                initialSection={editSection}
+                onClose={() => {
+                    setEditingLog(null);
+                    setEditSection(undefined);
+                }}
+            />
         </div>
     );
 }

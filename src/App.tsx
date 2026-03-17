@@ -1,5 +1,5 @@
 import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff, CalendarRange, UserCircle } from "lucide-react";
-import DailyTrackerWizard from "@/components/daily-flow/DailyTrackerWizard";
+import DailyLogHub from "@/components/daily-flow/DailyLogHub";
 import SyncHeader from "@/components/SyncHeader";
 import PendingLogs from "@/components/PendingLogs";
 import Auth from "@/components/Auth";
@@ -9,7 +9,6 @@ import HistoryView from "@/components/history/HistoryView";
 import Onboarding from "@/components/Onboarding";
 import ProfileView from "@/components/ProfileView";
 import { useAuth } from "@/contexts/AuthContext";
-import { type SyncAction } from "@/lib/db";
 import { useState, useEffect, useRef } from "react";
 import { useNotifications } from '@/hooks/useNotifications';
 import { supabase } from "@/lib/supabase";
@@ -19,8 +18,7 @@ type Tab = 'tracker' | 'diet' | 'stats' | 'history';
 function App() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [currentTab, setCurrentTab] = useState<Tab>('tracker');
-  const [editingLog, setEditingLog] = useState<SyncAction | null>(null);
-  const { session, loading, signOut, user } = useAuth(); // Added 'user' to destructuring
+  const { session, loading, signOut, user } = useAuth();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
@@ -184,8 +182,8 @@ function App() {
           <>
             {currentTab === 'tracker' && (
               <>
-                <DailyTrackerWizard editItem={editingLog} onClearEdit={() => setEditingLog(null)} />
-                <PendingLogs onEdit={setEditingLog} />
+                <DailyLogHub />
+                <PendingLogs />
               </>
             )}
 
