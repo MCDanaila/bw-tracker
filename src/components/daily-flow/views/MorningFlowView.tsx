@@ -14,13 +14,14 @@ import { toast } from "sonner";
 interface MorningFlowViewProps {
     existingData: any;
     yesterdayData?: any;
+    last7DaysAvg?: any;
     onBack: () => void;
     onSave: (updatedPayload: any) => void;
 }
 
 
 
-export function MorningFlowView({ existingData, yesterdayData, onBack, onSave }: MorningFlowViewProps) {
+export function MorningFlowView({ existingData, yesterdayData, last7DaysAvg, onBack, onSave }: MorningFlowViewProps) {
     const { user } = useAuth();
 
     // Initialize form with today's existing data (or smart defaults)
@@ -32,6 +33,7 @@ export function MorningFlowView({ existingData, yesterdayData, onBack, onSave }:
             sleep_quality: existingData?.sleep_quality || 0,
             stress_level: existingData?.stress_level || 0,
             mood: existingData?.mood || 0,
+            hrv: existingData?.hrv || 0,
         }
     });
 
@@ -72,6 +74,8 @@ export function MorningFlowView({ existingData, yesterdayData, onBack, onSave }:
                 ...currentDefaults,
                 weight_fasting: payload.weight_fasting,
                 sleep_hours: payload.sleep_hours,
+                stress_level: payload.stress_level,
+                hrv: payload.hrv,
             }));
 
             toast.success("Morning check-in saved! 🔥");
@@ -117,6 +121,9 @@ export function MorningFlowView({ existingData, yesterdayData, onBack, onSave }:
                                 <Stepper label="Custom Sleep (hrs)" value={sleepHours || 0} onChange={(v) => setValue("sleep_hours", v, { shouldDirty: true })} step={0.5} min={0} max={24} />
                             </div>
                         )}
+                        {last7DaysAvg?.sleep_hours && (
+                            <p className="text-xs text-muted-foreground mt-2 ml-1 font-medium">7-day avg: {last7DaysAvg.sleep_hours}h</p>
+                        )}
                     </div>
 
                     <div className="space-y-3 pt-2">
@@ -133,14 +140,22 @@ export function MorningFlowView({ existingData, yesterdayData, onBack, onSave }:
                         <div className="grid grid-cols-2 gap-4 p-5 rounded-2xl bg-card border border-border/50 shadow-sm">
                             <div className="col-span-2">
                                 <Stepper label="Weight (kg)" value={weightFasting || 0} onChange={(v) => setValue("weight_fasting", v, { shouldDirty: true })} step={0.1} min={30} max={200} />
-                                {yesterdayData?.weight_fasting && (
-                                    <p className="text-xs text-muted-foreground mt-2 ml-1">Yesterday: {yesterdayData.weight_fasting}kg</p>
-                                )}
+                                <div className="flex gap-4 mt-2 ml-1">
+                                    {yesterdayData?.weight_fasting && (
+                                        <p className="text-xs text-muted-foreground">Yesterday: {yesterdayData.weight_fasting}kg</p>
+                                    )}
+                                    {last7DaysAvg?.weight_fasting && (
+                                        <p className="text-xs text-muted-foreground font-medium">7-day avg: {last7DaysAvg.weight_fasting}kg</p>
+                                    )}
+                                </div>
                             </div>
 
                             <Input label="Time" type="time" {...register("measurement_time")} className="mt-2" />
                             <div className="col-span-1 mt-2">
                                 <Input label="HRV (ms)" type="number" {...register("hrv")} />
+                                {last7DaysAvg?.hrv && (
+                                    <p className="text-xs text-muted-foreground mt-2 ml-1 font-medium">Baseline: {last7DaysAvg.hrv}</p>
+                                )}
                             </div>
                         </div>
                     </div>

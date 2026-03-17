@@ -72,7 +72,7 @@ CREATE TABLE daily_logs (
     -- Evening/End of Day & Biofeedback
     water_liters NUMERIC CHECK (water_liters >= 0 AND water_liters <= 15),
     salt_grams NUMERIC,
-    cheat_meals BOOLEAN DEFAULT FALSE,
+    diet_adherence TEXT CHECK (diet_adherence IN ('perfect', 'minor_deviation', 'cheat_meal')),
     digestion_rating TEXT,
     digestion_comments TEXT,
     bathroom_visits INTEGER,

@@ -147,7 +147,7 @@ export default function DailySummaryCard({ log, date }: DailySummaryCardProps) {
             )}
 
             {/* End of Day Notes / Details */}
-            {(log.cheat_meals || log.general_notes || log.active_kcal) && (
+            {(log.diet_adherence || log.general_notes || log.active_kcal) && (
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
@@ -162,9 +162,9 @@ export default function DailySummaryCard({ log, date }: DailySummaryCardProps) {
                                     <span>{log.active_kcal} kcal</span>
                                 </div>
                             ) : null}
-                            {log.cheat_meals && (
+                            {log.diet_adherence && log.diet_adherence !== 'perfect' && (
                                 <div className="flex items-center gap-2 text-amber-600 font-medium">
-                                    <span>🍔 Cheat Meal Logged</span>
+                                    <span>🍔 Diet: {log.diet_adherence.replace('_', ' ')}</span>
                                 </div>
                             )}
                             {log.general_notes && (

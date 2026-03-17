@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { localDB, type SyncAction } from "@/lib/db";
 import { useAuth } from "@/contexts/AuthContext";
+import { type DailyLog } from "@/types/database";
 import { TodayDashboardView } from "./views/TodayDashboardView";
 import { MorningFlowView } from "./views/MorningFlowView";
 import { TrainingFlowView } from "./views/TrainingFlowView";
@@ -18,8 +19,9 @@ export interface DailyTrackerWizardProps {
 export default function DailyTrackerWizard({ editItem }: DailyTrackerWizardProps) {
     const { user } = useAuth();
     const [activeView, setActiveView] = useState<ViewState>("dashboard");
-    const [todayLog, setTodayLog] = useState<any>(null);
-    const [yesterdayLog, setYesterdayLog] = useState<any>(null);
+    const [todayLog, setTodayLog] = useState<DailyLog | null>(null);
+    const [yesterdayLog, setYesterdayLog] = useState<DailyLog | null>(null);
+    const [last7DaysAvg, setLast7DaysAvg] = useState<Partial<DailyLog> | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     // Fetch existing data for today to pre-fill the wizard views
@@ -54,6 +56,9 @@ export default function DailyTrackerWizard({ editItem }: DailyTrackerWizardProps
                                     sleep_hours: parsed.sleep_hours,
                                     water_liters: parsed.water_liters,
                                     salt_grams: parsed.salt_grams,
+                                    steps: parsed.steps,
+                                    stress_level: parsed.stress_level,
+                                    hrv: parsed.hrv,
                                 });
                             } catch (e) {
                                 console.error("Failed to parse defaults", e);
@@ -63,18 +68,15 @@ export default function DailyTrackerWizard({ editItem }: DailyTrackerWizardProps
                         }
                     }
 
-                    // Fetch yesterday's log (or the most recent past log) for contextual hints
+                    // Fetch recent logs for contextual hints & 7-day average
                     const allPastLogs = existingLogAction
                         .filter(a => a.payload?.date && a.payload.date < todayDate)
                         .sort((a, b) => new Date(b.payload.date).getTime() - new Date(a.payload.date).getTime());
 
+                    let pastLogsData: any[] = [];
                     if (allPastLogs.length > 0) {
-                        setYesterdayLog(allPastLogs[0].payload);
+                        pastLogsData = allPastLogs.map(a => a.payload);
                     } else {
-                        // Fallback: fetch from supabase if not in sync queue?
-                        // Since useAuth handles supabase client natively in many apps, we could
-                        // but maybe we just rely on syncQueue for simplicity if offline-first.
-                        // For now we'll set to null if not recently mutated locally.
                         const { supabase } = await import('@/lib/supabase');
                         const { data } = await supabase
                             .from('daily_logs')
@@ -82,12 +84,30 @@ export default function DailyTrackerWizard({ editItem }: DailyTrackerWizardProps
                             .eq('user_id', user.id)
                             .lt('date', todayDate)
                             .order('date', { ascending: false })
-                            .limit(1)
-                            .single();
+                            .limit(7);
 
                         if (data) {
-                            setYesterdayLog(data);
+                            pastLogsData = data;
                         }
+                    }
+
+                    if (pastLogsData.length > 0) {
+                        setYesterdayLog(pastLogsData[0]);
+
+                        let avgWeight = 0, avgSleep = 0, avgHrv = 0;
+                        let weightCount = 0, sleepCount = 0, hrvCount = 0;
+
+                        pastLogsData.slice(0, 7).forEach((log: any) => {
+                            if (log.weight_fasting) { avgWeight += Number(log.weight_fasting); weightCount++; }
+                            if (log.sleep_hours) { avgSleep += Number(log.sleep_hours); sleepCount++; }
+                            if (log.hrv) { avgHrv += Number(log.hrv); hrvCount++; }
+                        });
+
+                        setLast7DaysAvg({
+                            weight_fasting: weightCount > 0 ? (avgWeight / weightCount).toFixed(1) : null,
+                            sleep_hours: sleepCount > 0 ? (avgSleep / sleepCount).toFixed(1) : null,
+                            hrv: hrvCount > 0 ? Math.round(avgHrv / hrvCount) : null,
+                        });
                     }
                 } catch (error) {
                     console.error("Error fetching today's log:", error);
@@ -126,6 +146,7 @@ export default function DailyTrackerWizard({ editItem }: DailyTrackerWizardProps
                 <MorningFlowView
                     existingData={todayLog}
                     yesterdayData={yesterdayLog}
+                    last7DaysAvg={last7DaysAvg}
                     onBack={() => handleNavigate("dashboard")}
                     onSave={handleFlowComplete}
                 />

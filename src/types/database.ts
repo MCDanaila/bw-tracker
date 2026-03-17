@@ -66,7 +66,7 @@ export interface DailyLog {
     // Evening/Day & Biofeedback
     water_liters: number | null;
     salt_grams: number | null;
-    cheat_meals: boolean | null;
+    diet_adherence: 'perfect' | 'minor_deviation' | 'cheat_meal' | null;
     digestion_rating: string | null;
     digestion_comments: string | null;
     bathroom_visits: number | null;

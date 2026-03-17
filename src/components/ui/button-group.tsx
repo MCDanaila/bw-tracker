@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -15,14 +16,15 @@ interface ButtonGroupProps<T> {
 }
 
 export function ButtonGroup<T>({ options, value, onChange, className, label }: ButtonGroupProps<T>) {
+    const groupId = `button-group-${useId()}`;
     return (
-        <div className={cn("flex flex-col gap-2 w-full", className)}>
+        <div className={cn("flex flex-col gap-2 w-full", className)} role="group" aria-labelledby={label ? `${groupId}-label` : undefined}>
             {label && (
-                <span className="text-sm font-medium leading-none text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                <span id={`${groupId}-label`} className="text-sm font-medium leading-none text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     {label}
                 </span>
             )}
-            <div className="flex flex-wrap gap-2 w-full">
+            <div className="flex flex-wrap gap-2 w-full" role="group" aria-label={label}>
                 {options.map((opt, i) => {
                     const isSelected = value === opt.value;
                     return (
@@ -32,6 +34,7 @@ export function ButtonGroup<T>({ options, value, onChange, className, label }: B
                             variant={isSelected ? "default" : "outline"}
                             onClick={() => onChange(opt.value)}
                             className={cn("flex-1 min-w-fit")}
+                            aria-pressed={isSelected}
                         >
                             {opt.label}
                         </Button>

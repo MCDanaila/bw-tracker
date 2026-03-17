@@ -40,7 +40,16 @@ export function useSync() {
 
                 } catch (error) {
                     console.error('Failed to sync action:', action, error);
-                    // If it fails, we leave it in the queue for the next sync attempt!
+                    // Mark as failed after 3 attempts to prevent infinite queue buildup
+                    const retryCount = (action.retryCount || 0) + 1;
+                    if (retryCount >= 3) {
+                        console.error('Max retries reached, removing action:', action.id);
+                        if (action.id) {
+                            await localDB.syncQueue.delete(action.id);
+                        }
+                    } else if (action.id) {
+                        await localDB.syncQueue.update(action.id, { retryCount });
+                    }
                 }
             }
 

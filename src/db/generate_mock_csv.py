@@ -5,7 +5,7 @@ start_date = datetime.date(2026, 2, 7)
 end_date = datetime.date(2026, 3, 9)
 user_id = "3b8f612d-1dbf-4d3e-a7fd-473495c1ff17"
 
-headers = "user_id,date,weight_fasting,measurement_time,sleep_hours,sleep_quality,hrv,sleep_score,steps,steps_goal,active_kcal,cardio_hiit_mins,cardio_liss_mins,workout_session,workout_start_time,workout_duration,gym_rpe,gym_energy,gym_mood,soreness_level,water_liters,salt_grams,cheat_meals,digestion_rating,digestion_comments,bathroom_visits,stress_level,daily_energy,hunger_level,libido,mood,cycle_day,blood_glucose,sys_bp,dia_bp,general_notes"
+headers = "user_id,date,weight_fasting,measurement_time,sleep_hours,sleep_quality,hrv,sleep_score,steps,steps_goal,active_kcal,cardio_hiit_mins,cardio_liss_mins,workout_session,workout_start_time,workout_duration,gym_rpe,gym_energy,gym_mood,soreness_level,water_liters,salt_grams,diet_adherence,digestion_rating,digestion_comments,bathroom_visits,stress_level,daily_energy,hunger_level,libido,mood,cycle_day,blood_glucose,sys_bp,dia_bp,general_notes"
 lines = [headers]
 
 workout_sessions = ["Upper", "Lower", "Push", "Pull", "Legs", ""]
@@ -45,7 +45,7 @@ while current_date <= end_date:
     soreness = random.randint(1, 8)
     water = round(random.uniform(2.0, 4.5), 1)
     salt = round(random.uniform(3.0, 8.0), 1)
-    cheat = random.choice(["True", "False"])
+    cheat = random.choice(["perfect", "minor_deviation", "cheat_meal"])
     digestion = random.choice(["Poor", "Average", "Good", "Excellent"])
     bathroom = random.randint(0, 3)
     stress = random.randint(1, 4)
