@@ -1,15 +1,15 @@
 export const MOOD_OPTIONS = [
-    { label: "😫", value: 1 },
-    { label: "😐", value: 2 },
-    { label: "🙂", value: 3 },
-    { label: "😃", value: 4 },
-    { label: "🔥", value: 5 },
+    { label: "😫", value: 1, ariaLabel: "Very low" },
+    { label: "😐", value: 2, ariaLabel: "Low" },
+    { label: "🙂", value: 3, ariaLabel: "Neutral" },
+    { label: "😃", value: 4, ariaLabel: "Good" },
+    { label: "🔥", value: 5, ariaLabel: "Excellent" },
 ];
 
 export const ENERGY_OPTIONS = [
-    { label: "🪫", value: 1 },
-    { label: "🔋", value: 3 },
-    { label: "⚡", value: 5 },
+    { label: "🪫", value: 1, ariaLabel: "Low energy" },
+    { label: "🔋", value: 3, ariaLabel: "Moderate energy" },
+    { label: "⚡", value: 5, ariaLabel: "High energy" },
 ];
 
 export const STRESS_OPTIONS = [

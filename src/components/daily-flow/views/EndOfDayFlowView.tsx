@@ -154,7 +154,7 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
                             <Textarea
                                 placeholder="Any final notes about today? How did you feel overall?"
                                 className="min-h-[100px] rounded-2xl bg-background resize-none p-4 shadow-sm border-border/50"
-                                {...register("notes")}
+                                {...register("general_notes")}
                             />
                         </div>
                     </div>

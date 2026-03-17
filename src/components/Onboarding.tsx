@@ -96,8 +96,9 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                            <label className="text-sm font-medium text-muted-foreground">Gender</label>
+                            <label htmlFor="onboarding-gender" className="text-sm font-medium text-muted-foreground">Gender</label>
                             <select
+                                id="onboarding-gender"
                                 name="gender"
                                 value={formData.gender}
                                 onChange={handleChange}
@@ -124,8 +125,9 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-muted-foreground">Preferred Unit System</label>
+                        <label htmlFor="onboarding-unit" className="text-sm font-medium text-muted-foreground">Preferred Unit System</label>
                         <select
+                            id="onboarding-unit"
                             name="unit_system"
                             value={formData.unit_system}
                             onChange={handleChange}
@@ -170,8 +172,9 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-muted-foreground">Activity Level</label>
+                        <label htmlFor="onboarding-activity" className="text-sm font-medium text-muted-foreground">Activity Level</label>
                         <select
+                            id="onboarding-activity"
                             name="activity_level"
                             value={formData.activity_level}
                             onChange={handleChange}
@@ -187,8 +190,9 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-muted-foreground">Primary Goal</label>
+                        <label htmlFor="onboarding-goal" className="text-sm font-medium text-muted-foreground">Primary Goal</label>
                         <select
+                            id="onboarding-goal"
                             name="goal"
                             value={formData.goal}
                             onChange={handleChange}

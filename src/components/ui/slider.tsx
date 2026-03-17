@@ -29,9 +29,9 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
             className
           )}
           aria-label={label || "Range slider"}
-          aria-valuemin={props.min || 0}
-          aria-valuemax={props.max || 100}
-          aria-valuenow={props.value}
+          aria-valuemin={Number(props.min) || 0}
+          aria-valuemax={Number(props.max) || 100}
+          aria-valuenow={props.value !== undefined ? Number(props.value) : undefined}
           aria-invalid={!!error}
           aria-describedby={errorId}
           {...props}

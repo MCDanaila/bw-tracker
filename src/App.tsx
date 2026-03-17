@@ -10,18 +10,38 @@ import Onboarding from "@/components/Onboarding";
 import ProfileView from "@/components/ProfileView";
 import { useAuth } from "@/contexts/AuthContext";
 import { type SyncAction } from "@/lib/db";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNotifications } from '@/hooks/useNotifications';
 import { supabase } from "@/lib/supabase";
 
 type Tab = 'tracker' | 'diet' | 'stats' | 'history';
 
 function App() {
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [currentTab, setCurrentTab] = useState<Tab>('tracker');
   const [editingLog, setEditingLog] = useState<SyncAction | null>(null);
   const { session, loading, signOut, user } = useAuth(); // Added 'user' to destructuring
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+
+  // Close settings dropdown on outside click or Escape key
+  useEffect(() => {
+    if (!isSettingsOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsSettingsOpen(false);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsSettingsOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isSettingsOpen]);
 
   // Notification setup
   const { permission, requestPermission, scheduleDailyReminder } = useNotifications();
@@ -86,7 +106,7 @@ function App() {
       <div className="bg-card border-b border-border flex justify-between items-center px-4 py-2">
         <span className="font-bold text-foreground">BW Tracker</span>
 
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
             className="w-8 h-8 rounded-full bg-primary/20 text-primary font-bold flex items-center justify-center hover:bg-primary/30 transition-colors text-sm" // Adjusted size for better fit
@@ -95,7 +115,7 @@ function App() {
           </button>
 
           {isSettingsOpen && (
-            <div className="absolute right-0 mt-2 w-64 bg-popover text-popover-foreground rounded-xl shadow-xl border border-border py-2 z-50">
+            <div role="menu" className="absolute right-0 mt-2 w-64 bg-popover text-popover-foreground rounded-xl shadow-xl border border-border py-2 z-50">
               <div className="px-4 py-2 border-b border-border/50 flex flex-col">
                 <span className="text-sm font-medium text-foreground truncate">{user?.email}</span>
                 <span className="text-xs text-muted-foreground">Settings</span>

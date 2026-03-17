@@ -1,6 +1,7 @@
 import type { Food, MealPlan } from '@/types/database';
 import { calculateItemMacros, type DayOfWeek } from '@/hooks/useDietData';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import { RefreshCw, ChevronDown } from 'lucide-react';
 import FoodSearchModal from '@/components/diet/FoodSearchModal';
 import SwapPreviewModal from '@/components/diet/SwapPreviewModal';
@@ -51,6 +52,7 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                     quantity: result.newQuantity
                 }
             }));
+            toast('Swap applied for this session. Changes are not saved permanently yet.');
         }
 
         setSwapState({

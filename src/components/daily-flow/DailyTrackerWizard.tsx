@@ -16,7 +16,7 @@ export interface DailyTrackerWizardProps {
     onClearEdit?: () => void;
 }
 
-export default function DailyTrackerWizard({ editItem }: DailyTrackerWizardProps) {
+export default function DailyTrackerWizard({ editItem, onClearEdit }: DailyTrackerWizardProps) {
     const { user } = useAuth();
     const [activeView, setActiveView] = useState<ViewState>("dashboard");
     const [todayLog, setTodayLog] = useState<DailyLog | null>(null);
@@ -59,7 +59,7 @@ export default function DailyTrackerWizard({ editItem }: DailyTrackerWizardProps
                                     steps: parsed.steps,
                                     stress_level: parsed.stress_level,
                                     hrv: parsed.hrv,
-                                });
+                                } as DailyLog);
                             } catch (e) {
                                 console.error("Failed to parse defaults", e);
                             }
@@ -104,8 +104,8 @@ export default function DailyTrackerWizard({ editItem }: DailyTrackerWizardProps
                         });
 
                         setLast7DaysAvg({
-                            weight_fasting: weightCount > 0 ? (avgWeight / weightCount).toFixed(1) : null,
-                            sleep_hours: sleepCount > 0 ? (avgSleep / sleepCount).toFixed(1) : null,
+                            weight_fasting: weightCount > 0 ? parseFloat((avgWeight / weightCount).toFixed(1)) : null,
+                            sleep_hours: sleepCount > 0 ? parseFloat((avgSleep / sleepCount).toFixed(1)) : null,
                             hrv: hrvCount > 0 ? Math.round(avgHrv / hrvCount) : null,
                         });
                     }
@@ -128,6 +128,7 @@ export default function DailyTrackerWizard({ editItem }: DailyTrackerWizardProps
     const handleFlowComplete = (updatedPayload: any) => {
         setTodayLog(updatedPayload);
         setActiveView("dashboard");
+        onClearEdit?.();
     };
 
     if (isLoading) {

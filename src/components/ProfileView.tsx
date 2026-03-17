@@ -116,8 +116,8 @@ export default function ProfileView({ onBack }: ProfileViewProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                            <label className="text-sm font-medium text-muted-foreground">Gender</label>
-                            <select {...register('gender')} className={SELECT_CLASS}>
+                            <label htmlFor="profile-gender" className="text-sm font-medium text-muted-foreground">Gender</label>
+                            <select id="profile-gender" {...register('gender')} className={SELECT_CLASS}>
                                 <option value="">Select Gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
@@ -128,8 +128,8 @@ export default function ProfileView({ onBack }: ProfileViewProps) {
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-muted-foreground">Unit System</label>
-                        <select {...register('unit_system')} className={SELECT_CLASS}>
+                        <label htmlFor="profile-unit" className="text-sm font-medium text-muted-foreground">Unit System</label>
+                        <select id="profile-unit" {...register('unit_system')} className={SELECT_CLASS}>
                             <option value="metric">Metric (kg, cm)</option>
                             <option value="imperial">Imperial (lbs, inches)</option>
                         </select>
@@ -167,8 +167,8 @@ export default function ProfileView({ onBack }: ProfileViewProps) {
                     <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Fitness Profile</h2>
 
                     <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-muted-foreground">Activity Level</label>
-                        <select {...register('activity_level')} className={SELECT_CLASS}>
+                        <label htmlFor="profile-activity" className="text-sm font-medium text-muted-foreground">Activity Level</label>
+                        <select id="profile-activity" {...register('activity_level')} className={SELECT_CLASS}>
                             <option value="">Select Activity Level</option>
                             <option value="sedentary">Sedentary (office job, no exercise)</option>
                             <option value="lightly_active">Lightly Active (1–3 days/week)</option>
@@ -178,8 +178,8 @@ export default function ProfileView({ onBack }: ProfileViewProps) {
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-sm font-medium text-muted-foreground">Primary Goal</label>
-                        <select {...register('goal')} className={SELECT_CLASS}>
+                        <label htmlFor="profile-goal" className="text-sm font-medium text-muted-foreground">Primary Goal</label>
+                        <select id="profile-goal" {...register('goal')} className={SELECT_CLASS}>
                             <option value="">Select Goal</option>
                             <option value="lose_fat">Lose Fat</option>
                             <option value="maintain_weight">Maintain Weight</option>

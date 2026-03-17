@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { Mail, Lock, LogIn, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true);
@@ -32,7 +33,7 @@ export default function Auth() {
                 // For local development or if email confirmation is off, it logs in automatically.
                 if (signUpError) throw signUpError;
                 if (!isLogin) {
-                    alert('Registration successful! Please check your email to verify if required, or simply log in.');
+                    toast.success('Registration successful! Please check your email to verify if required, or simply log in.');
                 }
             }
         } catch (err: any) {

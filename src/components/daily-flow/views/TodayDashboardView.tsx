@@ -17,9 +17,10 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
     const waterGoal = profile?.water_goal ?? WATER_GOAL_DEFAULT;
 
     // Determine completion statuses based on the existing DB payload
-    const isMorningDone = !!todayLog?.weight_fasting && !!todayLog?.sleep_hours;
-    const isTrainingDone = !!todayLog?.steps && !!todayLog?.workout_session;
-    const isEndOfDayDone = !!todayLog?.water_liters && !!todayLog?.digestion_rating;
+    // Use explicit null/undefined checks so that 0 is treated as a valid logged value (e.g. rest day with 0 steps)
+    const isMorningDone = (todayLog?.weight_fasting !== null && todayLog?.weight_fasting !== undefined) && (todayLog?.sleep_hours !== null && todayLog?.sleep_hours !== undefined);
+    const isTrainingDone = (todayLog?.steps !== null && todayLog?.steps !== undefined) && !!todayLog?.workout_session;
+    const isEndOfDayDone = (todayLog?.water_liters !== null && todayLog?.water_liters !== undefined) && !!todayLog?.digestion_rating;
 
     // Calculate overall completion percentage for the top bar
     let completedSections = 0;
@@ -44,6 +45,14 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
     const sleepQualityScore = todayLog?.sleep_quality ? todayLog.sleep_quality * 10 : 0;
     const recoveryScore = (todayLog?.sleep_quality && todayLog?.stress_level)
         ? Math.round((sleepQualityScore * 0.6) + (stressScore * 0.4))
+        : null;
+
+    const recoveryMessage = recoveryScore !== null
+        ? recoveryScore < 40
+            ? "Your body needs rest. Prioritize sleep and recovery today."
+            : recoveryScore < 70
+                ? "Decent recovery. Stay consistent and keep up the effort."
+                : "Your recovery today was strong. Nice work!"
         : null;
 
     return (
@@ -79,28 +88,12 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
                 <Flame size={20} /> {streak} Day Tracking Streak
             </div>
 
-            {/* Dashboard Tiles (Body, Fuel, Drive) - Conceptual / Future usage */}
-            <div className="grid grid-cols-3 gap-3 mb-6">
-                <div className="bg-card p-3 rounded-xl border border-border/50 text-center shadow-sm flex flex-col items-center justify-center aspect-square">
-                    <span className="text-2xl mb-1">💪</span>
-                    <span className="text-xs font-semibold text-muted-foreground">Body</span>
-                </div>
-                <div className="bg-card p-3 rounded-xl border border-border/50 text-center shadow-sm flex flex-col items-center justify-center aspect-square">
-                    <span className="text-2xl mb-1">🥩</span>
-                    <span className="text-xs font-semibold text-muted-foreground">Fuel</span>
-                </div>
-                <div className="bg-card p-3 rounded-xl border border-border/50 text-center shadow-sm flex flex-col items-center justify-center aspect-square">
-                    <span className="text-2xl mb-1">🧠</span>
-                    <span className="text-xs font-semibold text-muted-foreground">Drive</span>
-                </div>
-            </div>
-
             {/* Recovery Score */}
             {recoveryScore !== null && (
                 <div className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-card to-card/50 border border-primary/20 shadow-md flex items-center justify-between">
                     <div>
                         <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-1">Recovery Score</h3>
-                        <p className="text-xs text-muted-foreground max-w-[140px]">Your recovery today was strong. Nice work!</p>
+                        <p className="text-xs text-muted-foreground max-w-[140px]">{recoveryMessage}</p>
                     </div>
                     <div className="relative flex items-center justify-center w-20 h-20">
                         <svg className="w-full h-full transform -rotate-90">

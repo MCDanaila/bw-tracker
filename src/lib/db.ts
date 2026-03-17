@@ -7,6 +7,7 @@ export interface SyncAction {
     payload: any;              // The actual data (weight, RPE, etc.)
     status: 'pending' | 'error';
     created_at: string;
+    retryCount?: number;
 }
 
 export class BWTrackerDB extends Dexie {
@@ -17,7 +18,7 @@ export class BWTrackerDB extends Dexie {
 
         // Define the database schema (only index the fields we need to query by)
         this.version(1).stores({
-            syncQueue: '++id, mutation_type, status, created_at'
+            syncQueue: '++id, mutation_type, status, created_at, retryCount'
         });
     }
 }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 export interface Option<T> {
     label: React.ReactNode;
     value: T;
+    ariaLabel?: string;
 }
 
 interface ButtonGroupProps<T> {
@@ -35,6 +36,7 @@ export function ButtonGroup<T>({ options, value, onChange, className, label }: B
                             onClick={() => onChange(opt.value)}
                             className={cn("flex-1 min-w-fit")}
                             aria-pressed={isSelected}
+                            aria-label={opt.ariaLabel}
                         >
                             {opt.label}
                         </Button>

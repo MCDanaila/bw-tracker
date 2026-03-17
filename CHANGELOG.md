@@ -4,6 +4,37 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+## [0.3.0] - Bug Fix & Quality Pass
+
+### 🐛 Bug Fixes
+- **Data Loss — Journal Field Mismatch:** Fixed `EndOfDayFlowView` registering the journal textarea as `"notes"` instead of `"general_notes"`, causing every journal entry to be silently dropped on save.
+- **Edit Flow State Leak:** Fixed `DailyTrackerWizard` not calling `onClearEdit` after completing an edit, causing `editingLog` in `App.tsx` to never reset and the wizard to re-open in edit mode.
+- **Broken Retry Guard:** Fixed `retryCount` not persisting in IndexedDB — the field was in the TypeScript interface but missing from the Dexie store column definition, so every sync retry read it as `undefined` and the 3-attempt cap was never enforced. Users' failed log entries were silently deleted without notification.
+- **Zero-Value Completion Detection:** Fixed section completion checks using `!!value` which treated `0` (valid for steps on a rest day, water, etc.) as incomplete. Replaced with explicit `!== null && !== undefined` guards.
+- **Hardcoded Steps Goal in Stats:** Fixed `StepsChart` receiving a hardcoded `targetSteps={10000}` instead of the user's profile `steps_goal`.
+- **`window.alert` in Auth:** Replaced the only `window.alert()` call (registration success) with a Sonner `toast.success()` for visual consistency.
+- **Pre-existing TypeScript Errors:** Fixed three pre-existing TS errors — partial `DailyLog` object cast, `toFixed()` returning `string` instead of `number` for 7-day averages, and `aria-valuemax` accepting `string | number` on the Slider component.
+
+### ✨ Features & UX Improvements
+- **Sync Success/Failure Feedback:** `useSync` now fires a `toast.success('All logs synced')` on successful sync and a `toast.error(...)` when a log entry exhausts all retries and is removed from the queue, instead of silently failing.
+- **Auto-Sync on Reconnect:** `SyncHeader` now listens for the browser `online` event and automatically triggers sync when the device regains connectivity — no manual button press required.
+- **Cache Invalidation After Sync:** `useSync` now invalidates `historyLogs` and `dashboardData` TanStack Query caches after a successful sync so the History and Stats tabs reflect freshly synced data immediately.
+- **Live Streak Counter:** `useStreak` replaced its one-shot `useEffect` with Dexie's `useLiveQuery`, so the streak count updates reactively when new logs are added within the same session.
+- **Dynamic Recovery Score Message:** The recovery score widget now shows contextual copy based on the actual score (low / medium / high) instead of a hardcoded "strong recovery" message.
+- **Session-Only Swap Warning:** Confirming a food swap in the Diet tab now shows a toast informing the user that the swap is session-only and will not persist after navigation.
+- **Removed Placeholder Tiles:** Removed the non-functional "Body / Fuel / Drive" dashboard tiles that appeared interactive but had no behaviour, eliminating false affordance.
+
+### ♿ Accessibility
+- **Emoji Button Labels:** Added `ariaLabel` field to `MOOD_OPTIONS` and `ENERGY_OPTIONS` constants and wired it through `ButtonGroup` to `aria-label` on each button, replacing emoji-only labels ("😫") with meaningful descriptions ("Very low") for screen readers.
+- **Label/Select Association:** Added `htmlFor` / `id` pairs to all `<label>` + `<select>` combinations in `Onboarding` and `ProfileView` so form controls are programmatically associated for assistive technology.
+- **Heatmap Touch Targets:** Increased calendar day cells from `w-7 h-7` (28px) to `w-9 h-9` (36px) and month navigation arrows from `p-1.5` to `p-2` to bring tap targets closer to the 44px minimum.
+- **Settings Dropdown Keyboard Handling:** Settings dropdown now closes on outside click and on `Escape` key press, with `role="menu"` applied to the container.
+
+### 💅 Polish / Architecture
+- **Removed Dead Dependency:** Removed `zustand` from `package.json` — it was listed as a dependency but had zero stores in the codebase.
+- **Fixed Invisible Pending Text:** `SyncHeader` pending status text now uses `text-muted-foreground` instead of `text-secondary`, which resolved near-zero contrast (invisible text) in light mode.
+- **`retryCount` in Dexie Schema:** Added `retryCount` to both the `SyncAction` TypeScript interface and the Dexie store column list so retry state is correctly persisted across sync attempts.
+
 ## [0.2.0] - The Daily Flow Update
 
 ### ✨ Features

@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import WeightChart from '@/components/dashboard/WeightChart';
 import StepsChart from '@/components/dashboard/StepsChart';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useProfile, STEPS_GOAL_DEFAULT } from '@/hooks/useProfile';
 
 const TIME_RANGES: { value: TimeRange; label: string }[] = [
     { value: '7d', label: '7d' },
@@ -16,6 +17,7 @@ const TIME_RANGES: { value: TimeRange; label: string }[] = [
 export default function DashboardView() {
     const [range, setRange] = useState<TimeRange>('7d');
     const { data: logData, isLoading, error } = useDashboardData(range);
+    const { data: profile } = useProfile();
 
     if (error) {
         return (
@@ -58,7 +60,7 @@ export default function DashboardView() {
                     <WeightChart data={logData || []} />
 
                     {/* Steps Chart */}
-                    <StepsChart data={logData || []} targetSteps={10000} />
+                    <StepsChart data={logData || []} targetSteps={profile?.steps_goal ?? STEPS_GOAL_DEFAULT} />
                 </>
             )}
         </div>

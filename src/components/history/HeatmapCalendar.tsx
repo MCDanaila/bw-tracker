@@ -108,7 +108,7 @@ export default function HeatmapCalendar({ logs, selectedDate, onSelectDate }: He
                 <div className="flex items-center gap-2 self-end sm:self-auto">
                     <button
                         onClick={handlePrevMonth}
-                        className="p-1.5 rounded-md hover:bg-muted text-muted-foreground transition-colors"
+                        className="p-2 rounded-md hover:bg-muted text-muted-foreground transition-colors"
                         aria-label="Previous month"
                     >
                         <ChevronLeft size={16} />
@@ -116,7 +116,7 @@ export default function HeatmapCalendar({ logs, selectedDate, onSelectDate }: He
                     <span className="text-sm font-semibold min-w-[100px] text-center text-foreground">{monthName}</span>
                     <button
                         onClick={handleNextMonth}
-                        className="p-1.5 rounded-md hover:bg-muted text-muted-foreground transition-colors"
+                        className="p-2 rounded-md hover:bg-muted text-muted-foreground transition-colors"
                         aria-label="Next month"
                     >
                         <ChevronRight size={16} />
@@ -156,7 +156,7 @@ export default function HeatmapCalendar({ logs, selectedDate, onSelectDate }: He
                                                     onClick={() => !isPad && onSelectDate(date)}
                                                     disabled={isPad}
                                                     className={cn(
-                                                        "w-7 h-7 sm:w-8 sm:h-8 rounded-md border transition-all duration-200 flex items-center justify-center p-0 cursor-pointer",
+                                                        "w-9 h-9 sm:w-10 sm:h-10 rounded-md border transition-all duration-200 flex items-center justify-center p-0 cursor-pointer",
                                                         getIntensityClass(date),
                                                         isSelected(date) ? "ring-2 ring-foreground ring-offset-2 ring-offset-background scale-110 z-10" : "hover:scale-105",
                                                         isPad ? "opacity-0" : ""
