@@ -123,3 +123,21 @@ export interface DailyLog {
     created_at: string;
     updated_at: string;
 }
+
+export interface AthleteGoal {
+    id: string;
+    athlete_id: string;
+    set_by: string;
+    target_weight: number | null;
+    steps_goal: number | null;
+    water_goal: number | null;
+    target_calories: number | null;
+    target_protein: number | null;
+    target_carbs: number | null;
+    target_fats: number | null;
+    phase: 'bulk' | 'cut' | 'maintenance' | 'reverse_diet' | null;
+    notes: string | null;
+    effective_from: string;
+    effective_until: string | null;
+    created_at: string;
+}

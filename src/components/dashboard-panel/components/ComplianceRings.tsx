@@ -1,4 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { RingsSkeleton } from './Skeletons';
 
 interface ComplianceRingsProps {
   diet: number;
@@ -19,8 +20,8 @@ export function ComplianceRings({ diet, training, steps, isLoading }: Compliance
     return (
       <Card>
         <CardHeader><CardTitle>Weekly Compliance</CardTitle></CardHeader>
-        <CardContent className="flex items-center justify-center py-8">
-          <div className="h-40 w-40 animate-pulse rounded-full bg-muted" />
+        <CardContent className="flex items-center justify-center py-6">
+          <RingsSkeleton />
         </CardContent>
       </Card>
     );

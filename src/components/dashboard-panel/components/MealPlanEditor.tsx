@@ -178,19 +178,21 @@ export function MealPlanEditor({ templateId, items: initialItems, onSave, readOn
   return (
     <div className="space-y-4">
       <Tabs value={activeDay} onValueChange={setActiveDay}>
-        <div className="flex items-center justify-between">
-          <TabsList>
-            {DAYS.map(day => (
-              <TabsTrigger key={day} value={day}>{day}</TabsTrigger>
-            ))}
-          </TabsList>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-0">
+          <div className="w-full overflow-x-auto pb-1 -mb-1">
+            <TabsList className="w-max min-w-full justify-start">
+              {DAYS.map(day => (
+                <TabsTrigger key={day} value={day} className="min-w-[56px] min-h-[44px]">{day}</TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
 
           {!readOnly && (
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={() => setCopyDayOpen(true)}>
+            <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+              <Button variant="outline" size="sm" onClick={() => setCopyDayOpen(true)} className="min-h-[44px]">
                 <Copy size={14} className="mr-1" /> Copy Day
               </Button>
-              <Button size="sm" onClick={handleSave} disabled={!isDirty || isSaving}>
+              <Button size="sm" onClick={handleSave} disabled={!isDirty || isSaving} className="min-h-[44px]">
                 {isSaving ? <Loader2 size={14} className="mr-1 animate-spin" /> : <Save size={14} className="mr-1" />}
                 {isDirty ? 'Save Changes' : 'Saved'}
               </Button>

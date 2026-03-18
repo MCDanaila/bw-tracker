@@ -1,5 +1,6 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { GaugeSkeleton } from './Skeletons';
 
 interface RecoveryGaugeProps {
   score: number | null;
@@ -19,8 +20,8 @@ export function RecoveryGauge({ score, trend, isLoading }: RecoveryGaugeProps) {
     return (
       <Card>
         <CardHeader><CardTitle>Recovery Score</CardTitle></CardHeader>
-        <CardContent className="flex items-center justify-center py-8">
-          <div className="h-40 w-40 animate-pulse rounded-full bg-muted" />
+        <CardContent className="flex items-center justify-center py-6">
+          <GaugeSkeleton />
         </CardContent>
       </Card>
     );

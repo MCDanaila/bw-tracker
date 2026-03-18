@@ -122,9 +122,6 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
     const hungerLevel = watch("hunger_level");
     const libido = watch("libido");
 
-    const isRest = workoutSession === "Rest";
-    const isCardio = workoutSession && workoutSession.toLowerCase().includes("cardio");
-
     const formattedDate = new Date(log.date + "T00:00:00").toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
@@ -133,9 +130,22 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
     });
 
     const onSubmit = async (data: any) => {
+        // Convert empty strings to null for optional integer/numeric fields.
+        // react-hook-form returns "" for untouched number inputs; Postgres
+        // rejects "" for integer columns with a 400 Bad Request.
+        const intFields = [
+            'hrv', 'steps', 'workout_duration',
+            'cardio_hiit_mins', 'cardio_liss_mins', 'active_kcal', 'digestion_rating',
+        ] as const;
+        const sanitized = { ...data };
+        for (const field of intFields) {
+            const v = sanitized[field];
+            sanitized[field] = v === "" || v === null || v === undefined ? null : Number(v);
+        }
+
         const merged = {
             ...log,
-            ...data,
+            ...sanitized,
             date: log.date,
             user_id: log.user_id,
         };
@@ -272,45 +282,35 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
 
                         <div className="grid grid-cols-2 gap-4">
                             <Input label="Daily Steps" type="number" {...register("steps")} />
-                            {!isRest && (
-                                <Input label="Duration (mins)" type="number" {...register("workout_duration")} />
-                            )}
-                            {isCardio && (
-                                <>
-                                    <Input label="HIIT (mins)" type="number" {...register("cardio_hiit_mins")} />
-                                    <Input label="LISS (mins)" type="number" {...register("cardio_liss_mins")} />
-                                </>
-                            )}
-                            {!isRest && (
-                                <Input label="Active kcal" type="number" {...register("active_kcal")} />
-                            )}
+                            <Input label="Duration (mins)" type="number" {...register("workout_duration")} />
+                            <Input label="HIIT (mins)" type="number" {...register("cardio_hiit_mins")} />
+                            <Input label="LISS (mins)" type="number" {...register("cardio_liss_mins")} />
+                            <Input label="Active kcal" type="number" {...register("active_kcal")} />
                         </div>
                     </div>
 
-                    {!isRest && (
-                        <div className="p-4 rounded-xl bg-card border border-border/50 space-y-6">
-                            <Slider
-                                label="Session RPE (1-10)"
-                                min="1"
-                                max="10"
-                                step="0.5"
-                                value={gymRpe}
-                                {...register("gym_rpe")}
-                            />
-                            <ButtonGroup
-                                label="Gym Energy"
-                                options={ENERGY_OPTIONS}
-                                value={gymEnergy}
-                                onChange={(v) => setValue("gym_energy", v, { shouldDirty: true })}
-                            />
-                            <ButtonGroup
-                                label="Gym Mood"
-                                options={MOOD_OPTIONS}
-                                value={gymMood}
-                                onChange={(v) => setValue("gym_mood", v, { shouldDirty: true })}
-                            />
-                        </div>
-                    )}
+                    <div className="p-4 rounded-xl bg-card border border-border/50 space-y-6">
+                        <Slider
+                            label="Session RPE (1-10)"
+                            min="1"
+                            max="10"
+                            step="0.5"
+                            value={gymRpe}
+                            {...register("gym_rpe")}
+                        />
+                        <ButtonGroup
+                            label="Gym Energy"
+                            options={ENERGY_OPTIONS}
+                            value={gymEnergy}
+                            onChange={(v) => setValue("gym_energy", v, { shouldDirty: true })}
+                        />
+                        <ButtonGroup
+                            label="Gym Mood"
+                            options={MOOD_OPTIONS}
+                            value={gymMood}
+                            onChange={(v) => setValue("gym_mood", v, { shouldDirty: true })}
+                        />
+                    </div>
                 </section>
 
                 {/* End of Day Section */}

@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,7 +52,9 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-lg border border-border">
+    <>
+    {/* Desktop Table Layout */}
+    <div className="hidden md:block rounded-lg border border-border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
@@ -86,7 +89,7 @@ export function DataTable<TData, TValue>({
               <TableRow key={i}>
                 {columns.map((_, j) => (
                   <TableCell key={j}>
-                    <div className="h-4 w-20 animate-pulse rounded bg-muted" />
+                    <Skeleton className="h-4 w-20" />
                   </TableCell>
                 ))}
               </TableRow>
@@ -115,6 +118,58 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
+
+    {/* Mobile Card Layout */}
+    <div className="md:hidden space-y-4">
+      {isLoading ? (
+        Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="rounded-lg border bg-card text-card-foreground p-4 space-y-3">
+            {columns.slice(0, 3).map((_, j) => (
+              <div key={j} className="flex justify-between items-center">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            ))}
+          </div>
+        ))
+      ) : table.getRowModel().rows.length === 0 ? (
+        <div className="rounded-lg border border-dashed p-8 text-center text-muted-foreground">
+          {emptyMessage}
+        </div>
+      ) : (
+        table.getRowModel().rows.map(row => (
+          <div
+            key={row.id}
+            className={`rounded-lg border bg-card text-card-foreground p-4 space-y-3 shadow-sm ${
+              onRowClick ? 'cursor-pointer active:scale-[0.98] transition-transform' : ''
+            }`}
+            onClick={() => onRowClick?.(row.original)}
+          >
+            {row.getVisibleCells().map(cell => {
+              // Try to extract a clean string from header if possible, otherwise use column id
+              const headerValue = typeof cell.column.columnDef.header === 'string' 
+                ? cell.column.columnDef.header 
+                : cell.column.id;
+
+              return (
+                <div key={cell.id} className="flex justify-between items-center gap-4 text-sm border-b last:border-0 pb-2 last:pb-0">
+                  <span className="font-medium text-muted-foreground break-words min-w-[30%]">
+                    {/* Render complex headers safely but ignore click events for sorting inside cards */}
+                    <div className="pointer-events-none capitalize">
+                      {headerValue}
+                    </div>
+                  </span>
+                  <span className="text-right truncate flex-1 flex justify-end">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        ))
+      )}
+    </div>
+    </>
   );
 }
 

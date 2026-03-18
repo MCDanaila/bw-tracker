@@ -1,5 +1,6 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface StatCardProps {
   label: string;
@@ -19,10 +20,10 @@ export function StatCard({ label, value, icon, trend, color, isLoading }: StatCa
     return (
       <Card>
         <CardContent className="p-4">
-          <div className="animate-pulse space-y-3">
-            <div className="h-3 w-20 rounded bg-muted" />
-            <div className="h-8 w-24 rounded bg-muted" />
-            <div className="h-3 w-16 rounded bg-muted" />
+          <div className="space-y-3">
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-3 w-16" />
           </div>
         </CardContent>
       </Card>

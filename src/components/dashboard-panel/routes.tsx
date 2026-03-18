@@ -1,5 +1,6 @@
 import { lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Outlet, useLocation } from 'react-router-dom';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const OverviewPage = lazy(() => import('./pages/OverviewPage'));
 const ProgressPage = lazy(() => import('./pages/ProgressPage'));
@@ -20,22 +21,33 @@ function NotFound() {
   );
 }
 
+function BoundaryLayout() {
+  const location = useLocation();
+  return (
+    <ErrorBoundary key={location.pathname}>
+      <Outlet />
+    </ErrorBoundary>
+  );
+}
+
 export function DashboardRoutes() {
   return (
     <Routes>
-      <Route index element={<OverviewPage />} />
-      <Route path="progress" element={<ProgressPage />} />
-      <Route path="athletes" element={<AthletesPage />} />
-      <Route path="athletes/:id" element={<AthleteDetailPage />} />
-      <Route path="athletes/:id/progress" element={<AthleteDetailPage />} />
-      <Route path="athletes/:id/diet" element={<AthleteDetailPage />} />
-      <Route path="athletes/:id/goals" element={<AthleteDetailPage />} />
-      <Route path="diet" element={<DietEditorPage />} />
-      <Route path="diet/foods" element={<FoodDatabasePage />} />
-      <Route path="diet/templates" element={<TemplatesPage />} />
-      <Route path="goals" element={<GoalsPage />} />
-      <Route path="settings" element={<SettingsPage />} />
-      <Route path="*" element={<NotFound />} />
+      <Route element={<BoundaryLayout />}>
+        <Route index element={<OverviewPage />} />
+        <Route path="progress" element={<ProgressPage />} />
+        <Route path="athletes" element={<AthletesPage />} />
+        <Route path="athletes/:id" element={<AthleteDetailPage />} />
+        <Route path="athletes/:id/progress" element={<AthleteDetailPage />} />
+        <Route path="athletes/:id/diet" element={<AthleteDetailPage />} />
+        <Route path="athletes/:id/goals" element={<AthleteDetailPage />} />
+        <Route path="diet" element={<DietEditorPage />} />
+        <Route path="diet/foods" element={<FoodDatabasePage />} />
+        <Route path="diet/templates" element={<TemplatesPage />} />
+        <Route path="goals" element={<GoalsPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
     </Routes>
   );
 }

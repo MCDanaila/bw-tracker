@@ -1,6 +1,7 @@
 import { Activity, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { SidebarNav } from './SidebarNav';
+import { AthleteSelector } from '../components/AthleteSelector';
 import { Button } from '@/components/ui/button';
 
 interface SidebarProps {
@@ -17,6 +18,9 @@ export function Sidebar({ collapsed }: SidebarProps) {
         <Activity size={24} className="text-primary shrink-0" />
         {!collapsed && <span className="text-lg font-bold">BW Tracker</span>}
       </div>
+
+      {/* Athlete Selector (coach only, full sidebar only) */}
+      {!collapsed && <AthleteSelector />}
 
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto">

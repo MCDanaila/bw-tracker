@@ -7,6 +7,7 @@ import {
   Legend,
 } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { RadarSkeleton } from './Skeletons';
 
 interface BiofeedbackRadarProps {
   axes: Array<{
@@ -22,8 +23,8 @@ export function BiofeedbackRadar({ axes, isLoading }: BiofeedbackRadarProps) {
     return (
       <Card>
         <CardHeader><CardTitle>Biofeedback</CardTitle></CardHeader>
-        <CardContent className="flex items-center justify-center py-8">
-          <div className="h-48 w-48 animate-pulse rounded-full bg-muted" />
+        <CardContent className="flex items-center justify-center py-6">
+          <RadarSkeleton />
         </CardContent>
       </Card>
     );

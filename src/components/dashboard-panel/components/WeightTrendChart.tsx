@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent, CardAction } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ChartSkeleton } from './Skeletons';
 import type { TimeRange } from '@/hooks/useDashboardData';
 
 interface WeightTrendChartProps {
@@ -43,7 +44,7 @@ export function WeightTrendChart({ data, targetWeight, dateRange, onRangeChange,
       <Card>
         <CardHeader><CardTitle>Weight Trend</CardTitle></CardHeader>
         <CardContent className="py-8">
-          <div className="h-64 animate-pulse rounded bg-muted" />
+          <ChartSkeleton className="h-64" />
         </CardContent>
       </Card>
     );

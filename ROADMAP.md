@@ -1888,7 +1888,7 @@ This phase delivers the coach-specific features: athlete roster, athlete detail 
 
 ### Database
 
-#### [ ] P3-T01: Add coach RLS policies to existing tables
+#### [x] P3-T01: Add coach RLS policies to existing tables
 
 **Description**: Write and execute a migration that adds coach access policies to `profiles`, `daily_logs`, `meal_adherence`, and `meal_plans` tables, as defined in DASHBOARD_SPEC.md Section 7.4. These are additive OR-based policies -- existing user policies remain unchanged.
 
@@ -1931,7 +1931,7 @@ CREATE POLICY "Coaches delete athlete meal plans"
 
 ---
 
-#### [ ] P3-T02: Create `athlete_goals` table
+#### [x] P3-T02: Create `athlete_goals` table
 
 **Description**: Create the versioned goals table from DASHBOARD_SPEC.md Section 7.2. This stores time-bounded goal sets per athlete, replacing the simple `target_weight`/`steps_goal`/`water_goal` on profiles for the dashboard.
 
@@ -1958,7 +1958,7 @@ WHERE target_weight IS NOT NULL OR steps_goal IS NOT NULL OR water_goal IS NOT N
 
 ---
 
-#### [ ] P3-T03: Create Postgres function `get_latest_logs_for_athletes`
+#### [x] P3-T03: Create Postgres function `get_latest_logs_for_athletes`
 
 **Description**: Create the server-side function from DASHBOARD_SPEC.md Section 7.5 that returns the latest daily log for each athlete in an array of IDs. This avoids N+1 queries when loading the athlete roster.
 
@@ -1976,7 +1976,7 @@ WHERE target_weight IS NOT NULL OR steps_goal IS NOT NULL OR water_goal IS NOT N
 
 ---
 
-#### [ ] P3-T04: Update TypeScript types for `athlete_goals`
+#### [x] P3-T04: Update TypeScript types for `athlete_goals`
 
 **Description**: Add the `AthleteGoal` interface to `src/types/database.ts`.
 
@@ -2014,7 +2014,7 @@ export interface AthleteGoal {
 
 ### Hooks / State
 
-#### [ ] P3-T05: Build `useAthletes` hook
+#### [x] P3-T05: Build `useAthletes` hook
 
 **Description**: Create a hook for coaches to fetch their roster of athletes with latest stats. Uses the `get_latest_logs_for_athletes` RPC function and joins with profile data.
 
@@ -2056,7 +2056,7 @@ export function useAthletes(): UseQueryResult<AthleteWithStats[]>;
 
 ---
 
-#### [ ] P3-T06: Build `useCoachStats` hook
+#### [x] P3-T06: Build `useCoachStats` hook
 
 **Description**: Create a hook that computes the three coach overview stat card values: total athletes, logs received today, and active alerts count.
 
@@ -2085,7 +2085,7 @@ export function useCoachStats(): CoachStats;
 
 ---
 
-#### [ ] P3-T07: Build `useAthleteGoals` hook
+#### [x] P3-T07: Build `useAthleteGoals` hook
 
 **Description**: Create a hook for reading and writing versioned athlete goals.
 
@@ -2113,7 +2113,7 @@ export function useSetGoal(): UseMutationResult;  // closes previous, inserts ne
 
 ---
 
-#### [ ] P3-T08: Fully wire `AthleteContext` with `AthleteSelector`
+#### [x] P3-T08: Fully wire `AthleteContext` with `AthleteSelector`
 
 **Description**: Upgrade the stub `AthleteContext` from P0-T12 to be fully functional. When a coach selects an athlete from the selector, all data-fetching hooks in the dashboard switch to that athlete's data.
 
@@ -2151,7 +2151,7 @@ export function useSetGoal(): UseMutationResult;  // closes previous, inserts ne
 
 ### Frontend / Components -- Roster and Detail
 
-#### [ ] P3-T09: Define `athletes-columns.tsx` column definitions
+#### [x] P3-T09: Define `athletes-columns.tsx` column definitions
 
 **Description**: Define TanStack Table column definitions for the Athletes Roster table.
 
@@ -2181,7 +2181,7 @@ export function useSetGoal(): UseMutationResult;  // closes previous, inserts ne
 
 ---
 
-#### [ ] P3-T10: Build `AthletesPage` (roster table)
+#### [x] P3-T10: Build `AthletesPage` (roster table)
 
 **Description**: Create the Athletes page at `/dashboard/athletes` showing the full athlete roster with search, filtering, and click-to-detail.
 
@@ -2206,7 +2206,7 @@ export function useSetGoal(): UseMutationResult;  // closes previous, inserts ne
 
 ---
 
-#### [ ] P3-T11: Build `AthleteDetailPage` (tabbed view)
+#### [x] P3-T11: Build `AthleteDetailPage` (tabbed view)
 
 **Description**: Create the Athlete Detail page at `/dashboard/athletes/:id` with a tabbed layout: Overview, Progress, Diet, Goals, Logs. Each tab reuses components from Phase 1 and Phase 2, parameterized with the athlete's ID via `useParams` from react-router-dom.
 
@@ -2240,7 +2240,7 @@ export function useSetGoal(): UseMutationResult;  // closes previous, inserts ne
 
 ---
 
-#### [ ] P3-T12: Define `logs-columns.tsx` column definitions
+#### [x] P3-T12: Define `logs-columns.tsx` column definitions
 
 **Description**: Define column definitions for the daily logs DataTable used in the Athlete Detail Logs tab.
 
@@ -2271,7 +2271,7 @@ export function useSetGoal(): UseMutationResult;  // closes previous, inserts ne
 
 ### Frontend / Components -- Coach Overview
 
-#### [ ] P3-T13: Build `ComplianceHeatmap` component
+#### [x] P3-T13: Build `ComplianceHeatmap` component
 
 **Description**: Create a matrix heatmap showing athletes (rows) x dates (columns), with each cell colored by compliance score. This is a custom component, not a Recharts chart.
 
@@ -2321,7 +2321,7 @@ interface ComplianceHeatmapProps {
 
 ---
 
-#### [ ] P3-T14: Build `AlertFeed` component (static/placeholder)
+#### [x] P3-T14: Build `AlertFeed` component (static/placeholder)
 
 **Description**: Create the alert feed component that will display chronological alerts. For now, render with an empty array -- the actual alert computation comes in Phase 4.
 
@@ -2367,7 +2367,7 @@ interface AlertFeedProps {
 
 ---
 
-#### [ ] P3-T15: Build Coach `OverviewPage` variant
+#### [x] P3-T15: Build Coach `OverviewPage` variant
 
 **Description**: Update the OverviewPage to be role-adaptive. When the user is a coach with no athlete selected, show the coach overview layout (DASHBOARD_SPEC.md Section 5.3 Coach View wireframe) instead of the athlete overview.
 
@@ -2407,7 +2407,7 @@ Row 4: ComplianceHeatmap (left, 2/3 width) + AlertFeed (right, 1/3 width) in gri
 
 ### Phase Wrap-Up
 
-#### [ ] P3-T16: Phase 3 verification and changelog
+#### [x] P3-T16: Phase 3 verification and changelog
 
 **Description**: Run full build and lint. Test coach workflows end-to-end: athlete roster, detail view, diet editing for athletes, goal setting, compliance heatmap. Verify athlete experience unchanged. Update `CHANGELOG.md`.
 

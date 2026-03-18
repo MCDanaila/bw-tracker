@@ -60,7 +60,7 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                 <Card className="bg-card">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Scale size={20} className="text-primary mb-2" />
-                        <span className="text-2xl font-bold">{log.weight_fasting || '--'} <span className="text-sm text-muted-foreground font-normal">kg</span></span>
+                        <span className="text-2xl font-bold">{log.weight_fasting?.toFixed(1) || '--'} <span className="text-sm text-muted-foreground font-normal">kg</span></span>
                         <span className="text-xs text-muted-foreground mt-1">Fasting Weight</span>
                     </CardContent>
                 </Card>

@@ -4,6 +4,84 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+## [0.9.0] - Dashboard Phase 5: UX Polish & Refinement
+
+### ✨ Features
+
+- **Settings Page** (`/dashboard/settings`): Fully rebuilt from placeholder. Sections: Profile (editable display name, read-only email, role badge with avatar initials), Preferences (unit system selector saved to `profiles` table via `useUpdateProfile`; default chart date range saved to `localStorage`), Coach-only Athlete Management (live status dropdowns — active/paused/terminated — with direct `coach_athletes` Supabase mutations), Account (Sign Out via `useAuth.signOut`, "Back to Mobile App" link to `/`). Loading skeleton on profile fetch.
+
+### 🦴 Loading States (Skeletons)
+
+- **Centralized `Skeletons.tsx`** (`src/components/dashboard-panel/components/Skeletons.tsx`): 6 dimension-accurate skeleton variants replacing ad-hoc `animate-pulse` divs across the dashboard:
+  - `StatCardSkeleton` — matches StatCard card dimensions
+  - `ChartSkeleton` — height-configurable rectangular placeholder
+  - `TableSkeleton` — header + N row bars
+  - `RadarSkeleton` — circular placeholder for `BiofeedbackRadar`
+  - `GaugeSkeleton` — circular placeholder for `RecoveryGauge`
+  - `RingsSkeleton` — concentric circles placeholder for `ComplianceRings`
+- All variants include `aria-busy="true"` and descriptive `aria-label` for screen reader support.
+- Applied to: `RecoveryGauge`, `ComplianceRings`, `BiofeedbackRadar`, `WeightTrendChart`, `StepsBarChart`, `ProgressPage` log table, and `SettingsPage`.
+
+### 🛡️ Error Boundaries
+
+- **Per-route error isolation** via `BoundaryLayout` in `routes.tsx`: wraps `<Outlet />` with `<ErrorBoundary key={location.pathname}>`, so error boundaries reset automatically on navigation. Removed the single global boundary from `DashboardApp.tsx`.
+
+### 📱 Responsive Audit & Polish
+
+- **`MealPlanEditor` day tabs**: Wrapped `TabsList` in `overflow-x-auto` horizontal scroll container on mobile. All day tab triggers get `min-h-[44px] min-w-[56px]` for WCAG-compliant touch targets. Action buttons (Copy Day, Save Changes) reflow to a full-width row on mobile.
+- **`ComplianceHeatmap`**: Athlete name buttons get `min-h-[44px]` for touch compliance.
+- **Settings Page CTAs**: All interactive buttons in SettingsPage enforce `min-h-[44px]`.
+- Confirmed all Recharts charts (`WeightTrendChart`, `StepsBarChart`, `BiofeedbackRadar`) already use `<ResponsiveContainer width="100%">` — no changes needed.
+
+### 📋 Empty States
+
+Updated and standardized contextual empty states across all lists and tables:
+
+| Location | Empty State |
+|---|---|
+| Athletes list (no athletes) | "No athletes assigned yet. Share your coach link to get started." |
+| Athletes table (filtered) | "No athletes match your filters" |
+| Food Database (empty DB) | "No foods yet" — "Add Food" action (coach only) |
+| Food Database (no results) | "No foods match your filters." |
+| Diet Templates | "No templates yet" — "Create Template" action |
+| Athlete Diet View | "No diet plan assigned" |
+| Alert Feed | "No active alerts" (CheckCircle icon, "Everything looks good!") |
+| Progress Logs (empty period) | "No data for this period" |
+
+### 💅 Architecture
+- `ProgressPage` log table skeletons migrated from inline `animate-pulse` divs to `<Skeleton>` component.
+- `AthletesPage` empty state copy now matches ROADMAP spec exactly.
+
+## [0.8.0] - Dashboard Phase 3: Coach Multi-Athlete Panel
+
+### Database
+- **Coach RLS policies** (`006`): Coaches can read athlete profiles, daily_logs, meal_adherence; full CRUD on athlete meal_plans (own-created only)
+- **athlete_goals table** (`007`): Versioned goal tracking with partial unique index for current goal, phase/macro targets, RLS for athletes and coaches, backfill from existing profile goals
+- **get_latest_logs_for_athletes** (`008`): Postgres RPC function using `DISTINCT ON` pattern to avoid N+1 queries for coach roster
+
+### Types
+- Added `AthleteGoal` interface to `src/types/database.ts`
+
+### Hooks
+- **useAthletes**: Fetches coach's athlete roster with latest stats, weight sparkline data, diet/steps compliance, and status. Combines coach_athletes, profiles, RPC, and recent daily_logs
+- **useAthleteGoals**: `useCurrentGoal(athleteId)`, `useGoalHistory(athleteId)`, `useSetGoal()` — versioned goal management with automatic close-previous-on-set
+- **useCoachStats**: Total athletes count, logs today count, active alerts placeholder
+
+### Components
+- **AthleteSelector**: Searchable combobox in sidebar for coaches to switch between athletes. Persists selection to URL `?athlete=` param via `useSearchParams`
+- **ComplianceHeatmap**: Athletes x dates matrix with color-coded compliance cells (red/amber/green), clickable athlete names, horizontally scrollable
+- **AlertFeed**: Chronological alert list with severity icons/colors, acknowledge button, empty state. Placeholder for Phase 4 alert engine
+- **AthleteContext upgrade**: Now persists `activeAthleteId` to URL search params, provides `activeAthlete` profile object
+
+### Pages
+- **AthletesPage** (`/dashboard/athletes`): Coach roster table with search, status filter, click-to-detail navigation
+- **AthleteDetailPage** (`/dashboard/athletes/:id`): 5-tab view (Overview, Progress, Diet, Goals, Logs) reusing Phase 1/2 components parameterized by athlete ID. Goals tab supports versioned goal setting with history timeline
+- **OverviewPage**: Now role-adaptive — coaches with no athlete selected see Coach Dashboard (stat cards, compact roster, compliance heatmap, alert feed); coaches with athlete selected or athletes see athlete dashboard
+
+### Tables
+- **athletes-columns**: 7 columns with inline SVG sparkline for weight trend, compliance badges, status badges
+- **logs-columns**: 10 columns for daily log data (weight, steps, sleep, diet, RPE, water, energy, mood) with formatted badges
+
 ## [0.7.0] - Dashboard Phase 2: Food Database & Diet Templates
 
 ### ✨ Features

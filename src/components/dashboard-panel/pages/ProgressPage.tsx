@@ -13,6 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProgressPage() {
   const { effectiveUserId } = useAthleteContext();
@@ -55,7 +56,7 @@ export default function ProgressPage() {
                   <TableRow key={i}>
                     {Array.from({ length: 5 }).map((_, j) => (
                       <TableCell key={j}>
-                        <div className="h-4 w-16 animate-pulse rounded bg-muted" />
+                        <Skeleton className="h-4 w-16" />
                       </TableCell>
                     ))}
                   </TableRow>

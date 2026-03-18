@@ -1,12 +1,15 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
+import type { UserProfile } from '@/hooks/useProfile';
 
 export interface AthleteContextValue {
   activeAthleteId: string | null;
   setActiveAthleteId: (id: string | null) => void;
   isCoach: boolean;
   effectiveUserId: string;
+  activeAthlete: UserProfile | null;
 }
 
 export const AthleteContext = createContext<AthleteContextValue | null>(null);
@@ -21,10 +24,27 @@ export function useAthleteContext() {
 export function AthleteProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const { data: profile } = useProfile();
-  const [activeAthleteId, setActiveAthleteId] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const activeAthleteId = searchParams.get('athlete') || null;
+
+  const setActiveAthleteId = useCallback((id: string | null) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (id) {
+        next.set('athlete', id);
+      } else {
+        next.delete('athlete');
+      }
+      return next;
+    }, { replace: true });
+  }, [setSearchParams]);
 
   const isCoach = profile?.role === 'coach';
   const effectiveUserId = activeAthleteId ?? user?.id ?? '';
+
+  // Fetch the active athlete's profile when one is selected
+  const { data: athleteProfile } = useProfile(activeAthleteId ?? undefined);
 
   return (
     <AthleteContext.Provider
@@ -33,6 +53,7 @@ export function AthleteProvider({ children }: { children: React.ReactNode }) {
         setActiveAthleteId,
         isCoach,
         effectiveUserId,
+        activeAthlete: activeAthleteId ? (athleteProfile ?? null) : null,
       }}
     >
       {children}
