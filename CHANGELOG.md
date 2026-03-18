@@ -4,6 +4,41 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+## [0.10.0] - Workout Log App Phase 0: Foundation
+
+### ✨ Features
+
+- **Workout App Entry Point** (`src/apps/workout/WorkoutApp.tsx`): New mobile-first app with 4-tab navigation (Log, History, Programs, Stats). Auth-gated via `useAuth()` context with logout button in header. Fixed bottom navigation with icon buttons matching tracker app pattern. Lazy-loaded from `/workout` route.
+
+### 🧭 Routing & Integration
+
+- **App Router Update** (`src/shell/AppRouter.tsx`): Added `/workout/*` route with lazy-loaded `WorkoutApp` component. Shell now routes three apps: `/` (tracker), `/dashboard/*` (dashboard), `/workout/*` (workout).
+- **Tracker App Link** (`src/apps/tracker/TrackerApp.tsx`): Added "Workout" button (Dumbbell icon) to bottom nav as 5th tab, linking to `/workout`. Styling follows existing tab pattern with gap-1 and text-xs labels.
+
+### 📱 Component Structure
+
+- **Log Workout** (`src/apps/workout/components/log/LogWorkoutView.tsx`): WIP stub. Planned: Exercise form with sets, reps, weight, RPE; voice notes; offline sync to Dexie.
+- **Workout History** (`src/apps/workout/components/history/WorkoutHistoryView.tsx`): WIP stub. Planned: Timeline of past sessions, expandable exercise cards, edit/delete, filters by program/date, exercise search.
+- **Programs** (`src/apps/workout/components/programs/ProgramsView.tsx`): WIP stub. Planned: Weekly program templates, exercise management with target sets/reps/rest, clone/activate features, coach assignment.
+- **Stats** (`src/apps/workout/components/stats/WorkoutStatsView.tsx`): WIP stub. Planned: Volume charts, 1RM estimates (Brzycki formula), exercise frequency heatmap, consistency streaks, progress tracking for key lifts.
+
+### 📋 Documentation
+
+- **WORKOUT_APP_WIP.md**: Comprehensive 200+ line specification including:
+  - Data models: `WorkoutSession`, `WorkoutExercise`, `WorkoutSet`, `WorkoutProgram`, `ProgramDay`, `ProgramExercise`
+  - Full feature breakdown for each tab with planned metrics and capabilities
+  - Integration points: routing, database schema (planned), offline support via Dexie
+  - Todo checklist covering data layer, hooks, components, and styling
+  - Performance considerations (lazy-load charts, paginate history, debounce search)
+  - Future enhancements (push notifications, wearable integration, volume auto-regulation, health app sync)
+
+- **Architecture Documentation** (`.claude/CLAUDE.md`): Updated to document multi-app shell architecture with shell/AppRouter.tsx, core layer, and three apps (tracker, dashboard, workout).
+
+### 💅 Architecture
+
+- **Multi-App Monorepo Pattern**: Established consistent structure mirroring tracker/dashboard: app entry point → lazy-loaded routes → 4-tab state navigation → component tree per tab.
+- **Offline-First Ready**: Workout app designed to use same Dexie IndexedDB sync queue pattern as tracker and dashboard apps.
+
 ## [0.9.0] - Dashboard Phase 5: UX Polish & Refinement
 
 ### ✨ Features
