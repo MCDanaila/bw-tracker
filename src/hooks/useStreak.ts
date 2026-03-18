@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useHistoryLogs } from './useHistoryLogs';
-import { localDB } from '@/lib/db';
+import { useAuth } from '@/contexts/AuthContext';
+import { localDB, type SyncAction } from '@/lib/db';
 import { getLocalDateStr } from '@/lib/utils';
 
 /**
@@ -10,21 +11,26 @@ import { getLocalDateStr } from '@/lib/utils';
  * so the streak is accurate even when offline.
  * Uses useLiveQuery so the streak updates reactively when new logs are added.
  */
-export function useStreak(): number {
-    const { data: remoteLogs } = useHistoryLogs();
+export function useStreak(userId?: string): number {
+    const { user } = useAuth();
+    const isOwnData = !userId || userId === user?.id;
+    const { data: remoteLogs } = useHistoryLogs(userId);
     const localActions = useLiveQuery(
-        () => localDB.syncQueue
-            .where('mutation_type')
-            .equals('UPSERT_DAILY_LOG')
-            .toArray(),
-        []
+        async () => {
+            if (!isOwnData) return [] as SyncAction[];
+            return localDB.syncQueue
+                .where('mutation_type')
+                .equals('UPSERT_DAILY_LOG')
+                .toArray();
+        },
+        [isOwnData]
     );
 
     return useMemo(() => {
         const localDates = new Set(
             (localActions || [])
-                .filter(a => a.payload?.date)
-                .map(a => a.payload.date as string)
+                .filter((a: SyncAction) => a.payload?.date)
+                .map((a: SyncAction) => a.payload.date as string)
         );
         const remoteDates = new Set((remoteLogs || []).map(l => l.date));
         const allDates = new Set([...remoteDates, ...localDates]);

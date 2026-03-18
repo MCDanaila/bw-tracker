@@ -4,6 +4,66 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+## [0.7.0] - Dashboard Phase 2: Food Database & Diet Templates
+
+### ✨ Features
+- **Food Database Page:** Full CRUD table at `/dashboard/diet/foods` with search (debounced 300ms), unit/state filter dropdowns, sortable columns, pagination, and role-gated add/edit/delete buttons (coach-only). Built on new generic `DataTable`, `DataTableToolbar`, and `DataTablePagination` components powered by `@tanstack/react-table`.
+- **Food Form Dialog:** Add/edit dialog with all food fields (name, portion size, unit, calories, protein, carbs, fats, state), auto-slug ID generation, and macro consistency warning when P*4 + C*4 + F*9 deviates > 20% from entered kcal.
+- **Confirm Dialog:** Reusable confirmation dialog for destructive actions with destructive/default variants, loading state, and backdrop/Escape close.
+- **Empty State Component:** Reusable centered empty state with icon, title, description, and optional action button.
+- **Diet Template System (Coach):** Template list view with create/delete, card grid layout showing name, description, and last updated date. Click-through to full meal plan editor per template.
+- **Meal Plan Editor:** Compound editor component with 7-day tabs (LUN-DOM), collapsible meal sections, inline food quantity editing, drag-and-drop reorder within meals (`@dnd-kit/core` + `@dnd-kit/sortable`), real-time macro recalculation, daily macro summary bar, "Copy Day" dialog for cloning meals across days, unsaved changes warning via `beforeunload`, and save-all persistence.
+- **Macro Summary Bar:** Horizontal stacked bar showing protein (blue), carbs (amber), fats (red) proportional to calorie contribution, with text summary and optional target calorie comparison (green/amber/red color coding).
+- **Food Row Editable:** Inline-editable food row with drag handle, food name, quantity input, unit label, live macro display, and delete button.
+- **Meal Row:** Collapsible meal section with editable meal name, food list with drag-and-drop sorting, subtotal macros, add food button (opens existing `FoodSearchModal`), and delete meal confirmation.
+- **Copy Day Dialog:** Multi-select dialog for copying all meals from one day to others, with Select All/Deselect All toggle and Italian day labels.
+- **Diet Editor Page (Athlete View):** Read-only view of assigned meal plan using `MealPlanEditor` with `readOnly` mode, data from `useDietData`.
+- **Diet Templates Hook:** `useDietTemplatesList`, `useDietTemplate`, `useCreateDietTemplate`, `useUpdateDietTemplate`, `useDeleteDietTemplate`, and `useAssignTemplate` (copy-on-assign from template to athlete's meal_plans).
+- **Foods Query Hook:** `useFoodsQuery` with server-side search, unit/state filtering, pagination via Supabase `.range()`, sorting, and exact count.
+
+### 💅 Schema / Architecture
+- **DB Migration 003 — Diet Templates:** Created `diet_templates` and `diet_template_items` tables with RLS policies (coaches CRUD own templates, athletes have no access). Foreign key from `diet_template_items.food_id` to `foods.id`. Day-of-week CHECK constraint (`LUN`-`DOM`).
+- **DB Migration 004 — Meal Plans Alter:** Added `created_by` (UUID, references auth.users) and `template_id` (UUID, references diet_templates, ON DELETE SET NULL) columns to `meal_plans`. Backfilled `created_by = user_id` for existing rows.
+- **DB Migration 005 — Foods Alter:** Added `created_by` (UUID) and `updated_at` (TIMESTAMPTZ) columns to `foods`. Added coach-specific RLS policy allowing coaches full CRUD on foods.
+- **TypeScript Types Updated:** Added `DietTemplate` and `DietTemplateItem` interfaces. Extended `Food` with `created_by` and `updated_at`. Extended `MealPlan` with `created_by` and `template_id`.
+- **New Dependencies:** `@tanstack/react-table`, `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`.
+
+## [0.6.0] - Dashboard Phase 1: Athlete Dashboard
+
+### ✨ Features
+- **Parameterized Hooks:** All core data hooks (`useDashboardData`, `useProfile`, `useHistoryLogs`, `useStreak`, `useDietData`) now accept an optional `userId` parameter, enabling coach-views-athlete data flow through `AthleteContext.effectiveUserId`.
+- **Dashboard Stats Hook:** `useDashboardStats` derives current weight, 7-day average weight, weight delta, average steps (7d), and logging streak from `useDashboardData('3m')` + `useStreak`.
+- **Recovery Score Hook:** `useRecoveryScore` computes a weighted recovery score (sleep 30%, HRV 25%, soreness 20%, stress 15%, energy 10%) with trend detection vs 7 days ago.
+- **Compliance Rings Hook:** `useComplianceRings` calculates 7-day compliance percentages for diet adherence, training frequency (target 5/7), and steps-at-goal days.
+- **Biofeedback Radar Hook:** `useBiofeedbackRadar` normalizes 6 biofeedback axes (Digestion, Energy, Mood, Hunger, Libido, Stress) to 0-100 for current vs previous week comparison.
+- **Stat Cards:** `StatCard` component with icon, label, value, optional trend indicator (up/down/stable with color coding), and loading skeleton.
+- **Recovery Gauge:** SVG 270-degree arc gauge with color zones (red/amber/green), animated fill, and trend indicator.
+- **Compliance Rings:** Three concentric SVG progress rings (diet/training/steps) with percentage legend.
+- **Biofeedback Radar:** Recharts `RadarChart` comparing current vs previous week across 6 axes with filled polygons.
+- **Weight Trend Chart:** Recharts `ComposedChart` with raw weight dots (Scatter), 7-day and 14-day moving averages (Line), target weight reference line, and time range selector (7d/14d/1m/3m/all).
+- **Steps Bar Chart:** Recharts `BarChart` with color-coded bars (green/amber/red) based on goal threshold compliance.
+- **Training Calendar Strip:** 7-day horizontal strip showing workout type icons, RPE color dots, and duration badges.
+- **Goal Progress Cards:** Progress bar cards for goals (target weight, daily steps, daily water) with inverted mode for weight-loss targets.
+- **Overview Page:** Full athlete dashboard assembling stat cards, weight trend chart, recovery gauge, compliance rings, training calendar strip, biofeedback radar, and steps bar chart.
+- **Progress Page:** Weight trend chart with raw data table (date, weight, steps, sleep, diet adherence) filtered by selected time range.
+- **Goals Page:** View/edit goals (target weight, daily steps, daily water) with `react-hook-form`, inline edit form, and progress card display.
+
+## [0.5.0] - Dashboard & Coach Panel — Phase 0: Foundation
+
+### ✨ Features
+- **Dashboard Shell & Routing:** Added `react-router-dom` with `BrowserRouter`. The existing mobile app remains at `/`, while a new desktop dashboard lives at `/dashboard/*` with 13 lazy-loaded routes (Overview, Progress, Athletes, Athlete Detail, Diet Editor, Food Database, Templates, Goals, Settings) plus a 404 fallback.
+- **DashboardApp Entry Point:** Auth-guarded shell at `/dashboard` that redirects unauthenticated users to `/`, wraps content in `AthleteProvider` context and `DashboardShell` layout.
+- **Responsive Sidebar Layout:** `DashboardShell` renders a sidebar (256px at xl, 224px at lg, 64px icon rail at md) alongside a scrollable content area. Below md, the sidebar is replaced by a slide-over `MobileDrawer` with backdrop, Escape-to-close, and nav-click-to-close.
+- **Role-Aware Navigation:** `SidebarNav` filters nav items by user role — athletes see 5 items (Overview, Progress, My Diet, Goals, Settings), coaches see 8 items (adds Athletes, Food Database, Templates). Uses `NavLink` for active-route highlighting and tooltips in icon-rail mode.
+- **Top Header Bar:** Breadcrumbs (route-aware, clickable segments), user avatar (first letter of email), and a "Coach" badge for coach users. Hamburger button visible only on mobile to trigger the drawer.
+- **AthleteProvider Context (Stub):** Provides `effectiveUserId`, `activeAthleteId`, `setActiveAthleteId`, and `isCoach` — enabling the coach-views-athlete pattern for all downstream hooks. Currently defaults to the logged-in user.
+
+### 💅 Schema / Architecture
+- **DB Migration 001 — Role System:** Added `role` column (`TEXT NOT NULL DEFAULT 'athlete'`) to `profiles` with CHECK constraint. Created `get_my_role()` and `is_coach_of()` SQL helper functions (STABLE SECURITY DEFINER). Added RLS policy preventing role self-escalation via client.
+- **DB Migration 002 — Coach-Athlete Relationships:** Created `coach_athletes` table with `coach_id`, `athlete_id`, `status` (active/paused/terminated), unique constraint, self-reference check, and RLS policies (coaches manage their own rows, athletes can see their own).
+- **TypeScript Types Updated:** Added `CoachAthlete` interface to `database.ts`. Added `role: 'athlete' | 'coach'` to `UserProfile` in `useProfile.ts`.
+- **Dashboard CSS Tokens:** Added semantic color tokens for metrics (weight, sleep, training, diet, steps, recovery), status levels (excellent, good, warning, danger, neutral), and extended chart palette (chart-6 through chart-8). Added `.grid-stats`, `.grid-panels`, `.grid-equal`, `.dashboard-content` utility classes.
+
 ## [0.4.2] - Data Integrity & Schema Alignment Pass
 
 ### 🐛 Bug Fixes

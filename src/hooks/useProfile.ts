@@ -15,27 +15,29 @@ export interface UserProfile {
     goal: string | null;
     steps_goal: number | null;
     water_goal: number | null;
+    role: 'athlete' | 'coach';
 }
 
 export const STEPS_GOAL_DEFAULT = 10000;
 export const WATER_GOAL_DEFAULT = 4.0;
 
-export const useProfile = () => {
+export const useProfile = (userId?: string) => {
     const { user } = useAuth();
+    const targetId = userId ?? user?.id;
 
     return useQuery({
-        queryKey: ['profile', user?.id],
+        queryKey: ['profile', targetId],
         queryFn: async () => {
-            if (!user?.id) return null;
+            if (!targetId) return null;
             const { data, error } = await supabase
                 .from('profiles')
                 .select('*')
-                .eq('id', user.id)
+                .eq('id', targetId)
                 .single();
             if (error) throw error;
             return data as UserProfile;
         },
-        enabled: !!user?.id,
+        enabled: !!targetId,
         staleTime: 1000 * 60 * 10,
     });
 };

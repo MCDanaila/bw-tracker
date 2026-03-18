@@ -12,18 +12,19 @@ export interface DailyLogChartData {
     steps: number | null;
 }
 
-export const useDashboardData = (range: TimeRange) => {
+export const useDashboardData = (range: TimeRange, userId?: string) => {
     const { user } = useAuth();
+    const targetId = userId ?? user?.id;
 
     return useQuery({
-        queryKey: ['dashboardData', user?.id, range],
+        queryKey: ['dashboardData', targetId, range],
         queryFn: async () => {
-            if (!user?.id) return [];
+            if (!targetId) return [];
 
             let query = supabase
                 .from('daily_logs')
                 .select('date, weight_fasting, steps')
-                .eq('user_id', user.id)
+                .eq('user_id', targetId)
                 .order('date', { ascending: true });
 
             // Apply time range filter if not 'all'
@@ -72,7 +73,7 @@ export const useDashboardData = (range: TimeRange) => {
 
             return formattedData;
         },
-        enabled: !!user?.id,
+        enabled: !!targetId,
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 };

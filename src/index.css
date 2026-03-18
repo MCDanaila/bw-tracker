@@ -109,6 +109,26 @@ body {
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Dashboard metric colors */
+  --color-metric-weight: hsl(220, 70%, 50%);
+  --color-metric-sleep: hsl(260, 60%, 55%);
+  --color-metric-training: hsl(25, 85%, 55%);
+  --color-metric-diet: hsl(45, 90%, 50%);
+  --color-metric-steps: hsl(150, 60%, 45%);
+  --color-metric-recovery: hsl(170, 55%, 45%);
+
+  /* Status colors */
+  --color-status-excellent: hsl(150, 70%, 45%);
+  --color-status-good: hsl(140, 55%, 50%);
+  --color-status-warning: hsl(40, 90%, 55%);
+  --color-status-danger: hsl(0, 75%, 55%);
+  --color-status-neutral: hsl(220, 10%, 60%);
+
+  /* Extended chart palette */
+  --color-chart-6: hsl(200, 65%, 50%);
+  --color-chart-7: hsl(150, 50%, 45%);
+  --color-chart-8: hsl(320, 60%, 55%);
 }
 
 @layer base {
@@ -124,3 +144,9 @@ body {
     @apply font-sans;
   }
 }
+
+/* Dashboard layout utilities */
+.grid-stats { @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4; }
+.grid-panels { @apply grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6; }
+.grid-equal { @apply grid grid-cols-1 lg:grid-cols-2 gap-6; }
+.dashboard-content { container-type: inline-size; }

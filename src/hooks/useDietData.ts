@@ -33,13 +33,14 @@ export const calculateItemMacros = (food: Food | null | undefined, quantity: num
     };
 };
 
-export const useDietData = () => {
+export const useDietData = (userId?: string) => {
     const { session } = useAuth();
+    const targetId = userId ?? session?.user.id;
 
     return useQuery({
-        queryKey: ['diet-plans', session?.user.id],
+        queryKey: ['diet-plans', targetId],
         queryFn: async () => {
-            if (!session?.user.id) return [];
+            if (!targetId) return [];
 
             const { data, error } = await supabase
                 .from('meal_plans')
@@ -63,7 +64,7 @@ export const useDietData = () => {
                         state
                     )
                 `)
-                .eq('user_id', session.user.id);
+                .eq('user_id', targetId);
 
             if (error) {
                 console.error("Error fetching diet data:", error);
@@ -74,7 +75,7 @@ export const useDietData = () => {
             // For a Many-to-One (meal -> food), it returns a single object
             return (data as unknown) as MealPlan[];
         },
-        enabled: !!session?.user.id,
+        enabled: !!targetId,
     });
 };
 

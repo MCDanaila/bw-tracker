@@ -8,7 +8,9 @@ export interface Food {
     carbs: number;
     fats: number;
     state: 'Peso da Cotto' | 'Peso da Crudo' | 'Peso sgocciolato' | 'Peso confezionato' | 'Peso da sgusciato' | 'N/A';
+    created_by: string | null;
     created_at: string;
+    updated_at: string;
 }
 
 export interface MealPlan {
@@ -18,10 +20,45 @@ export interface MealPlan {
     meal_name: string;
     food_id: string | null;
     target_quantity: number;
+    created_by: string | null;
+    template_id: string | null;
     created_at: string;
 
     // Joined relation
     foods?: Food | null;
+}
+
+export interface DietTemplate {
+    id: string;
+    coach_id: string;
+    name: string;
+    description: string | null;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface DietTemplateItem {
+    id: string;
+    template_id: string;
+    day_of_week: 'LUN' | 'MAR' | 'MER' | 'GIO' | 'VEN' | 'SAB' | 'DOM';
+    meal_name: string;
+    food_id: string | null;
+    target_quantity: number;
+    sort_order: number;
+    created_at: string;
+
+    // Joined relation
+    foods?: Food | null;
+}
+
+export interface CoachAthlete {
+    id: string;
+    coach_id: string;
+    athlete_id: string;
+    status: 'active' | 'paused' | 'terminated';
+    assigned_at: string;
+    terminated_at: string | null;
 }
 
 export interface MealAdherence {
