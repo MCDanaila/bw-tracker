@@ -44,7 +44,7 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
 
   return (
     <TooltipProvider delay={0}>
-      <nav className="flex flex-col gap-1 px-2 py-2">
+      <nav className="flex flex-col gap-2 px-3 py-3">
         {filteredItems.map((item) => {
           const link = (
             <NavLink
@@ -52,7 +52,7 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
               end={item.to === '/dashboard'}
               onClick={onNavigate}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                `flex items-center gap-3 rounded-md px-4 py-2.5 text-sm font-medium transition-colors ${
                   isActive
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'

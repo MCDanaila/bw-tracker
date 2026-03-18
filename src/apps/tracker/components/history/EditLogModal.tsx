@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
 import { type DailyLog } from "@/core/types/database";
-import { localDB } from "@/core/lib/db";
+import { upsertTodayQueueEntry } from "@/core/lib/db";
 import { supabase } from "@/core/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/core/components/ui/button";
@@ -20,6 +20,9 @@ import {
     DIGESTION_OPTIONS,
     HUNGER_OPTIONS,
     LIBIDO_OPTIONS,
+    SLEEP_PRESET_OPTIONS,
+    DAILY_LOG_INT_FIELDS,
+    getDailyLogDefaults,
 } from "@/core/lib/constants";
 import { toast } from "sonner";
 
@@ -32,63 +35,13 @@ interface EditLogModalProps {
 export default function EditLogModal({ log, onClose, initialSection }: EditLogModalProps) {
     const queryClient = useQueryClient();
     const { register, handleSubmit, watch, setValue, reset, formState: { isSubmitting } } = useForm({
-        defaultValues: {
-            weight_fasting: log?.weight_fasting ?? 0,
-            sleep_hours: log?.sleep_hours ?? 0,
-            sleep_quality: log?.sleep_quality ?? 0,
-            mood: log?.mood ?? 0,
-            stress_level: log?.stress_level ?? 0,
-            hrv: log?.hrv ?? "",
-            measurement_time: log?.measurement_time ?? "",
-            soreness_level: log?.soreness_level ?? 0,
-            workout_session: log?.workout_session ?? "Rest",
-            steps: log?.steps ?? "",
-            workout_duration: log?.workout_duration ?? "",
-            cardio_hiit_mins: log?.cardio_hiit_mins ?? "",
-            cardio_liss_mins: log?.cardio_liss_mins ?? "",
-            gym_rpe: log?.gym_rpe ?? 5,
-            gym_energy: log?.gym_energy ?? 0,
-            gym_mood: log?.gym_mood ?? 0,
-            active_kcal: log?.active_kcal ?? "",
-            water_liters: log?.water_liters ?? 0,
-            diet_adherence: log?.diet_adherence ?? "perfect",
-            digestion_rating: log?.digestion_rating ?? "",
-            daily_energy: log?.daily_energy ?? 0,
-            hunger_level: log?.hunger_level ?? 0,
-            libido: log?.libido ?? 0,
-            general_notes: log?.general_notes ?? "",
-        }
+        defaultValues: getDailyLogDefaults(log ?? undefined)
     });
 
     // Reset form when log changes
     useEffect(() => {
         if (log) {
-            reset({
-                weight_fasting: log.weight_fasting ?? 0,
-                sleep_hours: log.sleep_hours ?? 0,
-                sleep_quality: log.sleep_quality ?? 0,
-                mood: log.mood ?? 0,
-                stress_level: log.stress_level ?? 0,
-                hrv: log.hrv ?? "",
-                measurement_time: log.measurement_time ?? "",
-                soreness_level: log.soreness_level ?? 0,
-                workout_session: log.workout_session ?? "Rest",
-                steps: log.steps ?? "",
-                workout_duration: log.workout_duration ?? "",
-                cardio_hiit_mins: log.cardio_hiit_mins ?? "",
-                cardio_liss_mins: log.cardio_liss_mins ?? "",
-                gym_rpe: log.gym_rpe ?? 5,
-                gym_energy: log.gym_energy ?? 0,
-                gym_mood: log.gym_mood ?? 0,
-                active_kcal: log.active_kcal ?? "",
-                water_liters: log.water_liters ?? 0,
-                diet_adherence: log.diet_adherence ?? "perfect",
-                digestion_rating: log.digestion_rating ?? "",
-                daily_energy: log.daily_energy ?? 0,
-                hunger_level: log.hunger_level ?? 0,
-                libido: log.libido ?? 0,
-                general_notes: log.general_notes ?? "",
-            });
+            reset(getDailyLogDefaults(log));
         }
     }, [log, reset]);
 
@@ -116,11 +69,13 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
     const gymMood = watch("gym_mood");
     const gymEnergy = watch("gym_energy");
     const waterLiters = watch("water_liters");
+    const saltGrams = watch("salt_grams");
     const digestionRating = watch("digestion_rating");
     const dietAdherence = watch("diet_adherence");
-    const dailyEnergy = watch("daily_energy");
     const hungerLevel = watch("hunger_level");
     const libido = watch("libido");
+
+    const isRest = workoutSession === "Rest";
 
     const formattedDate = new Date(log.date + "T00:00:00").toLocaleDateString('en-US', {
         weekday: 'long',
@@ -130,15 +85,9 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
     });
 
     const onSubmit = async (data: any) => {
-        // Convert empty strings to null for optional integer/numeric fields.
-        // react-hook-form returns "" for untouched number inputs; Postgres
-        // rejects "" for integer columns with a 400 Bad Request.
-        const intFields = [
-            'hrv', 'steps', 'workout_duration',
-            'cardio_hiit_mins', 'cardio_liss_mins', 'active_kcal', 'digestion_rating',
-        ] as const;
+        // Sanitize empty strings to null for integer/numeric fields
         const sanitized = { ...data };
-        for (const field of intFields) {
+        for (const field of DAILY_LOG_INT_FIELDS) {
             const v = sanitized[field];
             sanitized[field] = v === "" || v === null || v === undefined ? null : Number(v);
         }
@@ -150,38 +99,28 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
             user_id: log.user_id,
         };
 
-        // Online path: write directly to Supabase
-        if (navigator.onLine) {
-            try {
-                const { error } = await supabase
-                    .from('daily_logs')
-                    .upsert(merged, { onConflict: 'user_id, date' });
-
-                if (error) throw error;
-
-                queryClient.invalidateQueries({ queryKey: ['historyLogs'] });
-                queryClient.invalidateQueries({ queryKey: ['dashboardData'] });
-                toast.success('Log updated');
-                onClose();
-                return;
-            } catch (error) {
-                console.error('Direct upsert failed, falling back to queue:', error);
-            }
-        }
-
-        // Offline fallback: queue for manual sync
+        // Always try Supabase first, catch all errors
         try {
-            await localDB.syncQueue.add({
-                mutation_type: 'UPSERT_DAILY_LOG',
-                payload: merged,
-                status: 'pending',
-                created_at: new Date().toISOString(),
-            });
-            toast.warning('Offline — changes queued for manual sync');
+            const { error } = await supabase
+                .from('daily_logs')
+                .upsert(merged, { onConflict: 'user_id, date' });
+
+            if (error) throw error;
+
+            queryClient.invalidateQueries({ queryKey: ['historyLogs'] });
+            queryClient.invalidateQueries({ queryKey: ['dashboardData'] });
+            toast.success('Log updated');
             onClose();
-        } catch (queueError) {
-            console.error(queueError);
-            toast.error('Failed to save log.');
+        } catch (err) {
+            console.error('Direct upsert failed, falling back to queue:', err);
+            try {
+                await upsertTodayQueueEntry(merged);
+                toast.warning('Offline — changes queued for sync');
+                onClose();
+            } catch (queueError) {
+                console.error(queueError);
+                toast.error('Failed to save log.');
+            }
         }
     };
 
@@ -210,36 +149,52 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                     <h3 id="section-morning" className="text-lg font-bold text-foreground border-b border-border pb-2">
                         Morning Check-In
                     </h3>
+                    <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-6">
 
-                    <div className="space-y-3">
-                        <Stepper
-                            label="Weight (kg)"
-                            value={weightFasting ?? 0}
-                            onChange={(v) => setValue("weight_fasting", v, { shouldDirty: true })}
-                            step={0.1}
-                            min={30}
-                            max={200}
-                        />
+                        <div className="space-y-3">
+                            <Stepper
+                                label="Weight (kg)"
+                                value={weightFasting ?? 0}
+                                onChange={(v) => setValue("weight_fasting", v, { shouldDirty: true })}
+                                step={0.01}
+                                min={30}
+                                max={200}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <Input label="Measurement Time" type="time" {...register("measurement_time")} />
+                            <Input label="HRV (ms)" type="number" {...register("hrv")} />
+                        </div>
                     </div>
+                    <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-6">
+                        <div className="space-y-3">
+                            <ButtonGroup
+                                label="How long did you sleep?"
+                                options={SLEEP_PRESET_OPTIONS}
+                                value={sleepHours > 0 ? ([6, 6.5, 7, 7.5, 8].includes(sleepHours) ? sleepHours : -1) : null}
+                                onChange={(v) => setValue("sleep_hours", v, { shouldDirty: true })}
+                            />
+                            {(![6, 6.5, 7, 7.5, 8].includes(sleepHours) && sleepHours !== 0) && (
+                                <Stepper
+                                    label="Custom Sleep (hrs)"
+                                    value={sleepHours !== -1 ? sleepHours : 0}
+                                    onChange={(v) => setValue("sleep_hours", v, { shouldDirty: true })}
+                                    step={0.5}
+                                    min={0}
+                                    max={24}
+                                />
+                            )}
+                        </div>
 
-                    <div className="space-y-3">
-                        <Stepper
-                            label="Sleep Hours"
-                            value={sleepHours ?? 0}
-                            onChange={(v) => setValue("sleep_hours", v, { shouldDirty: true })}
-                            step={0.5}
-                            min={0}
-                            max={24}
-                        />
-                    </div>
-
-                    <div className="p-4 rounded-xl bg-card border border-border/50 space-y-6">
                         <ButtonGroup
                             label="Sleep Quality"
                             options={SLEEP_QUALITY_OPTIONS}
                             value={sleepQuality}
                             onChange={(v) => setValue("sleep_quality", v, { shouldDirty: true })}
                         />
+                    </div>
+                    <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-6">
                         <ButtonGroup
                             label="Mood"
                             options={MOOD_OPTIONS}
@@ -259,11 +214,6 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                             onChange={(v) => setValue("soreness_level", v, { shouldDirty: true })}
                         />
                     </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <Input label="HRV (ms)" type="number" {...register("hrv")} />
-                        <Input label="Measurement Time" type="time" {...register("measurement_time")} />
-                    </div>
                 </section>
 
                 {/* Training Section */}
@@ -271,8 +221,8 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                     <h3 id="section-training" className="text-lg font-bold text-foreground border-b border-border pb-2">
                         Workout Log
                     </h3>
-
-                    <div className="p-4 rounded-xl bg-card border border-border/50 space-y-6">
+                    <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-6">
+                        <Input label="Daily Steps" type="number" {...register("steps")} />
                         <ButtonGroup
                             label="Workout Type"
                             options={WORKOUT_TYPES}
@@ -281,36 +231,43 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                         />
 
                         <div className="grid grid-cols-2 gap-4">
-                            <Input label="Daily Steps" type="number" {...register("steps")} />
+                            <Input label="Start Time" type="time" {...register("workout_start_time")} />
                             <Input label="Duration (mins)" type="number" {...register("workout_duration")} />
-                            <Input label="HIIT (mins)" type="number" {...register("cardio_hiit_mins")} />
-                            <Input label="LISS (mins)" type="number" {...register("cardio_liss_mins")} />
                             <Input label="Active kcal" type="number" {...register("active_kcal")} />
+                            <Input label="LISS (mins)" type="number" {...register("cardio_liss_mins")} />
+                            <Input label="HIIT (mins)" type="number" {...register("cardio_hiit_mins")} />
                         </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-card border border-border/50 space-y-6">
-                        <Slider
-                            label="Session RPE (1-10)"
-                            min="1"
-                            max="10"
-                            step="0.5"
-                            value={gymRpe}
-                            {...register("gym_rpe")}
-                        />
-                        <ButtonGroup
-                            label="Gym Energy"
-                            options={ENERGY_OPTIONS}
-                            value={gymEnergy}
-                            onChange={(v) => setValue("gym_energy", v, { shouldDirty: true })}
-                        />
-                        <ButtonGroup
-                            label="Gym Mood"
-                            options={MOOD_OPTIONS}
-                            value={gymMood}
-                            onChange={(v) => setValue("gym_mood", v, { shouldDirty: true })}
-                        />
-                    </div>
+                    {!isRest && (
+                        <div className="space-y-3 animate-in fade-in zoom-in-95 duration-200">
+                            <h3 className="text-md font-bold text-foreground">Performance</h3>
+                            <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-6">
+                                <ButtonGroup
+                                    label="Gym Mood"
+                                    options={MOOD_OPTIONS}
+                                    value={gymMood}
+                                    onChange={(v) => setValue("gym_mood", v, { shouldDirty: true })}
+                                />
+                                <ButtonGroup
+                                    label="Gym Energy"
+                                    options={ENERGY_OPTIONS}
+                                    value={gymEnergy}
+                                    onChange={(v) => setValue("gym_energy", v, { shouldDirty: true })}
+                                />
+                                <Slider
+                                    label="Session RPE (1-10)"
+                                    min="1"
+                                    max="10"
+                                    step="0.5"
+                                    value={gymRpe}
+                                    {...register("gym_rpe")}
+                                />
+                            </div>
+                        </div>
+
+
+                    )}
                 </section>
 
                 {/* End of Day Section */}
@@ -319,7 +276,7 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                         End of Day
                     </h3>
 
-                    <div className="space-y-3">
+                    <div className="p-5 rounded-2xl bg-card border border-border/50 space-y-3">
                         <Stepper
                             label="Water (Liters)"
                             value={waterLiters ?? 0}
@@ -327,6 +284,14 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                             step={0.5}
                             min={0}
                             max={10}
+                        />
+                        <Stepper
+                            label="Salt (Grams)"
+                            value={saltGrams ?? 0}
+                            onChange={(v) => setValue("salt_grams", v, { shouldDirty: true })}
+                            step={1}
+                            min={0}
+                            max={20}
                         />
                     </div>
 
@@ -344,7 +309,7 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant={dietAdherence === "minor_deviation" ? "secondary" : "outline"}
+                                    variant={dietAdherence === "minor_deviation" ? "default" : "outline"}
                                     onClick={() => setValue("diet_adherence", "minor_deviation", { shouldDirty: true })}
                                     className="rounded-xl shadow-none text-xs px-2"
                                 >
@@ -352,7 +317,7 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant={dietAdherence === "cheat_meal" ? "destructive" : "outline"}
+                                    variant={dietAdherence === "cheat_meal" ? "default" : "outline"}
                                     onClick={() => setValue("diet_adherence", "cheat_meal", { shouldDirty: true })}
                                     className="rounded-xl shadow-none text-xs px-2"
                                 >
@@ -362,24 +327,17 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                         </div>
 
                         <ButtonGroup
-                            label="Digestion Quality"
-                            options={DIGESTION_OPTIONS}
-                            value={digestionRating}
-                            onChange={(v) => setValue("digestion_rating", v, { shouldDirty: true })}
-                        />
-
-                        <ButtonGroup
-                            label="Daily Energy"
-                            options={ENERGY_OPTIONS}
-                            value={dailyEnergy}
-                            onChange={(v) => setValue("daily_energy", v, { shouldDirty: true })}
-                        />
-
-                        <ButtonGroup
                             label="Hunger Level"
                             options={HUNGER_OPTIONS}
                             value={hungerLevel}
                             onChange={(v) => setValue("hunger_level", v, { shouldDirty: true })}
+                        />
+
+                        <ButtonGroup
+                            label="Digestion Quality"
+                            options={DIGESTION_OPTIONS}
+                            value={digestionRating}
+                            onChange={(v) => setValue("digestion_rating", v, { shouldDirty: true })}
                         />
 
                         <ButtonGroup
@@ -399,10 +357,10 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                         </div>
                     </div>
                 </section>
-            </div>
+            </div >
 
             {/* Sticky footer */}
-            <div className="shrink-0 px-4 py-4 border-t border-border bg-card">
+            < div className="shrink-0 px-4 py-4 border-t border-border bg-card" >
                 <Button
                     onClick={handleSubmit(onSubmit)}
                     disabled={isSubmitting}
@@ -411,7 +369,7 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                 >
                     {isSubmitting ? "Saving..." : "Update Log"}
                 </Button>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

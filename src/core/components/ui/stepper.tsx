@@ -3,6 +3,12 @@ import { cn } from "@/core/lib/utils"
 import { Button } from "@/core/components/ui/button"
 import { Minus, Plus } from "lucide-react"
 
+const getDecimalPlaces = (n: number): number => {
+  const s = n.toString();
+  const d = s.indexOf('.');
+  return d >= 0 ? s.length - d - 1 : 0;
+};
+
 export interface StepperProps {
     value: number;
     onChange: (value: number) => void;
@@ -24,10 +30,10 @@ export function Stepper({
     className,
     disabled = false,
 }: StepperProps) {
-    const [inputValue, setInputValue] = useState(Number(value).toFixed(step < 1 ? 1 : 0));
+    const [inputValue, setInputValue] = useState(Number(value).toFixed(getDecimalPlaces(step)));
 
     useEffect(() => {
-        setInputValue(Number(value).toFixed(step < 1 ? 1 : 0));
+        setInputValue(Number(value).toFixed(getDecimalPlaces(step)));
     }, [value, step]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +49,7 @@ export function Stepper({
         if (clamped !== value) {
             onChange(clamped);
         } else {
-            setInputValue(Number(clamped).toFixed(step < 1 ? 1 : 0));
+            setInputValue(Number(clamped).toFixed(getDecimalPlaces(step)));
         }
     };
 

@@ -5,7 +5,7 @@ import { ChevronRight, ChevronDown, CheckCircle2, Circle, Target, Flame, Activit
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/core/components/ui/collapsible";
 import { useState } from "react";
 import { useStreak } from "@/core/hooks/useStreak";
-import { useProfile, STEPS_GOAL_DEFAULT, WATER_GOAL_DEFAULT } from "@/core/hooks/useProfile";
+import { useProfile, STEPS_GOAL_DEFAULT, WATER_GOAL_DEFAULT, SALT_GOAL_DEFAULT } from "@/core/hooks/useProfile";
 
 interface TodayDashboardViewProps {
     todayLog: any;
@@ -14,13 +14,14 @@ interface TodayDashboardViewProps {
 
 // Field lists for per-section completion tracking
 const MORNING_FIELDS: (keyof DailyLog)[] = [
-    "weight_fasting", "sleep_hours", "sleep_quality", "mood", "stress_level", "hrv", "soreness_level"
+    "weight_fasting", "measurement_time", "hrv", "sleep_hours", "sleep_quality", "mood", "stress_level", "soreness_level"
 ];
 const TRAINING_FIELDS: (keyof DailyLog)[] = [
-    "steps", "workout_session", "workout_duration", "gym_rpe", "gym_energy", "gym_mood", "cardio_liss_mins", "cardio_hiit_mins"
+    "steps", "workout_session", "workout_start_time", "workout_duration", "active_kcal", "cardio_hiit_mins", "cardio_liss_mins", "gym_rpe", "gym_energy", "gym_mood"
 ];
+
 const EOD_FIELDS: (keyof DailyLog)[] = [
-    "water_liters", "salt_grams", "diet_adherence", "digestion_rating", "daily_energy", "general_notes"
+    "water_liters", "salt_grams", "hunger_level", "diet_adherence", "digestion_rating", "libido"
 ];
 
 function countFilled(log: any, fields: string[]): number {
@@ -34,6 +35,7 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
     const [isGoalsOpen, setIsGoalsOpen] = useState(false);
     const stepsGoal = profile?.steps_goal ?? todayLog?.steps_goal ?? STEPS_GOAL_DEFAULT;
     const waterGoal = profile?.water_goal ?? WATER_GOAL_DEFAULT;
+    const saltGoal = profile?.salt_goal ?? SALT_GOAL_DEFAULT;
 
     // Per-section completion percentages based on fields filled
     const morningFilled = countFilled(todayLog, MORNING_FIELDS);
@@ -52,11 +54,13 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
 
     // Goal Calculations based on logged data
     const waterLiters = todayLog?.water_liters || 0;
+    const saltGrams = todayLog?.salt_grams || 0;
     const sleepHours = todayLog?.sleep_hours || 0;
     const steps = todayLog?.steps || 0;
     const cardioMins = (todayLog?.cardio_hiit_mins || 0) + (todayLog?.cardio_liss_mins || 0);
 
     const waterProgress = Math.min((waterLiters / waterGoal) * 100, 100);
+    const saltProgress = Math.min((saltGrams / saltGoal) * 100, 100);
     const sleepProgress = Math.min((sleepHours / 8) * 100, 100);
     const stepsProgress = Math.min((steps / stepsGoal) * 100, 100);
     const cardioProgress = Math.min((cardioMins / 150) * 100, 100);
@@ -64,9 +68,9 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
     // Recovery Score — weighted multi-signal formula
     const signals = [
         { value: todayLog?.sleep_quality ?? null, weight: 0.30, normalize: (v: number) => (v / 10) * 100 },
-        { value: todayLog?.sleep_hours ?? null,   weight: 0.20, normalize: (v: number) => Math.min(v / 8, 1) * 100 },
-        { value: todayLog?.stress_level ?? null,  weight: 0.25, normalize: (v: number) => ((10 - v) / 9) * 100 },
-        { value: todayLog?.mood ?? null,          weight: 0.15, normalize: (v: number) => ((v - 1) / 4) * 100 },
+        { value: todayLog?.sleep_hours ?? null, weight: 0.20, normalize: (v: number) => Math.min(v / 8, 1) * 100 },
+        { value: todayLog?.stress_level ?? null, weight: 0.25, normalize: (v: number) => ((10 - v) / 9) * 100 },
+        { value: todayLog?.mood ?? null, weight: 0.15, normalize: (v: number) => ((v - 1) / 4) * 100 },
         { value: todayLog?.soreness_level ?? null, weight: 0.10, normalize: (v: number) => ((5 - v) / 4) * 100 },
         // TODO: add HRV delta component once 7-day baseline is available
     ];
@@ -163,6 +167,13 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
                             <div className="text-xs text-muted-foreground font-semibold mb-1 uppercase tracking-wider">Water</div>
                             <div className="text-primary font-black mb-2">{waterLiters}L / {waterGoal}L</div>
                             <Progress value={waterProgress} className="h-2 w-full max-w-[80%]" />
+                        </div>
+                        {/* Salt tile */}
+                        <div className="bg-background p-3 rounded-xl border border-border/50 text-center flex flex-col items-center justify-center shadow-sm">
+                            <Droplets size={16} className="text-primary mb-1" />
+                            <div className="text-xs text-muted-foreground font-semibold mb-1 uppercase tracking-wider">Salt</div>
+                            <div className="text-primary font-black mb-2">{saltGrams}g / {saltGoal}g</div>
+                            <Progress value={saltProgress} className="h-2 w-full max-w-[80%]" />
                         </div>
                         {/* Sleep tile */}
                         <div className="bg-background p-3 rounded-xl border border-border/50 text-center flex flex-col items-center justify-center shadow-sm">

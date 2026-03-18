@@ -5,9 +5,9 @@ import { Button } from "@/core/components/ui/button";
 import { ButtonGroup } from "@/core/components/ui/button-group";
 import { Stepper } from "@/core/components/ui/stepper";
 import { DIGESTION_OPTIONS, HUNGER_OPTIONS, LIBIDO_OPTIONS } from "@/core/lib/constants";
-import { localDB } from "@/core/lib/db";
+import { saveDailyLog } from "@/core/lib/db";
 import { useAuth } from "@/core/contexts/AuthContext";
-import { useProfile, WATER_GOAL_DEFAULT } from "@/core/hooks/useProfile";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Textarea } from "@/core/components/ui/textarea";
 
@@ -21,13 +21,13 @@ interface EndOfDayFlowViewProps {
 
 export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowViewProps) {
     const { user } = useAuth();
-    const { data: profile } = useProfile();
-    const waterGoal = profile?.water_goal ?? WATER_GOAL_DEFAULT;
+    const queryClient = useQueryClient();
 
     const { register, handleSubmit, watch, setValue, formState: { isSubmitting } } = useForm({
         defaultValues: {
             ...existingData,
             water_liters: existingData?.water_liters || 0,
+            salt_grams: existingData?.salt_grams || 0,
             digestion_rating: existingData?.digestion_rating || 0,
             diet_adherence: existingData?.diet_adherence || "perfect",
             hunger_level: existingData?.hunger_level || 0,
@@ -36,6 +36,7 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
     });
 
     const waterLiters = watch("water_liters");
+    const saltGrams = watch("salt_grams");
     const digestionRating = watch("digestion_rating");
     const dietAdherence = watch("diet_adherence");
     const hungerLevel = watch("hunger_level");
@@ -55,12 +56,15 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
                 user_id: user.id,
             };
 
-            await localDB.syncQueue.add({
-                mutation_type: 'UPSERT_DAILY_LOG',
-                payload: payload,
-                status: 'pending',
-                created_at: new Date().toISOString(),
-            });
+            // Try to save directly to Supabase; fall back to queue if offline
+            const result = await saveDailyLog(payload);
+            if (result === 'synced') {
+                queryClient.invalidateQueries({ queryKey: ['historyLogs'] });
+                queryClient.invalidateQueries({ queryKey: ['dashboardData'] });
+                toast.success("Day completed! Excellent work.");
+            } else {
+                toast.success("Day completed (offline — will sync)");
+            }
 
             // Save water defaults
             const currentDefaultsStr = localStorage.getItem("bw_tracker_smart_defaults");
@@ -70,7 +74,6 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
                 water_liters: payload.water_liters,
             }));
 
-            toast.success("Day completed! Excellent work.");
             onSave(payload);
 
         } catch (error) {
@@ -104,16 +107,27 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
                             min={0}
                             max={10}
                         />
-                        <div className="flex justify-between items-center bg-background p-3 rounded-lg border border-border/30">
-                            <span className="text-sm font-medium text-muted-foreground">Goal: {waterGoal}L</span>
-                            <span className="text-sm font-bold text-primary">{Math.round((waterLiters / waterGoal) * 100)}%</span>
-                        </div>
+                        <Stepper
+                            label="Salt (Grams)"
+                            value={saltGrams}
+                            onChange={(v) => setValue("salt_grams", v, { shouldDirty: true })}
+                            step={1}
+                            min={0}
+                            max={20}
+                        />
                     </div>
                 </div>
 
                 <div className="space-y-3">
                     <h3 className="text-lg font-bold text-foreground">Diet & Digestion</h3>
                     <div className="p-5 rounded-2xl bg-card border border-border/50 shadow-sm space-y-6">
+
+                        <ButtonGroup
+                            label="Hunger Level"
+                            options={HUNGER_OPTIONS}
+                            value={hungerLevel}
+                            onChange={(v) => setValue("hunger_level", v, { shouldDirty: true })}
+                        />
 
                         <div>
                             <p className="text-sm font-semibold mb-3">Diet Adherence</p>
@@ -128,16 +142,15 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant={dietAdherence === "minor_deviation" ? "secondary" : "outline"}
+                                    variant={dietAdherence === "minor_deviation" ? "default" : "outline"}
                                     onClick={() => setValue("diet_adherence", "minor_deviation", { shouldDirty: true })}
-                                    className="rounded-xl shadow-none text-xs px-2 bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 data-[variant=secondary]:bg-yellow-500 data-[variant=secondary]:text-white"
-                                    data-variant={dietAdherence === "minor_deviation" ? "secondary" : "outline"}
+                                    className="rounded-xl shadow-none text-xs px-2"
                                 >
                                     Minor Deviation
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant={dietAdherence === "cheat_meal" ? "destructive" : "outline"}
+                                    variant={dietAdherence === "cheat_meal" ? "default" : "outline"}
                                     onClick={() => setValue("diet_adherence", "cheat_meal", { shouldDirty: true })}
                                     className="rounded-xl shadow-none text-xs px-2"
                                 >
@@ -151,13 +164,6 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
                             options={DIGESTION_OPTIONS}
                             value={digestionRating}
                             onChange={(v) => setValue("digestion_rating", v, { shouldDirty: true })}
-                        />
-
-                        <ButtonGroup
-                            label="Hunger Level"
-                            options={HUNGER_OPTIONS}
-                            value={hungerLevel}
-                            onChange={(v) => setValue("hunger_level", v, { shouldDirty: true })}
                         />
 
                         <ButtonGroup

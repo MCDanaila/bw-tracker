@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { CloudOff, CheckCircle2, RefreshCw } from "lucide-react";
+import { CheckCircle2, RefreshCw } from "lucide-react";
 import { localDB } from "@/core/lib/db";
 import { useSync } from "@/core/hooks/useSync";
 import { Button } from '@/core/components/ui/button';
@@ -34,9 +34,10 @@ export default function SyncHeader() {
                         <CheckCircle2 size={12} /> Synced
                     </p>
                 ) : (
-                    <p className="text-xs text-muted-foreground font-medium flex items-center gap-1 mt-1">
-                        <CloudOff size={12} /> {pendingCount} Pending
-                    </p>
+                    <div className="text-xs text-muted-foreground font-medium flex items-center gap-1 mt-1 relative">
+                        <RefreshCw size={12} />
+                        <span className="absolute left-2 top-0 w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    </div>
                 )}
             </div>
 

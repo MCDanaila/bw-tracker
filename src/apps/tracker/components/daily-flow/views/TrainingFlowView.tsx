@@ -6,9 +6,10 @@ import { Input } from "@/core/components/ui/input";
 import { ButtonGroup } from "@/core/components/ui/button-group";
 import { Slider } from "@/core/components/ui/slider";
 import { WORKOUT_TYPES, MOOD_OPTIONS, ENERGY_OPTIONS } from "@/core/lib/constants";
-import { localDB } from "@/core/lib/db";
+import { saveDailyLog } from "@/core/lib/db";
 import { useAuth } from "@/core/contexts/AuthContext";
 import { useProfile, STEPS_GOAL_DEFAULT } from "@/core/hooks/useProfile";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 interface TrainingFlowViewProps {
@@ -22,6 +23,7 @@ interface TrainingFlowViewProps {
 
 export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }: TrainingFlowViewProps) {
     const { user } = useAuth();
+    const queryClient = useQueryClient();
     const { data: profile } = useProfile();
     const stepsGoalDefault = existingData?.steps_goal ?? profile?.steps_goal ?? STEPS_GOAL_DEFAULT;
 
@@ -42,7 +44,6 @@ export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }
     const gymEnergy = watch("gym_energy");
     const gymRpe = watch("gym_rpe");
 
-    const isCardio = workoutSession && workoutSession.toLowerCase().includes("cardio");
     const isRest = workoutSession === "Rest";
 
     const onSubmit = async (data: any) => {
@@ -59,12 +60,15 @@ export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }
                 user_id: user.id,
             };
 
-            await localDB.syncQueue.add({
-                mutation_type: 'UPSERT_DAILY_LOG',
-                payload: payload,
-                status: 'pending',
-                created_at: new Date().toISOString(),
-            });
+            // Try to save directly to Supabase; fall back to queue if offline
+            const result = await saveDailyLog(payload);
+            if (result === 'synced') {
+                queryClient.invalidateQueries({ queryKey: ['historyLogs'] });
+                queryClient.invalidateQueries({ queryKey: ['dashboardData'] });
+                toast.success("Workout logged! 🏋️‍♀️");
+            } else {
+                toast.success("Workout logged (offline — will sync)");
+            }
 
             // Save smart defaults explicitly for Training fields (e.g. steps)
             const currentDefaultsStr = localStorage.getItem("bw_tracker_smart_defaults");
@@ -74,7 +78,6 @@ export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }
                 steps: payload.steps,
             }));
 
-            toast.success("Workout logged! 🏋️‍♀️");
             onSave(payload);
 
         } catch (error) {
@@ -100,6 +103,12 @@ export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }
                 <div className="space-y-3">
                     <h3 className="text-lg font-bold text-foreground">Activity</h3>
                     <div className="p-5 rounded-2xl bg-card border border-border/50 shadow-sm space-y-6">
+                        <div>
+                            <Input label="Daily Steps" type="number" {...register("steps")} />
+                            {yesterdayData?.steps !== undefined && (
+                                <p className="text-xs text-muted-foreground mt-2 ml-1">Yesterday: {yesterdayData.steps}</p>
+                            )}
+                        </div>
                         <ButtonGroup
                             label="Workout Type"
                             options={WORKOUT_TYPES}
@@ -108,28 +117,11 @@ export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }
                         />
 
                         <div className="grid grid-cols-2 gap-4 pt-2">
-                            <div>
-                                <Input label="Daily Steps" type="number" {...register("steps")} />
-                                {yesterdayData?.steps !== undefined && (
-                                    <p className="text-xs text-muted-foreground mt-2 ml-1">Yesterday: {yesterdayData.steps}</p>
-                                )}
-                            </div>
-                            <Input label="Steps Goal" type="number" {...register("steps_goal")} />
-
-                            {!isRest && (
-                                <>
-                                    <Input label="Duration (mins)" type="number" {...register("workout_duration")} />
-                                    <Input label="Start Time" type="time" {...register("workout_start_time")} />
-                                    <Input label="Active kcal" type="number" {...register("active_kcal")} />
-                                </>
-                            )}
-
-                            {isCardio && (
-                                <>
-                                    <Input label="HIIT (mins)" type="number" {...register("cardio_hiit_mins")} />
-                                    <Input label="LISS (mins)" type="number" {...register("cardio_liss_mins")} />
-                                </>
-                            )}
+                            <Input label="Start Time" type="time" {...register("workout_start_time")} />
+                            <Input label="Duration (mins)" type="number" {...register("workout_duration")} />
+                            <Input label="Active kcal" type="number" {...register("active_kcal")} />
+                            <Input label="LISS (mins)" type="number" {...register("cardio_liss_mins")} />
+                            <Input label="HIIT (mins)" type="number" {...register("cardio_hiit_mins")} />
                         </div>
                     </div>
                 </div>

@@ -4,6 +4,33 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+### ✨ Features (Tracker - Daily Log Queue)
+- **Single Queue Entry Per Day**: Refactored daily flow to merge section saves into one queue entry per date instead of creating separate entries for Morning/Training/End-of-Day. Uses new `upsertTodayQueueEntry()` helper in `src/core/lib/db.ts` that:
+  - Checks for existing pending entry for the date
+  - Merges new data with existing payload (no data loss across sections)
+  - Uses Dexie's `.update()` to avoid duplicate entries
+
+### 💅 Polish (Sync UI)
+- **Simplified Pending Indicator**: Replaced "{N} Pending" count text with a pulsing amber dot badge on sync icon. SyncHeader now shows:
+  - When synced: `CheckCircle2` icon + "Synced" label
+  - When pending: `RefreshCw` icon with pulsing amber dot + "Sync Now" button (no number)
+  - Reduces visual clutter while maintaining clear sync state awareness
+
+### 🐛 Bug Fixes (Dashboard)
+- **Sidebar Responsive Layout (768px < width < 1024px)**: Added dynamic breakpoint detection using `window.matchMedia()` to properly handle icon-rail mode at md breakpoint (768-1024px). Sidebar now correctly collapses when not at lg+ breakpoint, fixing layout issues in tablet viewport.
+
+### 💅 Polish (Sidebar)
+- **Menu Item Indentation**: Increased padding on sidebar nav items for better visual hierarchy and spacing:
+  - Nav outer padding: `px-2 py-2` → `px-3 py-3`
+  - NavLink indentation: `px-3 py-2` → `px-4 py-2.5`
+  - Gap between items: `gap-1` → `gap-2`
+
+### ✨ Features (Tracker - End of Day)
+- **Salt Intake Tracking**: Added "Salt (Grams)" stepper field in Hydration section. Accepts 0-20g with 1g steps, stored in `salt_grams` field.
+- **Removed Water Goal Display**: Eliminated "Goal: 4L" and compliance percentage from water section for cleaner UI.
+- **Standardized Diet Adherence Colors**: Updated all three Diet Adherence buttons (Perfect, Minor Deviation, Cheat Meal) to use consistent `variant="default"` when selected, matching ButtonGroup styling across the form.
+- **Reordered Diet & Digestion Section**: Moved Hunger Level to appear first, before Diet Adherence, for better logical flow (hunger → diet choice → digestion → libido).
+
 ## [0.10.0] - Workout Log App Phase 0: Foundation
 
 ### ✨ Features

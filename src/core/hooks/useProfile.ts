@@ -5,6 +5,7 @@ import type { UserProfile } from '@/core/types/database';
 
 export const STEPS_GOAL_DEFAULT = 10000;
 export const WATER_GOAL_DEFAULT = 4.0;
+export const SALT_GOAL_DEFAULT = 6.0;
 
 export const useProfile = (userId?: string) => {
     const { user } = useAuth();

@@ -30,12 +30,16 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
         day: 'numeric'
     });
 
-    const getScoreColor = (score: number | null, max: number = 10) => {
-        if (!score) return "bg-muted text-muted-foreground";
-        const ratio = score / max;
-        if (ratio >= 0.8) return "bg-emerald-500/10 text-emerald-600 border-emerald-500/20";
-        if (ratio >= 0.5) return "bg-amber-500/10 text-amber-600 border-amber-500/20";
-        return "bg-rose-500/10 text-rose-600 border-rose-500/20";
+    const getScoreColor = (score: number | null) => {
+        if (!score || score > 5 || score < 1) return "bg-muted text-muted-foreground"
+
+        // Normal scale: high score = good
+        // 1 (bad) → red, 2 → orange, 3 (neutral) → amber, 4 → light-green, 5 (good) → emerald
+        if (score === 1) return "bg-rose-500/10 text-rose-600 border-rose-500/20";
+        if (score === 2) return "bg-orange-500/10 text-orange-600 border-orange-500/20";
+        if (score === 3) return "bg-amber-500/10 text-amber-600 border-amber-500/20";
+        if (score === 4) return "bg-lime-500/10 text-lime-600 border-lime-500/20";
+        return "bg-emerald-500/10 text-emerald-600 border-emerald-500/20";
     };
 
     return (
@@ -43,16 +47,6 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
             {/* Header / Date */}
             <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold capitalize">{formattedDate}</h3>
-                {onEdit && (
-                    <button
-                        onClick={() => onEdit(log)}
-                        className="flex items-center gap-1 px-2 py-1 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                    >
-                        <Pencil size={14} />
-                        Edit
-                    </button>
-                )}
-
             </div>
 
             {/* Core Metrics Grid */}
@@ -86,8 +80,8 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                 <Card className="bg-card">
                     <CardContent className="p-4 flex flex-col items-center justify-center text-center">
                         <Droplets size={20} className="text-primary mb-2" />
-                        <span className="text-2xl font-bold">{log.water_liters || '--'} <span className="text-sm text-muted-foreground font-normal">L</span></span>
-                        <span className="text-xs text-muted-foreground mt-1">Water</span>
+                        <span className="text-2xl font-bold">{log.water_liters || '--'}<span className="text-sm text-muted-foreground font-normal">L</span> {log.salt_grams || '--'}<span className="text-sm text-muted-foreground font-normal">g</span></span>
+                        <span className="text-xs text-muted-foreground mt-1">Water / Salt</span>
                     </CardContent>
                 </Card>
             </div>
@@ -109,16 +103,16 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-wrap gap-2">
-                        <Badge variant="outline" className={getScoreColor(log.sleep_quality, 3)}>
+                        <Badge variant="outline" className={getScoreColor(log.sleep_quality)}>
                             Sleep Quality: {getLabelByValue(SLEEP_QUALITY_OPTIONS, log.sleep_quality) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.mood, 5)}>
+                        <Badge variant="outline" className={getScoreColor(log.mood)}>
                             Mood: {getLabelByValue(MOOD_OPTIONS, log.mood) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.stress_level, 3)}>
+                        <Badge variant="outline" className={getScoreColor(log.stress_level)}>
                             Stress: {getLabelByValue(STRESS_OPTIONS, log.stress_level) || '-'}
                         </Badge>
-                        <Badge variant="outline" className={getScoreColor(log.soreness_level, 3)}>
+                        <Badge variant="outline" className={getScoreColor(log.soreness_level)}>
                             Soreness: {getLabelByValue(STRESS_OPTIONS, log.soreness_level) || '-'}
                         </Badge>
                         {log.hrv ? (
@@ -174,15 +168,17 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                             ) : null}
                             <div className="flex flex-wrap gap-2 mt-1">
                                 {log.gym_rpe ? (
-                                    <Badge variant="secondary" className="bg-secondary/20">RPE: {log.gym_rpe}</Badge>
+                                    <Badge variant="outline" className={getScoreColor(log.gym_rpe)}>
+                                        RPE: {log.gym_rpe}
+                                    </Badge>
                                 ) : null}
                                 {log.gym_energy ? (
-                                    <Badge variant="secondary" className="bg-secondary/20">
+                                    <Badge variant="outline" className={getScoreColor(log.gym_energy)}>
                                         Gym Energy: {getLabelByValue(ENERGY_OPTIONS, log.gym_energy)}
                                     </Badge>
                                 ) : null}
                                 {log.gym_mood ? (
-                                    <Badge variant="secondary" className="bg-secondary/20">
+                                    <Badge variant="outline" className={getScoreColor(log.gym_mood)}>
                                         Gym Mood: {getLabelByValue(MOOD_OPTIONS, log.gym_mood)}
                                     </Badge>
                                 ) : null}
@@ -199,7 +195,7 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
             )}
 
             {/* End of Day */}
-            {(log.diet_adherence || log.general_notes || log.digestion_rating || log.daily_energy || log.hunger_level || log.libido) && (
+            {(log.diet_adherence || log.general_notes || log.digestion_rating || log.hunger_level || log.libido || log.salt_grams) && (
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
@@ -222,23 +218,18 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                                 </div>
                             )}
                             <div className="flex flex-wrap gap-2">
-                                {log.daily_energy ? (
-                                    <Badge variant="outline" className={getScoreColor(log.daily_energy, 3)}>
-                                        Energy: {getLabelByValue(ENERGY_OPTIONS, log.daily_energy) || '-'}
-                                    </Badge>
-                                ) : null}
                                 {log.digestion_rating ? (
-                                    <Badge variant="outline" className={getScoreColor(log.digestion_rating, 4)}>
+                                    <Badge variant="outline" className={getScoreColor(log.digestion_rating)}>
                                         Digestion: {getLabelByValue(DIGESTION_OPTIONS, log.digestion_rating) || '-'}
                                     </Badge>
                                 ) : null}
                                 {log.hunger_level ? (
-                                    <Badge variant="outline" className="bg-muted text-muted-foreground">
+                                    <Badge variant="outline" className={getScoreColor(log.hunger_level)}>
                                         Hunger: {getLabelByValue(HUNGER_OPTIONS, log.hunger_level) || '-'}
                                     </Badge>
                                 ) : null}
                                 {log.libido ? (
-                                    <Badge variant="outline" className="bg-muted text-muted-foreground">
+                                    <Badge variant="outline" className={getScoreColor(log.libido)}>
                                         Libido: {getLabelByValue(LIBIDO_OPTIONS, log.libido) || '-'}
                                     </Badge>
                                 ) : null}

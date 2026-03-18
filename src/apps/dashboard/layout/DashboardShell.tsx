@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { TopHeader } from './TopHeader';
 import { MobileDrawer } from './MobileDrawer';
@@ -9,6 +9,22 @@ interface DashboardShellProps {
 
 export function DashboardShell({ children }: DashboardShellProps) {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  // Track breakpoint: collapsed (icon rail) at md, expanded at lg+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsSidebarCollapsed(!e.matches); // collapsed when < 1024px (lg)
+    };
+
+    // Set initial state
+    setIsSidebarCollapsed(!mediaQuery.matches);
+
+    // Listen for changes
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   return (
     <div className="h-screen overflow-hidden bg-background">
@@ -21,7 +37,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
       <div className="flex h-full">
         {/* Sidebar - hidden below md, icon rail at md, full at lg/xl */}
         <aside className="hidden md:flex flex-col border-r border-border bg-card shrink-0 transition-all duration-300 md:w-16 lg:w-56 xl:w-64">
-          <Sidebar collapsed={false} />
+          <Sidebar collapsed={isSidebarCollapsed} />
         </aside>
 
         {/* Main content area */}

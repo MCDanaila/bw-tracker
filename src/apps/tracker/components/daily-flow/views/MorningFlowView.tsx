@@ -7,8 +7,9 @@ import { Input } from "@/core/components/ui/input";
 import { ButtonGroup } from "@/core/components/ui/button-group";
 import { Stepper } from "@/core/components/ui/stepper";
 import { SLEEP_QUALITY_OPTIONS, STRESS_OPTIONS, MOOD_OPTIONS } from "@/core/lib/constants";
-import { localDB } from "@/core/lib/db";
+import { saveDailyLog } from "@/core/lib/db";
 import { useAuth } from "@/core/contexts/AuthContext";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 interface MorningFlowViewProps {
@@ -23,6 +24,7 @@ interface MorningFlowViewProps {
 
 export function MorningFlowView({ existingData, yesterdayData, last7DaysAvg, onBack, onSave }: MorningFlowViewProps) {
     const { user } = useAuth();
+    const queryClient = useQueryClient();
 
     // Initialize form with today's existing data (or smart defaults)
     const { register, handleSubmit, watch, setValue, formState: { isSubmitting } } = useForm({
@@ -59,13 +61,15 @@ export function MorningFlowView({ existingData, yesterdayData, last7DaysAvg, onB
                 user_id: user.id,
             };
 
-            // Incremental Upsert
-            await localDB.syncQueue.add({
-                mutation_type: 'UPSERT_DAILY_LOG',
-                payload: payload,
-                status: 'pending',
-                created_at: new Date().toISOString(),
-            });
+            // Try to save directly to Supabase; fall back to queue if offline
+            const result = await saveDailyLog(payload);
+            if (result === 'synced') {
+                queryClient.invalidateQueries({ queryKey: ['historyLogs'] });
+                queryClient.invalidateQueries({ queryKey: ['dashboardData'] });
+                toast.success("Morning check-in saved! 🔥");
+            } else {
+                toast.success("Morning check-in saved (offline — will sync)");
+            }
 
             // Save smart defaults explicitly for Morning fields
             const currentDefaultsStr = localStorage.getItem("bw_tracker_smart_defaults");
@@ -78,7 +82,6 @@ export function MorningFlowView({ existingData, yesterdayData, last7DaysAvg, onB
                 hrv: payload.hrv,
             }));
 
-            toast.success("Morning check-in saved! 🔥");
             onSave(payload); // Push updated state back up to Wizard
 
         } catch (error) {
@@ -106,7 +109,7 @@ export function MorningFlowView({ existingData, yesterdayData, last7DaysAvg, onB
                         <h3 className="text-lg font-bold text-foreground">Morning Vitals</h3>
                         <div className="grid grid-cols-2 gap-4 p-5 rounded-2xl bg-card border border-border/50 shadow-sm">
                             <div className="col-span-2">
-                                <Stepper label="Weight (kg)" value={weightFasting || 0} onChange={(v) => setValue("weight_fasting", v, { shouldDirty: true })} step={0.1} min={30} max={200} />
+                                <Stepper label="Weight (kg)" value={weightFasting || 0} onChange={(v) => setValue("weight_fasting", v, { shouldDirty: true })} step={0.01} min={30} max={200} />
                                 <div className="flex gap-4 mt-2 ml-1">
                                     {yesterdayData?.weight_fasting && (
                                         <p className="text-xs text-muted-foreground">Yesterday: {yesterdayData.weight_fasting}kg</p>
