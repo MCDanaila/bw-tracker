@@ -11,6 +11,7 @@ export interface UserProfile {
     goal: string | null;
     steps_goal: number | null;
     water_goal: number | null;
+    salt_goal: number | null;
     email: string | null;
     role: 'athlete' | 'self_coached' | 'coach';
 }
