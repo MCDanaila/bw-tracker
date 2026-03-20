@@ -76,19 +76,19 @@ export default function SwapPreviewModal({
                         {/* Differences Grid */}
                         <div className="grid grid-cols-4 gap-2 text-center">
                             <div className={`p-2 rounded-lg border ${swapResult.macroDifferences.kcal > 50 ? 'bg-destructive/10 border-destructive/20 text-destructive' : swapResult.macroDifferences.kcal < -50 ? 'bg-primary/10 border-primary/20 text-primary' : 'bg-muted/20 border-border/50 text-muted-foreground'}`}>
-                                <div className="text-[10px] font-medium opacity-70">KCAL</div>
+                                <div className="text-2xs font-medium opacity-70">KCAL</div>
                                 <div className="font-bold text-sm tracking-tighter">{formatNum(Math.round(swapResult.macroDifferences.kcal))}</div>
                             </div>
                             <div className="p-2 rounded-lg border bg-muted/20 border-border/50 text-muted-foreground">
-                                <div className="text-[10px] font-medium opacity-70">P</div>
+                                <div className="text-2xs font-medium opacity-70">P</div>
                                 <div className="font-bold text-sm tracking-tighter">{formatNum(Number(swapResult.macroDifferences.p.toFixed(1)))}</div>
                             </div>
                             <div className={`p-2 rounded-lg border ${Math.abs(swapResult.macroDifferences.c) > 10 ? 'bg-secondary/10 border-secondary/20 text-secondary' : 'bg-muted/20 border-border/50 text-muted-foreground'}`}>
-                                <div className="text-[10px] font-medium opacity-70">C</div>
+                                <div className="text-2xs font-medium opacity-70">C</div>
                                 <div className="font-bold text-sm tracking-tighter">{formatNum(Number(swapResult.macroDifferences.c.toFixed(1)))}</div>
                             </div>
                             <div className={`p-2 rounded-lg border ${Math.abs(swapResult.macroDifferences.g) > 5 ? 'bg-secondary/10 border-secondary/20 text-secondary' : 'bg-muted/20 border-border/50 text-muted-foreground'}`}>
-                                <div className="text-[10px] font-medium opacity-70">G</div>
+                                <div className="text-2xs font-medium opacity-70">G</div>
                                 <div className="font-bold text-sm tracking-tighter">{formatNum(Number(swapResult.macroDifferences.g.toFixed(1)))}</div>
                             </div>
                         </div>

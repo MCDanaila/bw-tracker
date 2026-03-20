@@ -18,10 +18,10 @@ interface ComplianceHeatmapProps {
 
 function getScoreClasses(score: number | null): string {
   if (score === null) return "bg-muted text-muted-foreground";
-  if (score <= 40) return "bg-red-500/20 text-red-700";
-  if (score <= 60) return "bg-amber-500/20 text-amber-700";
-  if (score <= 80) return "bg-green-500/20 text-green-700";
-  return "bg-emerald-500/20 text-emerald-700";
+  if (score <= 40) return "bg-status-danger/20 text-status-danger";
+  if (score <= 60) return "bg-status-warning/20 text-status-warning";
+  if (score <= 80) return "bg-status-good/20 text-status-good";
+  return "bg-status-excellent/20 text-status-excellent";
 }
 
 function formatDateLabel(dateStr: string): string {
@@ -73,12 +73,13 @@ export default function ComplianceHeatmap({
       <CardHeader>
         <div className="flex items-center gap-2">
           <CardTitle>Compliance Heatmap</CardTitle>
-          <span
-            className="text-xs text-muted-foreground"
-            title="Cell color reflects daily compliance: red (0-40%), amber (41-60%), green (61-80%), emerald (81-100%), grey (no data)"
+          <button
+            type="button"
+            aria-label="Compliance score explanation: red (0-40%), amber (41-60%), green (61-80%), emerald (81-100%), grey (no data)"
+            className="text-xs text-muted-foreground cursor-pointer bg-transparent border-none p-0 leading-none"
           >
             ⓘ
-          </span>
+          </button>
         </div>
       </CardHeader>
       <CardContent>
@@ -122,8 +123,8 @@ export default function ComplianceHeatmap({
                     return (
                       <div
                         key={date}
-                        className={`h-6 w-8 rounded flex items-center justify-center text-[10px] font-semibold ${getScoreClasses(score)}`}
-                        title={`${athlete.athleteName} — ${formatDateLabel(date)}: ${score !== null ? `${score}%` : "N/A"}`}
+                        className={`h-6 w-8 rounded flex items-center justify-center text-2xs font-semibold ${getScoreClasses(score)}`}
+                        aria-label={`${athlete.athleteName} — ${formatDateLabel(date)}: ${score !== null ? `${score}%` : "N/A"}`}
                       >
                         {score !== null ? score : "–"}
                       </div>

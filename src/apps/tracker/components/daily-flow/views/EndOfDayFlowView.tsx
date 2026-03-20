@@ -86,7 +86,7 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
         <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
             {/* Header */}
             <div className="flex items-center gap-3 mt-2 mb-6">
-                <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full">
+                <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full" aria-label="Go back">
                     <ChevronLeft size={24} />
                 </Button>
                 <div className="flex-1">

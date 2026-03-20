@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useHistoryLogs } from '@/core/hooks/useHistoryLogs';
+import { useRecentLogs } from '@/core/hooks/useRecentLogs';
 
 interface BiofeedbackAxis {
   axis: string;
@@ -13,7 +13,7 @@ interface BiofeedbackRadarData {
 }
 
 export function useBiofeedbackRadar(userId?: string): BiofeedbackRadarData {
-  const { data: logs, isLoading } = useHistoryLogs(userId);
+  const { data: logs, isLoading } = useRecentLogs(userId, 14);
 
   return useMemo(() => {
     if (!logs || logs.length === 0) {

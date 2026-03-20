@@ -177,9 +177,9 @@ export default function WeeklyOverview({ weeklyTotals, weeklyAverage, days }: We
                                 <TableRow key={day} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                                     <TableCell className="p-3 font-semibold text-muted-foreground">{day}</TableCell>
                                     <TableCell className="p-3 text-right font-medium">{formatNumber(weeklyTotals[day].kcal)}</TableCell>
-                                    <TableCell className="p-3 text-right">{formatNumber(weeklyTotals[day].protein)}<span className="text-[10px] text-muted-foreground ml-0.5">g</span></TableCell>
-                                    <TableCell className="p-3 text-right">{formatNumber(weeklyTotals[day].carbs)}<span className="text-[10px] text-muted-foreground ml-0.5">g</span></TableCell>
-                                    <TableCell className="p-3 text-right">{formatNumber(weeklyTotals[day].fats)}<span className="text-[10px] text-muted-foreground ml-0.5">g</span></TableCell>
+                                    <TableCell className="p-3 text-right">{formatNumber(weeklyTotals[day].protein)}<span className="text-2xs text-muted-foreground ml-0.5">g</span></TableCell>
+                                    <TableCell className="p-3 text-right">{formatNumber(weeklyTotals[day].carbs)}<span className="text-2xs text-muted-foreground ml-0.5">g</span></TableCell>
+                                    <TableCell className="p-3 text-right">{formatNumber(weeklyTotals[day].fats)}<span className="text-2xs text-muted-foreground ml-0.5">g</span></TableCell>
                                     <TableCell className="p-3 text-right text-xs text-muted-foreground">{formatNumber(weeklyTotals[day].cgRatio, 2)}</TableCell>
                                 </TableRow>
                             ))}

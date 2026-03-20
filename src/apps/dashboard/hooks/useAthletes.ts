@@ -90,21 +90,21 @@ export function useAthletes() {
         const stepsLogs = recent.filter(l => l.steps != null);
         const stepsCompliance = stepsLogs.length > 0
           ? Math.round(
-              (stepsLogs.filter(l => l.steps! >= (l.steps_goal ?? 10000)).length / stepsLogs.length) * 100
-            )
+            (stepsLogs.filter(l => l.steps! >= (l.steps_goal ?? 10000)).length / stepsLogs.length) * 100
+          )
           : null;
 
         // Diet adherence: map to numeric and average
         const dietLogs = recent.filter(l => l.diet_adherence != null);
         const dietAdherence = dietLogs.length > 0
           ? Math.round(
-              dietLogs.reduce((sum, l) => {
-                const score = l.diet_adherence === 'perfect' ? 100
-                  : l.diet_adherence === 'minor_deviation' ? 70
+            dietLogs.reduce((sum, l) => {
+              const score = l.diet_adherence === 'perfect' ? 100
+                : l.diet_adherence === 'minor_deviation' ? 70
                   : 30;
-                return sum + score;
-              }, 0) / dietLogs.length
-            )
+              return sum + score;
+            }, 0) / dietLogs.length
+          )
           : null;
 
         return {

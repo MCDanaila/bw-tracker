@@ -12,6 +12,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const [formData, setFormData] = useState({
         username: '',
@@ -33,6 +34,24 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user) return;
+
+        // Field-level validation
+        const errs: Record<string, string> = {};
+        if (!formData.gender) errs.gender = 'Required';
+        const age = Number(formData.age);
+        if (!formData.age) errs.age = 'Required';
+        else if (age < 1 || age > 120) errs.age = 'Must be between 1 and 120';
+        const height = Number(formData.height);
+        if (!formData.height) errs.height = 'Required';
+        else if (height < 50 || height > 300) errs.height = 'Must be between 50 and 300';
+        const initWeight = Number(formData.initial_weight);
+        if (!formData.initial_weight) errs.initial_weight = 'Required';
+        else if (initWeight < 20 || initWeight > 500) errs.initial_weight = 'Must be between 20 and 500';
+        const targetWeight = Number(formData.target_weight);
+        if (!formData.target_weight) errs.target_weight = 'Required';
+        else if (targetWeight < 20 || targetWeight > 500) errs.target_weight = 'Must be between 20 and 500';
+        setFieldErrors(errs);
+        if (Object.keys(errs).length > 0) return;
 
         setLoading(true);
         setError(null);
@@ -103,6 +122,8 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                                 value={formData.gender}
                                 onChange={handleChange}
                                 required
+                                aria-invalid={!!fieldErrors.gender}
+                                aria-describedby={fieldErrors.gender ? "gender-error" : undefined}
                                 className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <option value="" disabled>Select Gender</option>
@@ -110,18 +131,24 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                                 <option value="female">Female</option>
                                 <option value="other">Other</option>
                             </select>
+                            {fieldErrors.gender && <p id="gender-error" className="text-xs text-destructive mt-1">{fieldErrors.gender}</p>}
                         </div>
-                        <Input
-                            label="Age"
-                            name="age"
-                            type="number"
-                            min="1"
-                            max="120"
-                            required
-                            value={formData.age}
-                            onChange={handleChange}
-                            placeholder="Years"
-                        />
+                        <div className="space-y-1.5">
+                            <Input
+                                label="Age"
+                                name="age"
+                                type="number"
+                                min="1"
+                                max="120"
+                                required
+                                value={formData.age}
+                                onChange={handleChange}
+                                placeholder="Years"
+                                aria-invalid={!!fieldErrors.age}
+                                aria-describedby={fieldErrors.age ? "age-error" : undefined}
+                            />
+                            {fieldErrors.age && <p id="age-error" className="text-xs text-destructive mt-1">{fieldErrors.age}</p>}
+                        </div>
                     </div>
 
                     <div className="space-y-1.5">
@@ -139,36 +166,51 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
                     </div>
 
                     <div className="grid grid-cols-[1fr_1fr_1fr] gap-4">
-                        <Input
-                            label={`Height (${isMetric ? 'cm' : 'inches'})`}
-                            name="height"
-                            type="number"
-                            step="0.01"
-                            required
-                            value={formData.height}
-                            onChange={handleChange}
-                            placeholder={isMetric ? 'e.g., 175' : 'e.g., 68'}
-                        />
-                        <Input
-                            label={`Current Weight (${isMetric ? 'kg' : 'lbs'})`}
-                            name="initial_weight"
-                            type="number"
-                            step="0.1"
-                            required
-                            value={formData.initial_weight}
-                            onChange={handleChange}
-                            placeholder={isMetric ? '70.5' : '155.0'}
-                        />
-                        <Input
-                            label={`Target Weight (${isMetric ? 'kg' : 'lbs'})`}
-                            name="target_weight"
-                            type="number"
-                            step="0.1"
-                            required
-                            value={formData.target_weight}
-                            onChange={handleChange}
-                            placeholder={isMetric ? '68.0' : '150.0'}
-                        />
+                        <div className="space-y-1.5">
+                            <Input
+                                label={`Height (${isMetric ? 'cm' : 'inches'})`}
+                                name="height"
+                                type="number"
+                                step="0.01"
+                                required
+                                value={formData.height}
+                                onChange={handleChange}
+                                placeholder={isMetric ? 'e.g., 175' : 'e.g., 68'}
+                                aria-invalid={!!fieldErrors.height}
+                                aria-describedby={fieldErrors.height ? "height-error" : undefined}
+                            />
+                            {fieldErrors.height && <p id="height-error" className="text-xs text-destructive mt-1">{fieldErrors.height}</p>}
+                        </div>
+                        <div className="space-y-1.5">
+                            <Input
+                                label={`Current Weight (${isMetric ? 'kg' : 'lbs'})`}
+                                name="initial_weight"
+                                type="number"
+                                step="0.1"
+                                required
+                                value={formData.initial_weight}
+                                onChange={handleChange}
+                                placeholder={isMetric ? '70.5' : '155.0'}
+                                aria-invalid={!!fieldErrors.initial_weight}
+                                aria-describedby={fieldErrors.initial_weight ? "initial_weight-error" : undefined}
+                            />
+                            {fieldErrors.initial_weight && <p id="initial_weight-error" className="text-xs text-destructive mt-1">{fieldErrors.initial_weight}</p>}
+                        </div>
+                        <div className="space-y-1.5">
+                            <Input
+                                label={`Target Weight (${isMetric ? 'kg' : 'lbs'})`}
+                                name="target_weight"
+                                type="number"
+                                step="0.1"
+                                required
+                                value={formData.target_weight}
+                                onChange={handleChange}
+                                placeholder={isMetric ? '68.0' : '150.0'}
+                                aria-invalid={!!fieldErrors.target_weight}
+                                aria-describedby={fieldErrors.target_weight ? "target_weight-error" : undefined}
+                            />
+                            {fieldErrors.target_weight && <p id="target_weight-error" className="text-xs text-destructive mt-1">{fieldErrors.target_weight}</p>}
+                        </div>
                     </div>
 
                     <div className="space-y-1.5">

@@ -21,7 +21,7 @@ export default function DashboardView() {
 
     if (error) {
         return (
-            <div className="p-8 text-center text-red-500">
+            <div className="p-8 text-center text-destructive">
                 Error loading statistics.
             </div>
         );

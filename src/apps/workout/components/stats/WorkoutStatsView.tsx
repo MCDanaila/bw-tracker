@@ -25,8 +25,8 @@ export default function WorkoutStatsView() {
         </div>
       </div>
 
-      <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-        <p className="text-amber-900 dark:text-amber-100 text-sm">
+      <div className="bg-status-warning/10 border border-status-warning/20 rounded-lg p-4">
+        <p className="text-status-warning text-sm">
           <strong>Planned:</strong> Volume tracking, 1RM estimates, frequency heatmap, progress charts, and streaks
         </p>
       </div>

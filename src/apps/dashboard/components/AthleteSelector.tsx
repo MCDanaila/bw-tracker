@@ -48,6 +48,7 @@ export function AthleteSelector() {
             size="icon-sm"
             onClick={() => setActiveAthleteId(null)}
             className="shrink-0"
+            aria-label="Deselect athlete"
           >
             <X size={14} />
           </Button>
@@ -72,6 +73,7 @@ export function AthleteSelector() {
               placeholder="Search athletes..."
               className="h-8 text-sm"
               autoFocus
+              aria-label="Search athletes"
             />
           </div>
           <div className="max-h-48 overflow-y-auto">

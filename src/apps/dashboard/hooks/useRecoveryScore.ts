@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useHistoryLogs } from '@/core/hooks/useHistoryLogs';
+import { useRecentLogs } from '@/core/hooks/useRecentLogs';
 import { getLocalDateStr } from '@/core/lib/utils';
 
 interface RecoveryScoreResult {
@@ -16,7 +16,7 @@ interface RecoveryScoreResult {
 }
 
 export function useRecoveryScore(userId?: string): RecoveryScoreResult {
-  const { data: logs, isLoading } = useHistoryLogs(userId);
+  const { data: logs, isLoading } = useRecentLogs(userId, 14);
 
   return useMemo(() => {
     if (!logs || logs.length === 0) {
@@ -39,13 +39,13 @@ export function useRecoveryScore(userId?: string): RecoveryScoreResult {
     const sleepScore = normalizeSleep(latest);
     // HRV: simple relative scoring (if available)
     const hrvScore = latest.hrv != null ? Math.min(100, Math.max(0, latest.hrv)) : null;
-    // Soreness: invert 1-3 scale (1=good=100, 3=bad=33)
+    // Soreness: invert 1-5 scale (1=no soreness=100, 5=severe=0)
     const sorenessScore = latest.soreness_level != null
-      ? ((4 - latest.soreness_level) / 3) * 100
+      ? ((5 - latest.soreness_level) / 4) * 100
       : null;
-    // Stress: invert 1-3 scale
+    // Stress: invert 1-5 scale (1=very stressed=0, 5=relaxed=100)
     const stressScore = latest.stress_level != null
-      ? ((4 - latest.stress_level) / 3) * 100
+      ? ((latest.stress_level - 1) / 4) * 100
       : null;
     // Energy: 1-3 scale -> 0-100
     const energyScore = latest.daily_energy != null
@@ -84,8 +84,8 @@ export function useRecoveryScore(userId?: string): RecoveryScoreResult {
       const pastWeights = [
         { value: pastSleepScore, weight: 0.30 },
         { value: pastLog.hrv != null ? Math.min(100, Math.max(0, pastLog.hrv)) : null, weight: 0.25 },
-        { value: pastLog.soreness_level != null ? ((4 - pastLog.soreness_level) / 3) * 100 : null, weight: 0.20 },
-        { value: pastLog.stress_level != null ? ((4 - pastLog.stress_level) / 3) * 100 : null, weight: 0.15 },
+        { value: pastLog.soreness_level != null ? ((5 - pastLog.soreness_level) / 4) * 100 : null, weight: 0.20 },
+        { value: pastLog.stress_level != null ? ((pastLog.stress_level - 1) / 4) * 100 : null, weight: 0.15 },
         { value: pastLog.daily_energy != null ? (pastLog.daily_energy / 3) * 100 : null, weight: 0.10 },
       ].filter(w => w.value != null);
 

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import { useProfile } from '../hooks/useProfile';
@@ -46,27 +46,16 @@ function deriveCapabilities(role: string | null): Capabilities {
 export function RoleProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
   const { data: profile, isLoading: profileLoading } = useProfile(user?.id);
-  const [roleContextValue, setRoleContextValue] = useState<RoleContextValue>({
-    role: null,
-    capabilities: deriveCapabilities(null),
-    isLoading: true,
-    profile: null,
-  });
 
-  useEffect(() => {
-    if (authLoading || profileLoading) {
-      setRoleContextValue((prev) => ({ ...prev, isLoading: true }));
-      return;
-    }
+  const isLoading = authLoading || profileLoading;
+  const role = isLoading ? null : ((profile?.role as 'athlete' | 'self_coached' | 'coach' | null) ?? null);
 
-    const role = (profile?.role as 'athlete' | 'self_coached' | 'coach' | null) ?? null;
-    setRoleContextValue({
-      role,
-      capabilities: deriveCapabilities(role),
-      isLoading: false,
-      profile: profile ?? null,
-    });
-  }, [profile, authLoading, profileLoading]);
+  const roleContextValue: RoleContextValue = {
+    role,
+    capabilities: deriveCapabilities(role),
+    isLoading,
+    profile: profile ?? null,
+  };
 
   return (
     <RoleContext.Provider value={roleContextValue}>

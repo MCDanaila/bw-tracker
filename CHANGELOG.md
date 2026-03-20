@@ -4,6 +4,36 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+### 🐛 Bug Fixes & Polish (Browser QA Pass — 2026-03-19)
+
+- **Critical: Conditional `React.useId()` in `slider.tsx`** (UI-002/CE-001): Moved `React.useId()` to an unconditional top-level call (`const generatedId = React.useId()`), then uses it as fallback via `id ?? generatedId`. Fixes Rules of Hooks violation that caused runtime errors in `TrainingFlowView` and `EditLogModal`.
+- **Double "BW Tracker" header** (UI-001): Removed duplicate `<span>BW Tracker</span>` from `TrackerApp`'s top bar. `SyncHeader` is now the single source of truth for the app title.
+- **Muscle Soreness mis-mapped to stress emojis** (UI-003): Added `SORENESS_OPTIONS` constant (💪→🔴, values 1–5, None→Severe) to `constants.ts`. Updated `MorningFlowView` and `DailySummaryCard` to use it instead of `STRESS_OPTIONS`.
+- **Recovery score normalization mismatch** (UI-004): Fixed `useRecoveryScore.ts` to normalize soreness over the correct 1–5 range (`(5-v)/4`) and stress as `(v-1)/4` to match `STRESS_OPTIONS` semantics (5=relaxed=best). Applied to both latest log and 7-day trend.
+- **`setState` in `useEffect` body in `RoleContext.tsx`** (CE-003): Eliminated the `useState+useEffect` pattern entirely — context value is now a derived value computed inline each render, removing the extra render cycle.
+- **Pending sync count missing** (UI-005): `SyncHeader` now shows `{pendingCount} pending` text next to the spinner when items are queued.
+- **`pb-safe` class without plugin** (UI-006): Replaced with `style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}` in bottom nav — works cross-browser without `tailwindcss-safe-area`.
+- **Error states invisible in dark mode** (UI-007/UI-008): Replaced `bg-red-50 text-red-600/text-red-500` with `bg-destructive/10 text-destructive` design token classes in `DietView`, `HistoryView`, and `DashboardView`.
+- **No error feedback on diet save** (UI-010): Wrapped `DietEditorPage.handleSaveItems` in try/catch with `toast.success()` / `toast.error()` feedback.
+- **`fetchTodayLog` stale closure** (CE-002): Wrapped `fetchTodayLog` in `useCallback([user])` and added it to the `useEffect` dependency array in `DailyLogHub`.
+- **Missing `aria-label` on icon-only buttons** (UI-011/UI-012): Added `aria-label="Go back"` to all back icon buttons and `aria-label="Open settings"` + `aria-expanded` to the settings avatar button.
+- **`let weeklyAvgSum` should be `const`** (UI-015): Fixed in `useDietData.ts`.
+- **Dead empty `DailyLogHubProps` interface** (UI-009): Removed unused empty exported interface from `DailyLogHub.tsx`.
+
+### ♿ Accessibility & UX Polish (UI/UX Audit Pass — 2026-03-19)
+
+- **Icon-only buttons labeled** (A11Y-001): Added `aria-label="Toggle sidebar menu"` to hamburger in `TopHeader`, `aria-label="Deselect athlete"` to X button in `AthleteSelector`.
+- **Search inputs labeled** (A11Y-002): Added `aria-label="Search food by name"` to `FoodSearchModal` input and `aria-label="Search athletes"` to `AthleteSelector` input.
+- **Info icon made keyboard-accessible** (A11Y-003): Replaced non-interactive `<span title="...">ⓘ</span>` in `ComplianceHeatmap` with a focusable `<button type="button" aria-label="...">`.
+- **`title` replaced with `aria-label`** (A11Y-004): Replaced `title` attributes on `ComplianceHeatmap` data cells and `MacroSummaryBar` macro bars with `aria-label` for reliable screen reader announcement.
+- **Swap button bilingual labels** (A11Y-005): Added `aria-label="Swap food"` alongside existing `title="Sostituisci"` in `DailyMeals`.
+- **Macro color tokens** (CON-001): Added `--color-macro-protein`, `--color-macro-carbs`, `--color-macro-fat` CSS custom properties to `@theme` in `index.css`.
+- **`text-2xs` design token** (CON-004): Added `--text-2xs: 0.625rem` to `@theme`. Replaced all 15 occurrences of `text-[10px]` across 8 files with `text-2xs`.
+- **`PageSpinner` component extracted** (CON-007): Created `src/core/components/ui/PageSpinner.tsx`. Replaced duplicated inline `<Loader2 className="animate-spin" />` patterns in `DietView`, `HistoryView`, and `DailyLogHub`.
+- **Silent mutation errors surfaced** (UX-002): Added `onError` toast handlers to `saveMutation` and `deleteMutation` in `FoodDatabasePage`.
+- **Macro warning on submit button** (UX-004): `FoodFormDialog` submit button turns amber when macro calculation warning is active.
+- **Empty state for filtered food database** (UX-005): `FoodDatabasePage` now shows `EmptyState` component with helpful message when search/filter returns zero results.
+
 ### ✨ Features (Tracker - Daily Log Queue)
 - **Single Queue Entry Per Day**: Refactored daily flow to merge section saves into one queue entry per date instead of creating separate entries for Morning/Training/End-of-Day. Uses new `upsertTodayQueueEntry()` helper in `src/core/lib/db.ts` that:
   - Checks for existing pending entry for the date

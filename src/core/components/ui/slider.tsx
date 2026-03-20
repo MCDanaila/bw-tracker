@@ -9,7 +9,8 @@ export interface SliderProps extends React.InputHTMLAttributes<HTMLInputElement>
 
 const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
   ({ className, label, error, id, ...props }, ref) => {
-    const sliderId = id || `slider-${React.useId()}`;
+    const generatedId = React.useId();
+    const sliderId = id ?? `slider-${generatedId}`;
     const errorId = error ? `${sliderId}-error` : undefined;
 
     return (
@@ -36,7 +37,7 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
           aria-describedby={errorId}
           {...props}
         />
-        <div className="flex justify-between text-[10px] text-muted-foreground px-1">
+        <div className="flex justify-between text-2xs text-muted-foreground px-1">
           <span>{props.min || 0}</span>
           <span>{props.max || 100}</span>
         </div>

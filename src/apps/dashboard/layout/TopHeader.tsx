@@ -23,6 +23,7 @@ export function TopHeader({ onToggleSidebar }: TopHeaderProps) {
         size="icon"
         className="md:hidden"
         onClick={onToggleSidebar}
+        aria-label="Toggle sidebar menu"
       >
         <Menu size={20} />
       </Button>

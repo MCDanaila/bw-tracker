@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Plus, UtensilsCrossed } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { supabase } from '@/core/lib/supabase';
 import { useAthleteContext } from '../contexts/AthleteContext';
 import { useFoodsQuery } from '../hooks/useFoodsQuery';
@@ -53,6 +54,9 @@ export default function FoodDatabasePage() {
       qc.invalidateQueries({ queryKey: ['foods-query'] });
       qc.invalidateQueries({ queryKey: ['foods'] });
     },
+    onError: () => {
+      toast.error('Failed to save. Please try again.');
+    },
   });
 
   const deleteMutation = useMutation({
@@ -67,6 +71,9 @@ export default function FoodDatabasePage() {
       qc.invalidateQueries({ queryKey: ['foods-query'] });
       qc.invalidateQueries({ queryKey: ['foods'] });
       setDeletingFood(null);
+    },
+    onError: () => {
+      toast.error('Failed to delete. Please try again.');
     },
   });
 
@@ -125,6 +132,12 @@ export default function FoodDatabasePage() {
           title="No foods yet"
           description={canManageAthletes ? 'Add your first food to get started.' : 'No foods have been added yet.'}
           action={canManageAthletes ? { label: 'Add Food', onClick: () => setShowAddDialog(true) } : undefined}
+        />
+      ) : !isLoading && foods.length === 0 && (search || unitFilter || stateFilter) ? (
+        <EmptyState
+          icon={<UtensilsCrossed size={40} />}
+          title="No foods match your filters"
+          description="Try adjusting your search or filters to find what you're looking for."
         />
       ) : (
         <DataTable

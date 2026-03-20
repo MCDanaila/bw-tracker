@@ -40,6 +40,7 @@ export default function FoodSearchModal({ isOpen, onClose, onSelectFood }: FoodS
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-2.5 bg-background border border-border/50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground"
                         autoFocus
+                        aria-label="Search food by name"
                     />
                 </div>
 
@@ -53,7 +54,7 @@ export default function FoodSearchModal({ isOpen, onClose, onSelectFood }: FoodS
                     )}
 
                     {error && (
-                        <div className="p-4 text-center text-red-500 text-sm mt-10">
+                        <div className="p-4 text-center text-destructive text-sm mt-10">
                             Error loading database.
                         </div>
                     )}
@@ -78,7 +79,7 @@ export default function FoodSearchModal({ isOpen, onClose, onSelectFood }: FoodS
                                     >
                                         <div>
                                             <div className="font-medium text-foreground text-sm group-hover:text-primary transition-colors">{food.name}</div>
-                                            <div className="text-[10px] text-muted-foreground mt-0.5 flex gap-2">
+                                            <div className="text-2xs text-muted-foreground mt-0.5 flex gap-2">
                                                 <span>{food.portion_size}{food.unit}</span>
                                                 <span className="opacity-40">•</span>
                                                 <span>P: {food.protein}</span>

@@ -61,7 +61,7 @@ export function TrainingCalendarStrip({ days, isLoading }: TrainingCalendarStrip
                     : 'bg-card'
                 }`}
               >
-                <span className="text-[10px] font-medium uppercase text-muted-foreground">
+                <span className="text-2xs font-medium uppercase text-muted-foreground">
                   {day.dayLabel}
                 </span>
                 <span className="mt-1 text-xs font-semibold">
@@ -70,11 +70,11 @@ export function TrainingCalendarStrip({ days, isLoading }: TrainingCalendarStrip
                 {!isRest && day.rpe != null && (
                   <div className="mt-1 flex items-center gap-1">
                     <div className={`h-1.5 w-1.5 rounded-full ${getRpeColor(day.rpe)}`} />
-                    <span className="text-[10px] text-muted-foreground">RPE {day.rpe}</span>
+                    <span className="text-2xs text-muted-foreground">RPE {day.rpe}</span>
                   </div>
                 )}
                 {!isRest && day.duration != null && (
-                  <span className="mt-0.5 text-[10px] text-muted-foreground">
+                  <span className="mt-0.5 text-2xs text-muted-foreground">
                     {day.duration}m
                   </span>
                 )}

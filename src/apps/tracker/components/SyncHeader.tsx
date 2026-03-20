@@ -34,9 +34,10 @@ export default function SyncHeader() {
                         <CheckCircle2 size={12} /> Synced
                     </p>
                 ) : (
-                    <div className="text-xs text-muted-foreground font-medium flex items-center gap-1 mt-1 relative">
-                        <RefreshCw size={12} />
-                        <span className="absolute left-2 top-0 w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    <div className="text-xs text-status-warning font-medium flex items-center gap-1 mt-1">
+                        <RefreshCw size={12} className="animate-spin" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-status-warning animate-pulse" />
+                        <span>{pendingCount} pending</span>
                     </div>
                 )}
             </div>

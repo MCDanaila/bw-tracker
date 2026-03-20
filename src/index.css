@@ -129,6 +129,14 @@ body {
   --color-chart-6: hsl(200, 65%, 50%);
   --color-chart-7: hsl(150, 50%, 45%);
   --color-chart-8: hsl(320, 60%, 55%);
+
+  /* Macro colors — single source of truth */
+  --color-macro-protein: hsl(217, 91%, 60%);
+  --color-macro-carbs: hsl(43, 96%, 56%);
+  --color-macro-fat: hsl(0, 84%, 60%);
+
+  /* Custom text sizes */
+  --text-2xs: 0.625rem;
 }
 
 @layer base {

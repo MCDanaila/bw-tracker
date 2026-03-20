@@ -10,6 +10,7 @@ export interface SyncAction {
     status: 'pending' | 'error';
     created_at: string;
     retryCount?: number;
+    date?: string;             // Top-level indexed copy of payload.date for efficient lookups
 }
 
 export class BWTrackerDB extends Dexie {
@@ -18,9 +19,14 @@ export class BWTrackerDB extends Dexie {
     constructor() {
         super('BWTrackerDB');
 
-        // Define the database schema (only index the fields we need to query by)
+        // v1: original schema
         this.version(1).stores({
             syncQueue: '++id, mutation_type, status, created_at, retryCount'
+        });
+
+        // v2: promote date to top-level indexed field
+        this.version(2).stores({
+            syncQueue: '++id, mutation_type, status, created_at, retryCount, date'
         });
     }
 }
@@ -35,29 +41,28 @@ export const localDB = new BWTrackerDB();
 export async function upsertTodayQueueEntry(payload: any): Promise<void> {
   const todayDate = payload.date || getLocalDateStr();
 
-  // Find all pending UPSERT_DAILY_LOG entries
-  const allPending = await localDB.syncQueue
+  // Use the indexed `mutation_type` field to narrow the set, then filter by
+  // the indexed `date` field — avoids a full collection scan.
+  const existing = await localDB.syncQueue
     .where('mutation_type')
     .equals('UPSERT_DAILY_LOG')
-    .toArray();
-
-  // Filter to today's date and get the latest one (highest id)
-  const existing = allPending
-    .filter(a => a.status === 'pending' && a.payload?.date === todayDate)
-    .at(-1);
+    .and(a => a.status === 'pending' && (a.date === todayDate || a.payload?.date === todayDate))
+    .last();
 
   if (existing?.id != null) {
     // Update existing entry with merged payload
     await localDB.syncQueue.update(existing.id, {
       payload: { ...existing.payload, ...payload },
+      date: todayDate,
     });
   } else {
-    // Create new entry
+    // Create new entry — store date as top-level indexed field
     await localDB.syncQueue.add({
       mutation_type: 'UPSERT_DAILY_LOG',
       payload,
       status: 'pending',
       created_at: new Date().toISOString(),
+      date: todayDate,
     });
   }
 }

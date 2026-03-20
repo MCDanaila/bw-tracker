@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { localDB } from "@/core/lib/db";
 import { useAuth } from "@/core/contexts/AuthContext";
 import { type DailyLog } from "@/core/types/database";
@@ -6,11 +6,10 @@ import { TodayDashboardView } from "./views/TodayDashboardView";
 import { MorningFlowView } from "./views/MorningFlowView";
 import { TrainingFlowView } from "./views/TrainingFlowView";
 import { EndOfDayFlowView } from "./views/EndOfDayFlowView";
+import { PageSpinner } from "@/core/components/ui/PageSpinner";
 import { getLocalDateStr } from "@/core/lib/utils";
 
 export type ViewState = "dashboard" | "morning" | "training" | "end_of_day";
-
-export interface DailyLogHubProps {}
 
 export default function DailyLogHub() {
     const { user } = useAuth();
@@ -22,7 +21,7 @@ export default function DailyLogHub() {
     const [isLoading, setIsLoading] = useState(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
 
-    async function fetchTodayLog() {
+    const fetchTodayLog = useCallback(async function fetchTodayLog() {
         if (!user) return;
         setIsLoading(true);
 
@@ -122,11 +121,11 @@ export default function DailyLogHub() {
         }
 
         setIsLoading(false);
-    }
+    }, [user]);
 
     useEffect(() => {
         fetchTodayLog();
-    }, [user]);
+    }, [fetchTodayLog]);
 
     const handleNavigate = (view: ViewState) => {
         setActiveView(view);
@@ -140,7 +139,7 @@ export default function DailyLogHub() {
     };
 
     if (isLoading) {
-        return <div className="flex items-center justify-center p-12 text-muted-foreground animate-pulse">Loading today's flow...</div>;
+        return <PageSpinner message="Loading today's flow..." />;
     }
 
     if (fetchError) {

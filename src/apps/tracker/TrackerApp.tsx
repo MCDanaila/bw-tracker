@@ -133,12 +133,12 @@ function App() {
   return (
     <div className="min-h-screen bg-background">
       {/* Top Header & Settings Menu */}
-      <div className="bg-card border-b border-border flex justify-between items-center px-4 py-2">
-        <span className="font-bold text-foreground">BW Tracker</span>
-
+      <div className="bg-card border-b border-border flex justify-end items-center px-4 py-2">
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+            aria-label="Open settings"
+            aria-expanded={isSettingsOpen}
             className="w-8 h-8 rounded-full bg-primary/20 text-primary font-bold flex items-center justify-center hover:bg-primary/30 transition-colors text-sm" // Adjusted size for better fit
           >
             {user?.email?.charAt(0).toUpperCase()}
@@ -235,7 +235,7 @@ function App() {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 w-full bg-card border-t border-border flex justify-around p-3 pb-safe z-10">
+      <nav className="fixed bottom-0 w-full bg-card border-t border-border flex justify-around p-3 z-10" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
         <button
           onClick={() => setCurrentTab('tracker')}
           className={`flex flex-col items-center ${currentTab === 'tracker' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'} `}

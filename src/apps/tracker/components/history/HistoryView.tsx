@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useHistoryLogs } from '@/core/hooks/useHistoryLogs';
 import { useStreak } from '@/core/hooks/useStreak';
-import { Loader2, CalendarRange } from 'lucide-react';
+import { CalendarRange } from 'lucide-react';
+import { PageSpinner } from '@/core/components/ui/PageSpinner';
 import HeatmapCalendar from './HeatmapCalendar';
 import DailySummaryCard from './DailySummaryCard';
 import EditLogModal from './EditLogModal';
@@ -58,19 +59,14 @@ export default function HistoryView() {
 
     if (error) {
         return (
-            <div className="p-8 text-center text-red-500">
+            <div className="p-8 text-center text-destructive">
                 Error loading history.
             </div>
         );
     }
 
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center h-64 text-muted-foreground gap-3">
-                <Loader2 className="animate-spin text-primary" size={32} />
-                <span className="text-sm font-medium">Loading logs...</span>
-            </div>
-        );
+        return <PageSpinner message="Loading logs..." />;
     }
 
     return (

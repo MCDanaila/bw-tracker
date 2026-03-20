@@ -22,6 +22,14 @@ export const STRESS_OPTIONS = [
     { label: "😌", value: 5 },
 ];
 
+export const SORENESS_OPTIONS = [
+    { label: "🥵", value: 1, ariaLabel: "severe pain/limited motion" },
+    { label: "😫", value: 2, ariaLabel: "stiff/painful movement" },
+    { label: "😐", value: 3, ariaLabel: "noticeable soreness" },
+    { label: "😌", value: 4, ariaLabel: "light stiffness" },
+    { label: "😊", value: 5, ariaLabel: "no pain/fully recovered" },
+];
+
 export const SLEEP_PRESET_OPTIONS = [
     { label: '6h', value: 6 },
     { label: '6.5h', value: 6.5 },

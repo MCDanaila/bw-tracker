@@ -153,8 +153,11 @@ export function FoodFormDialog({ open, onClose, food, onSave }: FoodFormDialogPr
                 id="portion_size"
                 type="number"
                 step="1"
-                {...register('portion_size', { valueAsNumber: true, required: true, min: { value: 0.1, message: '> 0' } })}
+                aria-invalid={!!errors.portion_size}
+                aria-describedby={errors.portion_size ? "portion_size-error" : undefined}
+                {...register('portion_size', { valueAsNumber: true, required: 'Required', min: { value: 0.1, message: '> 0' } })}
               />
+              {errors.portion_size && <p id="portion_size-error" className="text-xs text-destructive">{errors.portion_size.message}</p>}
             </div>
 
             <div className="space-y-1">
@@ -171,8 +174,11 @@ export function FoodFormDialog({ open, onClose, food, onSave }: FoodFormDialogPr
                 id="calories"
                 type="number"
                 step="1"
-                {...register('calories', { valueAsNumber: true, required: true, min: 0 })}
+                aria-invalid={!!errors.calories}
+                aria-describedby={errors.calories ? "calories-error" : undefined}
+                {...register('calories', { valueAsNumber: true, required: 'Required', min: { value: 0, message: 'Min 0' } })}
               />
+              {errors.calories && <p id="calories-error" className="text-xs text-destructive">{errors.calories.message}</p>}
             </div>
 
             <div className="space-y-1">
@@ -181,8 +187,11 @@ export function FoodFormDialog({ open, onClose, food, onSave }: FoodFormDialogPr
                 id="protein"
                 type="number"
                 step="0.1"
-                {...register('protein', { valueAsNumber: true, required: true, min: 0 })}
+                aria-invalid={!!errors.protein}
+                aria-describedby={errors.protein ? "protein-error" : undefined}
+                {...register('protein', { valueAsNumber: true, required: 'Required', min: { value: 0, message: 'Min 0' } })}
               />
+              {errors.protein && <p id="protein-error" className="text-xs text-destructive">{errors.protein.message}</p>}
             </div>
 
             <div className="space-y-1">
@@ -191,8 +200,11 @@ export function FoodFormDialog({ open, onClose, food, onSave }: FoodFormDialogPr
                 id="carbs"
                 type="number"
                 step="0.1"
-                {...register('carbs', { valueAsNumber: true, required: true, min: 0 })}
+                aria-invalid={!!errors.carbs}
+                aria-describedby={errors.carbs ? "carbs-error" : undefined}
+                {...register('carbs', { valueAsNumber: true, required: 'Required', min: { value: 0, message: 'Min 0' } })}
               />
+              {errors.carbs && <p id="carbs-error" className="text-xs text-destructive">{errors.carbs.message}</p>}
             </div>
 
             <div className="space-y-1">
@@ -201,8 +213,11 @@ export function FoodFormDialog({ open, onClose, food, onSave }: FoodFormDialogPr
                 id="fats"
                 type="number"
                 step="0.1"
-                {...register('fats', { valueAsNumber: true, required: true, min: 0 })}
+                aria-invalid={!!errors.fats}
+                aria-describedby={errors.fats ? "fats-error" : undefined}
+                {...register('fats', { valueAsNumber: true, required: 'Required', min: { value: 0, message: 'Min 0' } })}
               />
+              {errors.fats && <p id="fats-error" className="text-xs text-destructive">{errors.fats.message}</p>}
             </div>
 
             <div className="col-span-2 space-y-1">
@@ -222,7 +237,11 @@ export function FoodFormDialog({ open, onClose, food, onSave }: FoodFormDialogPr
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className={macroWarning ? 'bg-status-warning text-white hover:bg-status-warning/90' : undefined}
+            >
               {isSubmitting && <Loader2 size={14} className="mr-1 animate-spin" />}
               {isEdit ? 'Update' : 'Create'}
             </Button>

@@ -121,7 +121,7 @@ export function TodayDashboardView({ todayLog, onNavigate }: TodayDashboardViewP
             </div>
 
             {/* Streak & Motivation */}
-            <div className="flex items-center justify-center gap-2 mt-8 mb-4 bg-orange-500/10 text-orange-500 py-3 rounded-xl font-bold shadow-sm border border-orange-500/20">
+            <div className="flex items-center justify-center gap-2 mt-8 mb-4 bg-status-warning/10 text-status-warning py-3 rounded-xl font-bold shadow-sm border border-status-warning/20">
                 <Flame size={20} /> {streak} Day Tracking Streak
             </div>
 

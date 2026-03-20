@@ -11,15 +11,15 @@ import {
 const NULL_PLACEHOLDER = '—';
 
 const dietAdherenceConfig = {
-  perfect: { label: 'Perfect', className: 'bg-green-100 text-green-800' },
-  minor_deviation: { label: 'Minor Deviation', className: 'bg-amber-100 text-amber-800' },
-  cheat_meal: { label: 'Cheat Meal', className: 'bg-red-100 text-red-800' },
+  perfect: { label: 'Perfect', className: 'bg-status-good/20 text-status-good' },
+  minor_deviation: { label: 'Minor Deviation', className: 'bg-status-warning/20 text-status-warning' },
+  cheat_meal: { label: 'Cheat Meal', className: 'bg-status-danger/20 text-status-danger' },
 } as const;
 
 function getRpeColor(rpe: number): string {
-  if (rpe <= 4) return 'text-green-600';
-  if (rpe <= 7) return 'text-amber-600';
-  return 'text-red-600';
+  if (rpe <= 4) return 'text-status-good';
+  if (rpe <= 7) return 'text-status-warning';
+  return 'text-status-danger';
 }
 
 function getOptionAriaLabel(

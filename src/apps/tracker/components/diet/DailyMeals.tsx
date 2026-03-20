@@ -142,7 +142,7 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                                     <h3 className="font-bold text-foreground text-lg capitalize">
                                         {mealName.toLowerCase()}
                                     </h3>
-                                    <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                    <span className="bg-primary text-primary-foreground text-2xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                                         {mealName}
                                     </span>
                                 </div>
@@ -191,6 +191,7 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                                                     className={`p-1.5 rounded-full transition-colors shrink-0 ${isSwapped ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-primary hover:bg-muted/50 sm:opacity-0 group-hover/item:opacity-100"
                                                         }`}
                                                     title="Sostituisci"
+                                                    aria-label="Swap food"
                                                 >
                                                     <RefreshCw size={14} className={isSwapped ? "stroke-[2.5px]" : ""} />
                                                 </button>

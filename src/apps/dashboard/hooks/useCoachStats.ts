@@ -18,19 +18,10 @@ export function useCoachStats(): CoachStats {
     queryFn: async () => {
       if (!user?.id) return { totalAthletes: 0, logsTodayCount: 0, activeAlertsCount: 0 };
 
-      // 1. Count active athletes
-      const { count: totalAthletes, error: countErr } = await supabase
+      // Single query: fetch athlete IDs and total count in one round-trip
+      const { data: relationships, count: totalAthletes, error: relErr } = await supabase
         .from('coach_athletes')
-        .select('*', { count: 'exact', head: true })
-        .eq('coach_id', user.id)
-        .eq('status', 'active');
-
-      if (countErr) throw countErr;
-
-      // 2. Get athlete IDs for today's log count
-      const { data: relationships, error: relErr } = await supabase
-        .from('coach_athletes')
-        .select('athlete_id')
+        .select('athlete_id', { count: 'exact' })
         .eq('coach_id', user.id)
         .eq('status', 'active');
 

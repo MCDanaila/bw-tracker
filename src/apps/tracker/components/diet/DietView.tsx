@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useDietData, useWeeklyOverview, type DayOfWeek } from '@/core/hooks/useDietData';
 import WeeklyOverview from './WeeklyOverview';
 import DailyMeals from './DailyMeals';
-import { Loader2 } from 'lucide-react';
+import { PageSpinner } from '@/core/components/ui/PageSpinner';
 import { Tabs, TabsList, TabsTrigger } from "@/core/components/ui/tabs";
 
 export default function DietView() {
@@ -26,17 +26,12 @@ export default function DietView() {
     }, [mealPlans, selectedDay]);
 
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center p-12 text-muted-foreground">
-                <Loader2 className="animate-spin mb-4" size={32} />
-                <p>Caricamento piano alimentare...</p>
-            </div>
-        );
+        return <PageSpinner message="Caricamento piano alimentare..." />;
     }
 
     if (error) {
         return (
-            <div className="p-4 bg-red-50 text-red-600 rounded-xl m-4">
+            <div className="p-4 bg-destructive/10 text-destructive rounded-xl m-4">
                 Error loading diet data: {error.message}
             </div>
         );

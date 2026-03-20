@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Plus, FileText, ArrowLeft, Loader2, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { useAthleteContext } from '../contexts/AthleteContext';
 import { useDietTemplatesList, useDietTemplate, useCreateDietTemplate, useDeleteDietTemplate } from '../hooks/useDietTemplates';
 import { useDietData } from '@/core/hooks/useDietData';
@@ -57,20 +58,27 @@ function CoachDietEditor() {
   const handleSaveItems = useCallback(async (items: DietTemplateItem[]) => {
     if (!selectedId) return;
 
-    // Delete all existing items, then re-insert
-    const { error: delErr } = await supabase
-      .from('diet_template_items')
-      .delete()
-      .eq('template_id', selectedId);
-    if (delErr) throw delErr;
-
-    if (items.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const toInsert = items.map(({ id: _id, created_at: _ca, ...rest }) => rest);
-      const { error: insErr } = await supabase
+    try {
+      // Delete all existing items, then re-insert
+      const { error: delErr } = await supabase
         .from('diet_template_items')
-        .insert(toInsert);
-      if (insErr) throw insErr;
+        .delete()
+        .eq('template_id', selectedId);
+      if (delErr) throw delErr;
+
+      if (items.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const toInsert = items.map(({ id: _id, created_at: _ca, ...rest }) => rest);
+        const { error: insErr } = await supabase
+          .from('diet_template_items')
+          .insert(toInsert);
+        if (insErr) throw insErr;
+      }
+
+      toast.success('Diet template saved.');
+    } catch (err) {
+      console.error('Failed to save diet template:', err);
+      toast.error('Failed to save. Please try again.');
     }
   }, [selectedId]);
 

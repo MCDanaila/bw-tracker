@@ -92,10 +92,11 @@ No test runner is currently configured. When adding tests, configure `vitest` an
 - **Frontend:** React 19 + Vite + Tailwind CSS v4
 - **Backend/DB:** Supabase (PostgreSQL + Auth + RLS)
 - **State Management:** TanStack Query (server), local React state
-- **Offline Queue:** Dexie 4 (IndexedDB for sync queue)
-- **UI:** shadcn/ui, Base UI, Lucide icons
+- **Offline Queue:** Dexie 4 + dexie-react-hooks (IndexedDB for sync queue)
+- **UI:** shadcn/ui, Base UI, Lucide icons, sonner (toasts)
 - **Forms:** React Hook Form
 - **Charts:** Recharts
+- **DnD:** @dnd-kit (drag-and-drop for diet/meal editing)
 - **PWA:** vite-plugin-pwa with Workbox
 
 ### Application Flow
@@ -111,12 +112,17 @@ No test runner is currently configured. When adding tests, configure `vitest` an
 **Tracker App Flow** ([src/apps/tracker/TrackerApp.tsx](src/apps/tracker/TrackerApp.tsx)):
 1. Auth gate → shows `Auth` if no session
 2. Onboarding gate → checks `profiles` for height/initial_weight
-3. State-based tab router (no URL routing). Four tabs:
-   - **Tracker** — Quick daily log forms (morning biometrics, gym performance, evening recovery)
-   - **History** — Past logs view with sortable/filterable data table
+3. On load: auto-switches to `history` tab if today's log already exists (checks Dexie queue + Supabase)
+4. State-based tab router (no URL routing). Four tab states (`tracker` | `history` | `diet` | `stats`):
+   - **Log** (`tracker`) — `DailyLogHub` with sub-navigation between 4 views:
+     - `dashboard` — Today summary card with buttons to open each flow
+     - `morning` — Morning biometrics form (weight, sleep, HRV, etc.)
+     - `training` — Gym performance form
+     - `end_of_day` — Evening recovery form
+   - **History** — Past logs heatmap calendar + editable summary cards
    - **Diet** — Weekly meal plan with adherence tracking and food swap UI
-   - **Stats** — Dashboard with charts and analytics
-   - **Workout** — Link to `/workout` app
+   - **Stats** — Dashboard with weight/steps charts
+   - Workout nav item is a plain `<a href="/workout">` link, not a tab state
 
 ### Key Modules (Core Layer)
 
@@ -128,7 +134,7 @@ No test runner is currently configured. When adding tests, configure `vitest` an
 
 **[src/core/lib/swapAlgorithm.ts](src/core/lib/swapAlgorithm.ts)** — Pure domain logic for food swap calculations. Given a food and macro target, calculates replacement food weight needed to match macros.
 
-**[src/core/hooks/useSync.ts](src/core/hooks/useSync.ts)** — Drains `syncQueue` to Supabase. Called when user clicks sync button.
+**[src/core/hooks/useSync.ts](src/core/hooks/useSync.ts)** — Drains `syncQueue` to Supabase. Called when user clicks sync button. Other hooks: `useDashboardData`, `useDietData`, `useStreak`, `useNotifications`, `useProfile`, `useFoods`, `useHistoryLogs` (8 total).
 
 **[src/core/contexts/AuthContext.tsx](src/core/contexts/AuthContext.tsx)** — Session management. Manages Supabase session and auth state.
 
@@ -156,12 +162,15 @@ src/
 │   ├── contexts/
 │   │   ├── AuthContext.tsx    # Supabase auth provider
 │   │   └── RoleContext.tsx    # User capabilities & role-based access
-│   ├── hooks/                 # Shared data hooks
+│   ├── hooks/                 # Shared data hooks (8 total)
 │   │   ├── useSync.ts         # Offline queue drain
 │   │   ├── useProfile.ts      # Profile queries
 │   │   ├── useFoods.ts        # Food library queries
 │   │   ├── useHistoryLogs.ts  # Daily logs queries
-│   │   └── ... (8 total)
+│   │   ├── useDashboardData.ts # Stats/chart data
+│   │   ├── useDietData.ts     # Meal plan + adherence
+│   │   ├── useStreak.ts       # Logging streak calc
+│   │   └── useNotifications.ts # Push notification setup
 │   ├── lib/
 │   │   ├── supabase.ts        # Supabase client singleton
 │   │   ├── db.ts              # Dexie IndexedDB schema
@@ -224,17 +233,17 @@ src/
 - **TEXT PK for foods:** `foods.id` is the food name, not a UUID. Simplifies food swap matching logic.
 - **Manual type generation:** No codegen from Postgres schema. Types in [database.ts](src/types/database.ts) are hand-maintained — keep in sync when schema changes.
 - **Two SQL files:** [schema.sql](supabase/schema.sql) and [profiles.sql](supabase/profiles.sql) are separate; no migration tooling yet.
-- **Zustand imported but unused:** Store library is in package.json but not used in app. Component state only.
+- **Smart defaults via localStorage:** `DailyLogHub` reads `bw_tracker_smart_defaults` key to pre-fill form fields for days with no prior data.
 
 ---
 
 ## Common Tasks
 
 ### Adding a New Feature
-1. Create the UI component in `src/components/`
-2. Create a data hook in `src/hooks/` if fetching Supabase data
-3. For mutations: dispatch to Dexie queue in `src/lib/db.ts` first, then sync via `useSync()`
-4. Update `src/types/database.ts` if querying new tables
+1. Create the UI component in the relevant `src/apps/<app>/components/` directory
+2. Create a data hook in `src/core/hooks/` if fetching Supabase data
+3. For mutations: dispatch to Dexie queue in `src/core/lib/db.ts` first, then sync via `useSync()`
+4. Update `src/core/types/database.ts` if querying new tables
 5. Test on slow connection: DevTools > Network > Throttle to 3G
 
 ### Debugging Offline Queue
@@ -243,7 +252,7 @@ src/
 - `SyncHeader` shows sync status and pending count
 
 ### Adding a Supabase Query
-1. Create a hook in `src/hooks/use*.ts` with TanStack Query `useQuery`
+1. Create a hook in `src/core/hooks/use*.ts` with TanStack Query `useQuery`
 2. Use `supabase.from('table').select()` with your filters
 3. Handle loading/error states in component
 4. Avoid re-fetching: TanStack Query caches by default
@@ -253,3 +262,11 @@ src/
 - For complex component variants, use shadcn/ui + CVA
 - Dark mode: CSS custom properties via Tailwind's theme
 - Test mobile: DevTools > Toggle Device Toolbar (375px width is common)
+
+### Error Handling & Validation
+- **Page-level fetch errors** → render `<ErrorState>` component
+- **Mutation errors** → `toast.error()` via sonner (already imported in most forms)
+- **Field-level errors** → inline `<p className="text-xs text-destructive" id="{field}-error">{errors.field?.message}</p>` below each invalid input
+  - Add `aria-invalid={!!errors.field}` and `aria-describedby="{field}-error"` to the input element
+  - See `src/core/components/ui/slider.tsx` for the canonical a11y attribute pattern
+- For forms using `react-hook-form`, destructure `errors` from `formState` to access validation state

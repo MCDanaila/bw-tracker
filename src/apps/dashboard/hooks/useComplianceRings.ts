@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useHistoryLogs } from '@/core/hooks/useHistoryLogs';
+import { useRecentLogs } from '@/core/hooks/useRecentLogs';
 import { useProfile, STEPS_GOAL_DEFAULT } from '@/core/hooks/useProfile';
 
 interface ComplianceRingsData {
@@ -10,7 +10,7 @@ interface ComplianceRingsData {
 }
 
 export function useComplianceRings(userId?: string): ComplianceRingsData {
-  const { data: logs, isLoading: logsLoading } = useHistoryLogs(userId);
+  const { data: logs, isLoading: logsLoading } = useRecentLogs(userId, 7);
   const { data: profile, isLoading: profileLoading } = useProfile(userId);
 
   return useMemo(() => {

@@ -79,7 +79,7 @@ export const useWeeklyOverview = (mealPlans: MealPlan[] = []) => {
         return acc;
     }, {} as WeeklyMacros);
 
-    let weeklyAvgSum = { kcal: 0, p: 0, c: 0, g: 0, cgRatio: 0 };
+    const weeklyAvgSum = { kcal: 0, p: 0, c: 0, g: 0, cgRatio: 0 };
     let activeDaysCount = 0;
 
     // Aggregate macros per day

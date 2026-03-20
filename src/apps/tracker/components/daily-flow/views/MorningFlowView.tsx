@@ -6,7 +6,7 @@ import { Button } from "@/core/components/ui/button";
 import { Input } from "@/core/components/ui/input";
 import { ButtonGroup } from "@/core/components/ui/button-group";
 import { Stepper } from "@/core/components/ui/stepper";
-import { SLEEP_QUALITY_OPTIONS, STRESS_OPTIONS, MOOD_OPTIONS } from "@/core/lib/constants";
+import { SLEEP_QUALITY_OPTIONS, STRESS_OPTIONS, MOOD_OPTIONS, SORENESS_OPTIONS } from "@/core/lib/constants";
 import { saveDailyLog } from "@/core/lib/db";
 import { useAuth } from "@/core/contexts/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
@@ -94,7 +94,7 @@ export function MorningFlowView({ existingData, yesterdayData, last7DaysAvg, onB
         <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
             {/* Header */}
             <div className="flex items-center gap-3 mt-2 mb-6">
-                <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full">
+                <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full" aria-label="Go back">
                     <ChevronLeft size={24} />
                 </Button>
                 <div className="flex-1">
@@ -162,7 +162,7 @@ export function MorningFlowView({ existingData, yesterdayData, last7DaysAvg, onB
                         <div className="grid grid-cols-1 gap-4 p-5 rounded-2xl bg-card border border-border/50 shadow-sm">
                             <ButtonGroup label="Mood" options={MOOD_OPTIONS} value={mood} onChange={(v) => setValue("mood", v, { shouldDirty: true })} />
                             <ButtonGroup label="Stress Level" options={STRESS_OPTIONS} value={stressLevel} onChange={(v) => setValue("stress_level", v, { shouldDirty: true })} />
-                            <ButtonGroup label="Muscle Soreness" options={STRESS_OPTIONS} value={sorenessLevel} onChange={(v) => setValue("soreness_level", v, { shouldDirty: true })} />
+                            <ButtonGroup label="Muscle Soreness" options={SORENESS_OPTIONS} value={sorenessLevel} onChange={(v) => setValue("soreness_level", v, { shouldDirty: true })} />
                         </div>
                     </div>
 

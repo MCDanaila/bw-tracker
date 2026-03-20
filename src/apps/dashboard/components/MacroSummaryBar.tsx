@@ -33,17 +33,17 @@ export function MacroSummaryBar({ calories, protein, carbs, fats, targetCalories
             <div
               className="bg-blue-500 transition-all"
               style={{ width: `${proteinPct}%` }}
-              title={`Protein: ${Math.round(proteinPct)}%`}
+              aria-label={`Protein: ${Math.round(proteinPct)}%`}
             />
             <div
               className="bg-amber-500 transition-all"
               style={{ width: `${carbsPct}%` }}
-              title={`Carbs: ${Math.round(carbsPct)}%`}
+              aria-label={`Carbs: ${Math.round(carbsPct)}%`}
             />
             <div
               className="bg-red-500 transition-all"
               style={{ width: `${fatsPct}%` }}
-              title={`Fats: ${Math.round(fatsPct)}%`}
+              aria-label={`Fats: ${Math.round(fatsPct)}%`}
             />
           </>
         )}

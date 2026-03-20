@@ -11,7 +11,7 @@ export interface UserProfile {
     goal: string | null;
     steps_goal: number | null;
     water_goal: number | null;
-    salt_goal?: number | null;
+    email: string | null;
     role: 'athlete' | 'self_coached' | 'coach';
 }
 
@@ -27,7 +27,7 @@ export interface Food {
     state: 'Peso da Cotto' | 'Peso da Crudo' | 'Peso sgocciolato' | 'Peso confezionato' | 'Peso da sgusciato' | 'N/A';
     created_by: string | null;
     created_at: string;
-    updated_at: string;
+    updated_at?: string; // column does not exist in current schema — optional to avoid silent undefined reads
 }
 
 export interface MealPlan {

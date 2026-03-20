@@ -54,9 +54,9 @@ function Sparkline({ values }: { values: number[] }) {
 
 function complianceBadgeClass(value: number | null): string {
   if (value == null) return 'bg-muted text-muted-foreground';
-  if (value >= 80) return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
-  if (value >= 60) return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400';
-  return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+  if (value >= 80) return 'bg-status-good/20 text-status-good';
+  if (value >= 60) return 'bg-status-warning/20 text-status-warning';
+  return 'bg-status-danger/20 text-status-danger';
 }
 
 export const athletesColumns: ColumnDef<AthleteWithStats>[] = [
@@ -123,10 +123,10 @@ export const athletesColumns: ColumnDef<AthleteWithStats>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
       const className = status === 'active'
-        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+        ? 'bg-status-good/20 text-status-good'
         : status === 'paused'
-        ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
-        : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+        ? 'bg-status-warning/20 text-status-warning'
+        : 'bg-status-danger/20 text-status-danger';
       return (
         <Badge variant="outline" className={className}>
           {status}

@@ -2,7 +2,7 @@ import { type DailyLog } from '@/core/types/database';
 import { Card, CardContent, CardHeader, CardTitle } from '@/core/components/ui/card';
 import { Badge } from '@/core/components/ui/badge';
 import { Activity, Moon, Dumbbell, Droplets, HeartPulse, Scale, Utensils, Pencil } from 'lucide-react';
-import { ENERGY_OPTIONS, MOOD_OPTIONS, STRESS_OPTIONS, SLEEP_QUALITY_OPTIONS, DIGESTION_OPTIONS, HUNGER_OPTIONS, LIBIDO_OPTIONS, getLabelByValue } from '@/core/lib/constants';
+import { ENERGY_OPTIONS, MOOD_OPTIONS, STRESS_OPTIONS, SLEEP_QUALITY_OPTIONS, DIGESTION_OPTIONS, HUNGER_OPTIONS, LIBIDO_OPTIONS, SORENESS_OPTIONS, getLabelByValue } from '@/core/lib/constants';
 
 interface DailySummaryCardProps {
     log: DailyLog | null;
@@ -35,11 +35,11 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
 
         // Normal scale: high score = good
         // 1 (bad) → red, 2 → orange, 3 (neutral) → amber, 4 → light-green, 5 (good) → emerald
-        if (score === 1) return "bg-rose-500/10 text-rose-600 border-rose-500/20";
-        if (score === 2) return "bg-orange-500/10 text-orange-600 border-orange-500/20";
-        if (score === 3) return "bg-amber-500/10 text-amber-600 border-amber-500/20";
-        if (score === 4) return "bg-lime-500/10 text-lime-600 border-lime-500/20";
-        return "bg-emerald-500/10 text-emerald-600 border-emerald-500/20";
+        if (score === 1) return "bg-status-danger/10 text-status-danger border-status-danger/20";
+        if (score === 2) return "bg-status-warning/10 text-status-warning border-status-warning/20";
+        if (score === 3) return "bg-status-warning/10 text-status-warning border-status-warning/20";
+        if (score === 4) return "bg-status-good/10 text-status-good border-status-good/20";
+        return "bg-status-excellent/10 text-status-excellent border-status-excellent/20";
     };
 
     return (
@@ -113,7 +113,7 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                             Stress: {getLabelByValue(STRESS_OPTIONS, log.stress_level) || '-'}
                         </Badge>
                         <Badge variant="outline" className={getScoreColor(log.soreness_level)}>
-                            Soreness: {getLabelByValue(STRESS_OPTIONS, log.soreness_level) || '-'}
+                            Soreness: {getLabelByValue(SORENESS_OPTIONS, log.soreness_level) || '-'}
                         </Badge>
                         {log.hrv ? (
                             <Badge variant="outline" className="bg-muted text-muted-foreground">
@@ -213,7 +213,7 @@ export default function DailySummaryCard({ log, date, onEdit, onEditSection }: D
                     <CardContent>
                         <div className="space-y-3">
                             {log.diet_adherence && log.diet_adherence !== 'perfect' && (
-                                <div className="flex items-center gap-2 text-amber-600 font-medium text-sm">
+                                <div className="flex items-center gap-2 text-status-warning font-medium text-sm">
                                     <span>🍔 Diet: {log.diet_adherence.replace('_', ' ')}</span>
                                 </div>
                             )}

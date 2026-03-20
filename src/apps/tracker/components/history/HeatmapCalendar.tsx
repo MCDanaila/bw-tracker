@@ -129,7 +129,7 @@ export default function HeatmapCalendar({ logs, selectedDate, onSelectDate }: He
                 {/* Weekday headers */}
                 <div className="grid grid-cols-7 gap-1.5 mb-2">
                     {weekdays.map(day => (
-                        <div key={day} className="text-center text-[10px] font-medium text-muted-foreground">
+                        <div key={day} className="text-center text-2xs font-medium text-muted-foreground">
                             {day}
                         </div>
                     ))}

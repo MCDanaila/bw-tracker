@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useHistoryLogs } from './useHistoryLogs';
+import { useRecentLogs } from './useRecentLogs';
 import { useAuth } from '@/core/contexts/AuthContext';
 import { localDB, type SyncAction } from '@/core/lib/db';
 import { getLocalDateStr } from '@/core/lib/utils';
@@ -14,7 +14,7 @@ import { getLocalDateStr } from '@/core/lib/utils';
 export function useStreak(userId?: string): number {
     const { user } = useAuth();
     const isOwnData = !userId || userId === user?.id;
-    const { data: remoteLogs } = useHistoryLogs(userId);
+    const { data: remoteLogs } = useRecentLogs(userId, 90);
     const localActions = useLiveQuery(
         async () => {
             if (!isOwnData) return [] as SyncAction[];
