@@ -87,7 +87,7 @@ function App() {
   // Default to History tab if today's log already exists
   useEffect(() => {
     if (!session?.user?.id || needsOnboarding !== false) return;
-    
+
     const userId = session.user.id;
 
     async function checkTodayLog() {
@@ -235,42 +235,35 @@ function App() {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 w-full bg-card border-t border-border flex justify-around p-3 z-10" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
-        <button
-          onClick={() => setCurrentTab('tracker')}
-          className={`flex flex-col items-center ${currentTab === 'tracker' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'} `}
-        >
-          <Activity size={24} />
-          <span className="text-xs mt-1 font-medium">Log</span>
-        </button>
-        <button
-          onClick={() => setCurrentTab('history')}
-          className={`flex flex-col items-center ${currentTab === 'history' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'} `}
-        >
-          <CalendarRange size={24} />
-          <span className="text-xs mt-1 font-medium">History</span>
-        </button>
-        <button
-          onClick={() => setCurrentTab('diet')}
-          className={`flex flex-col items-center ${currentTab === 'diet' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'} `}
-        >
-          <Apple size={24} />
-          <span className="text-xs mt-1 font-medium">Diet</span>
-        </button>
-        <button
-          onClick={() => setCurrentTab('stats')}
-          className={`flex flex-col items-center ${currentTab === 'stats' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'} `}
-        >
-          <LayoutDashboard size={24} />
-          <span className="text-xs mt-1 font-medium">Stats</span>
-        </button>
+      <nav className="fixed bottom-0 w-full bg-card/95 backdrop-blur border-t border-border flex justify-around z-10" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+        {([
+          { tab: 'tracker' as Tab, icon: <Activity size={22} />, label: 'Log' },
+          { tab: 'history' as Tab, icon: <CalendarRange size={22} />, label: 'History' },
+          { tab: 'diet' as Tab, icon: <Apple size={22} />, label: 'Diet' },
+          { tab: 'stats' as Tab, icon: <LayoutDashboard size={22} />, label: 'Stats' },
+        ] as const).map(({ tab, icon, label }) => {
+          const active = currentTab === tab;
+          return (
+            <button
+              key={tab}
+              onClick={() => setCurrentTab(tab)}
+              className={`flex flex-col items-center justify-center min-h-[44px] min-w-[44px] flex-1 pt-2 pb-1 relative transition-colors duration-150 cursor-pointer ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              {active && (
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-primary" />
+              )}
+              {icon}
+              <span className={`text-xs mt-0.5 font-medium ${active ? 'font-semibold' : ''}`}>{label}</span>
+            </button>
+          );
+        })}
         <a
           href="/workout"
-          className="flex flex-col items-center text-muted-foreground hover:text-foreground"
+          className="flex flex-col items-center justify-center min-h-[44px] min-w-[44px] flex-1 pt-2 pb-1 text-muted-foreground hover:text-foreground transition-colors duration-150"
           title="Go to Workout Log"
         >
-          <Dumbbell size={24} />
-          <span className="text-xs mt-1 font-medium">Workout</span>
+          <Dumbbell size={22} />
+          <span className="text-xs mt-0.5 font-medium">Workout</span>
         </a>
       </nav>
     </div>
