@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: bw-tracker-backend
+Version: 0.1.0
+Summary: FastAPI backend for bw-tracker fitness app
+Author-email: Mihaid <coach@bw-tracker.app>
+Requires-Python: >=3.11
+Provides-Extra: dev

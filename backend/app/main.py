@@ -1,0 +1,98 @@
+"""FastAPI application factory and setup."""
+
+import logging
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+from .config import settings
+from .lib.supabase_client import close_supabase_client
+from .routers import health, ai, diet, goals, knowledge
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan events (startup/shutdown)."""
+    logger.info("bw-tracker backend starting up...")
+    yield
+    logger.info("bw-tracker backend shutting down...")
+    await close_supabase_client()
+
+
+def create_app() -> FastAPI:
+    """Create and configure the FastAPI application."""
+
+    app = FastAPI(
+        title="bw-tracker API",
+        description="Backend for bw-tracker fitness app",
+        version="0.1.0",
+        lifespan=lifespan,
+    )
+
+    # CORS configuration
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            settings.frontend_url,
+            "http://localhost:3000",
+            "http://localhost:3001",
+        ],
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allow_headers=["*"],
+    )
+
+    # Include routers
+    app.include_router(health.router)
+    app.include_router(ai.router)
+    app.include_router(diet.router)
+    app.include_router(goals.router)
+    app.include_router(knowledge.router)
+
+    # Global exception handler for HTTPException
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception):
+        """Log and format all unhandled exceptions."""
+        logger.error(f"Unhandled exception: {exc}", exc_info=True)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "Internal server error",
+                "status_code": 500,
+            },
+        )
+
+    @app.get("/")
+    async def root():
+        """Root endpoint."""
+        return {
+            "service": "bw-tracker backend",
+            "version": "0.1.0",
+            "health": "/health",
+        }
+
+    return app
+
+
+# Create the app instance for ASGI servers (Uvicorn, Vercel, etc.)
+app = create_app()
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=settings.debug,
+    )
