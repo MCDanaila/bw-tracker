@@ -27,6 +27,10 @@ CREATE POLICY "Coaches can manage relationships"
   USING (coach_id = auth.uid())
   WITH CHECK (coach_id = auth.uid());
 
+CREATE POLICY "Service role can query relationships"
+  ON coach_athletes FOR SELECT
+  USING (auth.role() = 'service_role');
+
 -- Indexes --
 CREATE INDEX IF NOT EXISTS idx_coach_athletes_coach_status
   ON coach_athletes(coach_id, status);

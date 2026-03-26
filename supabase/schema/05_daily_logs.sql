@@ -67,3 +67,7 @@ CREATE POLICY "Users manage their own daily logs"
 CREATE POLICY "Coaches can view athlete daily logs"
   ON daily_logs FOR SELECT
   USING (public.is_coach_of(user_id));
+
+CREATE POLICY "Service role can query daily logs"
+  ON daily_logs FOR SELECT
+  USING (auth.role() = 'service_role');

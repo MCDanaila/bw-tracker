@@ -55,6 +55,11 @@ CREATE POLICY "Coaches update athlete goals"
   ON athlete_goals FOR UPDATE
   USING (public.is_coach_of(athlete_id));
 
+-- Service role (for Edge Functions)
+CREATE POLICY "Service role can query goals"
+  ON athlete_goals FOR SELECT
+  USING (auth.role() = 'service_role');
+
 -- Indexes --
 CREATE INDEX IF NOT EXISTS idx_athlete_goals_athlete_id
   ON athlete_goals(athlete_id);

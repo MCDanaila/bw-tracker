@@ -86,7 +86,7 @@ No test runner is currently configured. When adding tests, configure `vitest` an
 
 ## Architecture Overview
 
-**bw-tracker** is a mobile-first Progressive Web App (PWA) for fitness/nutrition tracking, replacing an Excel spreadsheet. Single-user app for an Italian athlete.
+**bw-tracker** is a mobile-first Progressive Web App (PWA) for fitness/nutrition tracking, replacing an Excel spreadsheet.
 
 ### Tech Stack
 - **Frontend:** React 19 + Vite + Tailwind CSS v4

@@ -52,6 +52,10 @@ CREATE POLICY "Coaches can view profiles of their athletes"
     )
   );
 
+CREATE POLICY "Service role can query profiles"
+  ON public.profiles FOR SELECT
+  USING (auth.role() = 'service_role');
+
 -- Prevent role self-escalation
 CREATE POLICY "Users cannot change their own role"
   ON profiles FOR UPDATE

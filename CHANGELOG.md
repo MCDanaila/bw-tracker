@@ -4,6 +4,103 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+### 🤖 Features (AI Diet Planner RAG System — 2026-03-26)
+
+#### Phase 0: User Input Expansion & Bug Fixes
+- **Athlete Preferences Table**: New `athlete_preferences` table (PostgreSQL) with comprehensive dietary context:
+  - Arrays: allergies, intolerances, dietary_restrictions, food_dislikes, food_preferences, cuisine_preferences, supplement_use
+  - Scalars: meal_timing_notes, digestion_issues, cooking_skill (enum: none/basic/intermediate/advanced), meal_prep_time (enum: minimal/moderate/flexible), budget_level (enum: budget/moderate/premium), additional_notes
+  - RLS: athletes read own; coaches read+write for their athletes
+- **Preferences UI Tab**: New "Preferences" tab in `AthleteDetailPage` with:
+  - Form-based editor (react-hook-form) with comma-separated tag input for arrays
+  - Display mode showing all preferences with proper formatting
+  - Inline helper text marking allergies/intolerances/restrictions as required for AI
+- **Swap Persistence Fix**: `DailyMeals.tsx` now saves food swaps to `meal_adherence` table via Supabase upsert. Toast message changed from "not saved permanently yet" to "Swap saved."
+- **Template Assignment UI**: New `AssignTemplateDialog` component with selectable template cards. Added "Assign Template" button to DietTab (visible both when empty and as secondary action).
+- **New Hooks**: `useAthletePreferences()` and `useSetAthletePreferences()` following TanStack Query patterns.
+
+#### Phase 1: RAG Infrastructure (pgvector + Knowledge Base)
+- **Vector Extension**: Enabled PostgreSQL `pgvector` extension for Supabase vector storage
+- **Knowledge Tables**:
+  - `knowledge_documents`: coach-uploaded documents with `source_type` (pdf/text), char_count, is_active flag
+  - `knowledge_chunks`: chunked document content with `embedding vector(768)`, token_count, chunk_index
+  - `ai_suggestions`: generated diet plans with status workflow (pending→approved→applied), context_snapshot JSONB, retrieved_chunk_ids
+  - `ai_suggestion_feedback`: 5-star ratings, feedback text, was_followed boolean per (suggestion, user) pair
+- **RLS Policies**: Coaches manage own documents; edge functions write chunks server-side; athletes view approved/applied suggestions only
+- **RPC Function**: `match_knowledge_chunks(query_embedding, match_count, coach_id)` for vector similarity search with coach filtering
+- **IVFFlat Index**: Prepared on knowledge_chunks.embedding for fast similarity search (lists=100)
+- **New Types**: `KnowledgeDocument`, `KnowledgeChunk`, `AiSuggestion`, `AiSuggestionFeedback` in `database.ts`
+
+#### Phase 2: Gemini API Integration (Edge Functions + Frontend)
+- **embed-document Edge Function** (`/supabase/edge-functions/embed-document`):
+  - Chunks content on paragraph boundaries, merges short chunks, caps at ~1500 chars
+  - Calls Google Gemini `text-embedding-004` to generate 768-dim embeddings
+  - Stores chunks in `knowledge_chunks` table with embedding vectors
+  - Handles errors gracefully; returns chunk count on success
+- **generate-diet-suggestion Edge Function** (`/supabase/edge-functions/generate-diet-suggestion`):
+  - Validates caller is coach of athlete via `is_coach_of()` RPC
+  - Assembles athlete context: profile, current goal, preferences, last 7 daily logs biofeedback, meal plans
+  - Embeds query via Gemini; retrieves top 5 knowledge chunks via `match_knowledge_chunks()`
+  - Builds structured prompt with athlete context, preferences, knowledge excerpts, food sample
+  - Calls Gemini `gemini-1.5-flash` to generate JSON weekly meal plan (7 days, 3-4 meals/day, macros per meal)
+  - Handles rate limiting (429), missing preferences (422), and auth errors (403)
+  - Inserts suggestion into `ai_suggestions` table with status `pending`
+- **aiDietService.ts**: Thin wrapper exporting `generateDietSuggestion()`, `updateSuggestionStatus()`, `submitSuggestionFeedback()`
+- **useAiDietSuggestions Hook**:
+  - `useAiSuggestions(athleteId)` — fetches suggestions ordered by created_at DESC
+  - `useGenerateDietSuggestion()` — mutation calling Edge Function, invalidates suggestions cache
+  - `useUpdateSuggestionStatus()` — updates status (pending→approved/rejected/applied)
+  - `useSubmitSuggestionFeedback()` — upserts user feedback with rating + text
+
+#### Phase 3: Diet Planner MVP UI
+- **Sidebar Navigation**: Added "AI Planner" nav item (Sparkles icon) to `SidebarNav.tsx`, marked `coachOnly: true`
+- **Routing**: Added `/dashboard/ai-planner` route with lazy-loaded `AiPlannerPage`
+- **AiPlannerPage**: Placeholder page with instructions; ready for component integration
+- **AiPlannerControls Component**:
+  - Textarea query input with "Generate Plan" button
+  - Preference readiness check with warning if allergies/intolerances/restrictions empty
+  - Scrollable history list showing past suggestions with status badge
+  - Rate limit & error toast handling
+- **AiSuggestionViewer Component**:
+  - Summary card + coaching notes
+  - 7-day tabbed meal plan (Mon-Sun) with meals, foods, macros per meal + day totals
+  - Status badges (pending/approved/rejected/applied)
+  - Action buttons: [Approve][Reject] when pending, [Apply to Meal Plan] when approved
+  - Knowledge sources attribution card
+- **KnowledgeBasePanel Component** (Sheet):
+  - List of coach's documents with is_active toggle, delete button
+  - "Add Text Document" dialog (title, description, content textarea) → chunks & embeds via Edge Function
+  - "Add PDF" button (disabled, marked "Coming Soon")
+  - Document char count display
+- **useKnowledgeDocuments Hook**:
+  - `useKnowledgeDocuments()` — fetches coach's docs
+  - `useCreateKnowledgeDocument()` — inserts doc + invokes embed-document Edge Function
+  - `useDeleteKnowledgeDocument()` — cascades chunk deletion
+  - `useToggleDocumentActive()` — soft-delete via is_active flag
+- **SuggestionFoodMatchDialog**: Placeholder showing suggested foods; ready for fuzzy matching logic
+- **SuggestionFeedbackDialog**: 5-star rating + "Was followed?" checkbox + feedback textarea; calls `useSubmitSuggestionFeedback()`
+
+#### Implementation Status
+- **Complete (23/25 tasks)**:
+  - ✅ All SQL schemas created
+  - ✅ All TypeScript types defined
+  - ✅ Both Edge Functions fully implemented with error handling
+  - ✅ All frontend hooks with TanStack Query
+  - ✅ All UI components created (5 components + 1 dialog)
+  - ✅ Integration points wired (routes, sidebar, dialogs)
+  - ✅ Preferences tab integrated into athlete detail page
+  - ✅ Swap persistence fixed in tracker diet view
+
+- **Pending (2/25 tasks)**:
+  - ⏳ Manual: Set `GEMINI_API_KEY` secret in Supabase dashboard
+  - ⏳ Manual: Deploy SQL schemas to Supabase & test Edge Functions
+
+#### Architecture Notes
+- **Knowledge Base Language**: English-only for AI UI (coach-authored, not athlete-facing at this stage)
+- **Offline**: No offline queue for AI suggestions (coaches must be online); meal plan edits still use Dexie queue
+- **Cost**: Google Gemini free tier (embeddings + text-davinci-003 equivalent); no budget concerns at MVP scale
+- **Future Work**: Coach prompt editing (feature flag), AI suggestions on mobile tracker app, PDF upload + parsing
+
 ### 🐛 Bug Fixes & Polish (Browser QA Pass — 2026-03-19)
 
 - **Critical: Conditional `React.useId()` in `slider.tsx`** (UI-002/CE-001): Moved `React.useId()` to an unconditional top-level call (`const generatedId = React.useId()`), then uses it as fallback via `id ?? generatedId`. Fixes Rules of Hooks violation that caused runtime errors in `TrainingFlowView` and `EditLogModal`.

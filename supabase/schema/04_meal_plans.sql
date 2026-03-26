@@ -41,6 +41,19 @@ CREATE POLICY "Coaches delete athlete meal plans"
   ON meal_plans FOR DELETE
   USING (public.is_coach_of(user_id) AND created_by = auth.uid());
 
+CREATE POLICY "Service role can insert meal plans"
+  ON meal_plans FOR INSERT
+  WITH CHECK (auth.role() = 'service_role');
+
+CREATE POLICY "Service role can query meal plans"
+  ON meal_plans FOR SELECT
+  USING (auth.role() = 'service_role');
+
+CREATE POLICY "Service role can update meal plans"
+  ON meal_plans FOR UPDATE
+  USING (auth.role() = 'service_role')
+  WITH CHECK (auth.role() = 'service_role');
+
 -- Indexes --
 CREATE INDEX IF NOT EXISTS idx_meal_plans_user_id
   ON meal_plans(user_id);

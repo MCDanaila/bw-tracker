@@ -13,6 +13,7 @@ import { useRecoveryScore } from '../hooks/useRecoveryScore';
 import { useComplianceRings } from '../hooks/useComplianceRings';
 import { useBiofeedbackRadar } from '../hooks/useBiofeedbackRadar';
 import { useCurrentGoal, useGoalHistory, useSetGoal } from '../hooks/useAthleteGoals';
+import { useAthletePreferences, useSetAthletePreferences } from '../hooks/useAthletePreferences';
 import { StatCard } from '../components/StatCard';
 import { WeightTrendChart } from '../components/WeightTrendChart';
 import { RecoveryGauge } from '../components/RecoveryGauge';
@@ -22,6 +23,7 @@ import { StepsBarChart } from '../components/StepsBarChart';
 import { TrainingCalendarStrip } from '../components/TrainingCalendarStrip';
 import { MealPlanEditor } from '../components/MealPlanEditor';
 import { GoalProgressCard } from '../components/GoalProgressCard';
+import AssignTemplateDialog from '../components/AssignTemplateDialog';
 import { DataTable } from '../tables/DataTable';
 import { logsColumns } from '../tables/logs-columns';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/core/components/ui/tabs';
@@ -37,6 +39,7 @@ const TAB_MAP: Record<string, string> = {
   'progress': 'progress',
   'diet': 'diet',
   'goals': 'goals',
+  'preferences': 'preferences',
 };
 
 export default function AthleteDetailPage() {
@@ -92,6 +95,7 @@ export default function AthleteDetailPage() {
           <TabsTrigger value="progress">Progress</TabsTrigger>
           <TabsTrigger value="diet">Diet</TabsTrigger>
           <TabsTrigger value="goals">Goals</TabsTrigger>
+          <TabsTrigger value="preferences">Preferences</TabsTrigger>
           <TabsTrigger value="logs">Logs</TabsTrigger>
         </TabsList>
 
@@ -106,6 +110,9 @@ export default function AthleteDetailPage() {
         </TabsContent>
         <TabsContent value="goals">
           <GoalsTab athleteId={id} />
+        </TabsContent>
+        <TabsContent value="preferences">
+          <PreferencesTab athleteId={id} />
         </TabsContent>
         <TabsContent value="logs">
           <LogsTab athleteId={id} />
@@ -169,6 +176,7 @@ function ProgressTab({ athleteId }: { athleteId: string }) {
 // ---- Diet Tab ----
 function DietTab({ athleteId }: { athleteId: string }) {
   const { data: plans, isLoading } = useDietData(athleteId);
+  const [showAssignDialog, setShowAssignDialog] = useState(false);
 
   const items = useMemo(() => {
     if (!plans || plans.length === 0) return [];
@@ -211,12 +219,34 @@ function DietTab({ athleteId }: { athleteId: string }) {
   }
 
   if (items.length === 0) {
-    return <p className="text-muted-foreground mt-4">No diet plan assigned to this athlete.</p>;
+    return (
+      <div className="mt-4 space-y-4">
+        <p className="text-muted-foreground">No diet plan assigned to this athlete.</p>
+        <Button onClick={() => setShowAssignDialog(true)} variant="outline">
+          Assign Template
+        </Button>
+        <AssignTemplateDialog
+          isOpen={showAssignDialog}
+          onClose={() => setShowAssignDialog(false)}
+          athleteId={athleteId}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 space-y-4">
+      <div className="flex justify-end">
+        <Button onClick={() => setShowAssignDialog(true)} variant="outline" size="sm">
+          Assign Another Template
+        </Button>
+      </div>
       <MealPlanEditor templateId="" items={items} onSave={handleSave} />
+      <AssignTemplateDialog
+        isOpen={showAssignDialog}
+        onClose={() => setShowAssignDialog(false)}
+        athleteId={athleteId}
+      />
     </div>
   );
 }
@@ -395,6 +425,287 @@ function GoalsTab({ athleteId }: { athleteId: string }) {
             ))}
           </div>
         </div>
+      )}
+    </div>
+  );
+}
+
+// ---- Preferences Tab ----
+interface PreferencesFormValues {
+  allergies: string;
+  intolerances: string;
+  dietary_restrictions: string;
+  food_dislikes: string;
+  food_preferences: string;
+  cuisine_preferences: string;
+  meal_timing_notes: string;
+  supplement_use: string;
+  digestion_issues: string;
+  cooking_skill: string;
+  meal_prep_time: string;
+  budget_level: string;
+  additional_notes: string;
+}
+
+function PreferencesTab({ athleteId }: { athleteId: string }) {
+  const { data: preferences } = useAthletePreferences(athleteId);
+  const setPreferences = useSetAthletePreferences();
+  const [editing, setEditing] = useState(false);
+
+  const { register, handleSubmit, reset } = useForm<PreferencesFormValues>({
+    values: {
+      allergies: (preferences?.allergies ?? []).join(', '),
+      intolerances: (preferences?.intolerances ?? []).join(', '),
+      dietary_restrictions: (preferences?.dietary_restrictions ?? []).join(', '),
+      food_dislikes: (preferences?.food_dislikes ?? []).join(', '),
+      food_preferences: (preferences?.food_preferences ?? []).join(', '),
+      cuisine_preferences: (preferences?.cuisine_preferences ?? []).join(', '),
+      meal_timing_notes: preferences?.meal_timing_notes ?? '',
+      supplement_use: (preferences?.supplement_use ?? []).join(', '),
+      digestion_issues: preferences?.digestion_issues ?? '',
+      cooking_skill: preferences?.cooking_skill ?? '',
+      meal_prep_time: preferences?.meal_prep_time ?? '',
+      budget_level: preferences?.budget_level ?? '',
+      additional_notes: preferences?.additional_notes ?? '',
+    },
+  });
+
+  const parseArrayField = (value: string): string[] => {
+    return value
+      .split(',')
+      .map(item => item.trim())
+      .filter(item => item.length > 0);
+  };
+
+  const onSave = async (values: PreferencesFormValues) => {
+    await setPreferences.mutateAsync({
+      athleteId,
+      allergies: parseArrayField(values.allergies),
+      intolerances: parseArrayField(values.intolerances),
+      dietary_restrictions: parseArrayField(values.dietary_restrictions),
+      food_dislikes: parseArrayField(values.food_dislikes),
+      food_preferences: parseArrayField(values.food_preferences),
+      cuisine_preferences: parseArrayField(values.cuisine_preferences),
+      meal_timing_notes: values.meal_timing_notes || null,
+      supplement_use: parseArrayField(values.supplement_use),
+      digestion_issues: values.digestion_issues || null,
+      cooking_skill: (values.cooking_skill || null) as 'none' | 'basic' | 'intermediate' | 'advanced' | null,
+      meal_prep_time: (values.meal_prep_time || null) as 'minimal' | 'moderate' | 'flexible' | null,
+      budget_level: (values.budget_level || null) as 'budget' | 'moderate' | 'premium' | null,
+      additional_notes: values.additional_notes || null,
+    });
+    setEditing(false);
+  };
+
+  const hasPreferences = preferences && (
+    preferences.allergies.length > 0 ||
+    preferences.intolerances.length > 0 ||
+    preferences.dietary_restrictions.length > 0 ||
+    preferences.food_dislikes.length > 0 ||
+    preferences.food_preferences.length > 0 ||
+    preferences.cuisine_preferences.length > 0 ||
+    preferences.meal_timing_notes ||
+    preferences.supplement_use.length > 0 ||
+    preferences.digestion_issues ||
+    preferences.cooking_skill ||
+    preferences.meal_prep_time ||
+    preferences.budget_level ||
+    preferences.additional_notes
+  );
+
+  return (
+    <div className="space-y-6 mt-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Dietary Preferences</h2>
+        {!editing && (
+          <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+            <Pencil size={14} className="mr-1" /> {hasPreferences ? 'Edit' : 'Set'} Preferences
+          </Button>
+        )}
+      </div>
+
+      {!editing && hasPreferences && (
+        <div className="space-y-4">
+          {preferences?.allergies.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Allergies</p>
+              <p className="text-sm">{preferences.allergies.join(', ')}</p>
+            </div>
+          )}
+          {preferences?.intolerances.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Intolerances</p>
+              <p className="text-sm">{preferences.intolerances.join(', ')}</p>
+            </div>
+          )}
+          {preferences?.dietary_restrictions.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Dietary Restrictions</p>
+              <p className="text-sm">{preferences.dietary_restrictions.join(', ')}</p>
+            </div>
+          )}
+          {preferences?.food_dislikes.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Food Dislikes</p>
+              <p className="text-sm">{preferences.food_dislikes.join(', ')}</p>
+            </div>
+          )}
+          {preferences?.food_preferences.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Food Preferences</p>
+              <p className="text-sm">{preferences.food_preferences.join(', ')}</p>
+            </div>
+          )}
+          {preferences?.cuisine_preferences.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Cuisine Preferences</p>
+              <p className="text-sm">{preferences.cuisine_preferences.join(', ')}</p>
+            </div>
+          )}
+          {preferences?.cooking_skill && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Cooking Skill</p>
+              <p className="text-sm capitalize">{preferences.cooking_skill.replace('_', ' ')}</p>
+            </div>
+          )}
+          {preferences?.meal_prep_time && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Meal Prep Time</p>
+              <p className="text-sm capitalize">{preferences.meal_prep_time.replace('_', ' ')}</p>
+            </div>
+          )}
+          {preferences?.budget_level && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Budget Level</p>
+              <p className="text-sm capitalize">{preferences.budget_level.replace('_', ' ')}</p>
+            </div>
+          )}
+          {preferences?.meal_timing_notes && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Meal Timing Notes</p>
+              <p className="text-sm">{preferences.meal_timing_notes}</p>
+            </div>
+          )}
+          {preferences?.supplement_use.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Supplements</p>
+              <p className="text-sm">{preferences.supplement_use.join(', ')}</p>
+            </div>
+          )}
+          {preferences?.digestion_issues && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Digestion Issues</p>
+              <p className="text-sm">{preferences.digestion_issues}</p>
+            </div>
+          )}
+          {preferences?.additional_notes && (
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Additional Notes</p>
+              <p className="text-sm">{preferences.additional_notes}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {!editing && !hasPreferences && (
+        <p className="text-muted-foreground">No preferences set. Required for AI suggestions: allergies, intolerances, and dietary restrictions.</p>
+      )}
+
+      {editing && (
+        <Card>
+          <CardHeader><CardTitle>Set Preferences</CardTitle></CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSave)} className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <Label htmlFor="allergies">
+                    Allergies <span className="text-destructive">*</span>
+                  </Label>
+                  <Input id="allergies" placeholder="e.g., nuts, shellfish" {...register('allergies')} />
+                  <p className="text-xs text-muted-foreground">Comma-separated list (required for AI)</p>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="intolerances">
+                    Intolerances <span className="text-destructive">*</span>
+                  </Label>
+                  <Input id="intolerances" placeholder="e.g., lactose, gluten" {...register('intolerances')} />
+                  <p className="text-xs text-muted-foreground">Comma-separated list (required for AI)</p>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="dietary_restrictions">
+                    Dietary Restrictions <span className="text-destructive">*</span>
+                  </Label>
+                  <Input id="dietary_restrictions" placeholder="e.g., vegan, halal" {...register('dietary_restrictions')} />
+                  <p className="text-xs text-muted-foreground">Comma-separated list (required for AI)</p>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="food_dislikes">Food Dislikes</Label>
+                  <Input id="food_dislikes" placeholder="e.g., beets, mushrooms" {...register('food_dislikes')} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="food_preferences">Food Preferences</Label>
+                  <Input id="food_preferences" placeholder="e.g., grilled, pasta-based" {...register('food_preferences')} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="cuisine_preferences">Cuisine Preferences</Label>
+                  <Input id="cuisine_preferences" placeholder="e.g., Mediterranean, Asian" {...register('cuisine_preferences')} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="cooking_skill">Cooking Skill</Label>
+                  <select id="cooking_skill" {...register('cooking_skill')} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm">
+                    <option value="">None</option>
+                    <option value="none">None</option>
+                    <option value="basic">Basic</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="meal_prep_time">Meal Prep Time Available</Label>
+                  <select id="meal_prep_time" {...register('meal_prep_time')} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm">
+                    <option value="">None</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="flexible">Flexible</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="budget_level">Budget Level</Label>
+                  <select id="budget_level" {...register('budget_level')} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm">
+                    <option value="">None</option>
+                    <option value="budget">Budget</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="premium">Premium</option>
+                  </select>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="supplement_use">Supplement Use</Label>
+                <Input id="supplement_use" placeholder="e.g., whey, creatine, vitamins" {...register('supplement_use')} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="meal_timing_notes">Meal Timing Notes</Label>
+                <Input id="meal_timing_notes" placeholder="e.g., fasted cardio preferred, avoid eating late" {...register('meal_timing_notes')} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="digestion_issues">Digestion Issues</Label>
+                <Input id="digestion_issues" placeholder="e.g., bloating after fiber, slow digestion" {...register('digestion_issues')} />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="additional_notes">Additional Notes</Label>
+                <Input id="additional_notes" placeholder="Any other relevant information..." {...register('additional_notes')} />
+              </div>
+              <div className="flex gap-2">
+                <Button type="submit" disabled={setPreferences.isPending}>
+                  <Save size={14} className="mr-1" /> {setPreferences.isPending ? 'Saving...' : 'Save Preferences'}
+                </Button>
+                <Button type="button" variant="ghost" onClick={() => { reset(); setEditing(false); }}>
+                  <X size={14} className="mr-1" /> Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

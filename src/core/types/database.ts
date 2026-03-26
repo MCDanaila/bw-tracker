@@ -159,3 +159,70 @@ export interface AthleteGoal {
     effective_until: string | null;
     created_at: string;
 }
+
+export interface AthletePreferences {
+    athlete_id: string;
+    set_by: string;
+    allergies: string[];
+    intolerances: string[];
+    dietary_restrictions: string[];
+    food_dislikes: string[];
+    food_preferences: string[];
+    cuisine_preferences: string[];
+    meal_timing_notes: string | null;
+    supplement_use: string[];
+    digestion_issues: string | null;
+    cooking_skill: 'none' | 'basic' | 'intermediate' | 'advanced' | null;
+    meal_prep_time: 'minimal' | 'moderate' | 'flexible' | null;
+    budget_level: 'budget' | 'moderate' | 'premium' | null;
+    additional_notes: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface KnowledgeDocument {
+    id: string;
+    uploaded_by: string;
+    title: string;
+    description: string | null;
+    source_type: 'pdf' | 'text';
+    storage_path: string | null;
+    char_count: number | null;
+    is_active: boolean;
+    created_at: string;
+}
+
+export interface KnowledgeChunk {
+    id: string;
+    document_id: string;
+    chunk_index: number;
+    content: string;
+    token_count: number | null;
+    created_at: string;
+    // embedding is stored but not included in client-side queries
+}
+
+export interface AiSuggestion {
+    id: string;
+    athlete_id: string;
+    generated_by: string;
+    query_text: string;
+    context_snapshot: Record<string, unknown> | null;
+    retrieved_chunk_ids: string[];
+    suggestion_text: string | null;
+    suggestion_json: Record<string, unknown> | null;
+    status: 'pending' | 'approved' | 'rejected' | 'applied';
+    coach_edits: string | null;
+    applied_at: string | null;
+    created_at: string;
+}
+
+export interface AiSuggestionFeedback {
+    id: string;
+    suggestion_id: string;
+    user_id: string;
+    rating: number | null;
+    feedback_text: string | null;
+    was_followed: boolean | null;
+    created_at: string;
+}

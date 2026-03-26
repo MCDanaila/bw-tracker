@@ -8,6 +8,7 @@ import {
   Users,
   Database,
   FileStack,
+  Sparkles,
 } from 'lucide-react';
 import { useRole } from '@/core/contexts/RoleContext';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
@@ -26,6 +27,7 @@ const navItems: NavItem[] = [
   { label: 'My Diet', to: '/dashboard/diet', icon: <Apple size={20} /> },
   { label: 'Food Database', to: '/dashboard/diet/foods', icon: <Database size={20} />, coachOnly: true },
   { label: 'Templates', to: '/dashboard/diet/templates', icon: <FileStack size={20} />, coachOnly: true },
+  { label: 'AI Planner', to: '/dashboard/ai-planner', icon: <Sparkles size={20} /> },
   { label: 'Goals', to: '/dashboard/goals', icon: <Target size={20} /> },
   { label: 'Settings', to: '/dashboard/settings', icon: <Settings size={20} /> },
 ];

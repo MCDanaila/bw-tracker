@@ -1,0 +1,23 @@
+{
+  "buildCommand": "npm run build",
+  "installCommand": "npm install && cd backend && pip install -e . && cd ..",
+  "outputDirectory": "dist",
+  "env": {
+    "VITE_SUPABASE_URL": "@supabase_url",
+    "VITE_SUPABASE_ANON_KEY": "@supabase_anon_key",
+    "VITE_BACKEND_URL": "@backend_url"
+  },
+  "functions": {
+    "backend/**/*.py": {
+      "runtime": "python3.11",
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/api/$1"
+    }
+  ]
+}

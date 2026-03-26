@@ -7,6 +7,9 @@ import FoodSearchModal from './FoodSearchModal';
 import SwapPreviewModal from './SwapPreviewModal';
 import { type SwapResult } from '@/core/lib/swapAlgorithm';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/core/components/ui/collapsible";
+import { supabase } from '@/core/lib/supabase';
+import { getLocalDateStr } from '@/core/lib/utils';
+import { useAuth } from '@/core/contexts/AuthContext';
 
 interface DailyMealsProps {
     day: DayOfWeek;
@@ -14,6 +17,7 @@ interface DailyMealsProps {
 }
 
 export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
+    const { user } = useAuth();
     const [swapState, setSwapState] = useState<{
         isSearchOpen: boolean;
         isPreviewOpen: boolean;
@@ -43,8 +47,9 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
         });
     };
 
-    const handleConfirmSwap = (result: SwapResult) => {
-        if (swapState.activePlan) {
+    const handleConfirmSwap = async (result: SwapResult) => {
+        if (swapState.activePlan && user?.id) {
+            // Update local state for UI
             setLocalSwaps(prev => ({
                 ...prev,
                 [swapState.activePlan!.id]: {
@@ -52,7 +57,23 @@ export default function DailyMeals({ day, mealPlans }: DailyMealsProps) {
                     quantity: result.newQuantity
                 }
             }));
-            toast('Swap applied for this session. Changes are not saved permanently yet.');
+
+            // Persist to meal_adherence table
+            try {
+                await supabase.from('meal_adherence').upsert({
+                    user_id: user.id,
+                    date: getLocalDateStr(),
+                    meal_plan_id: swapState.activePlan.id,
+                    is_completed: true,
+                    swapped_food_id: result.newFood.id,
+                    swapped_quantity: result.newQuantity,
+                }, { onConflict: 'user_id,date,meal_plan_id' });
+
+                toast('Swap saved.');
+            } catch (error) {
+                console.error('Failed to save swap:', error);
+                toast.error('Failed to save swap');
+            }
         }
 
         setSwapState({

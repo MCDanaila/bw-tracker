@@ -11,6 +11,7 @@ const FoodDatabasePage = lazy(() => import('./pages/FoodDatabasePage'));
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage'));
 const GoalsPage = lazy(() => import('./pages/GoalsPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const AiPlannerPage = lazy(() => import('./pages/AiPlannerPage'));
 
 function NotFound() {
   return (
@@ -41,10 +42,12 @@ export function DashboardRoutes() {
         <Route path="athletes/:id/progress" element={<AthleteDetailPage />} />
         <Route path="athletes/:id/diet" element={<AthleteDetailPage />} />
         <Route path="athletes/:id/goals" element={<AthleteDetailPage />} />
+        <Route path="athletes/:id/preferences" element={<AthleteDetailPage />} />
         <Route path="diet" element={<DietEditorPage />} />
         <Route path="diet/foods" element={<FoodDatabasePage />} />
         <Route path="diet/templates" element={<TemplatesPage />} />
         <Route path="goals" element={<GoalsPage />} />
+        <Route path="ai-planner" element={<AiPlannerPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
