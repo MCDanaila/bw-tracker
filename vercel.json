@@ -2,13 +2,6 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install && cd backend && pip install -e . && cd ..",
   "outputDirectory": "dist",
-  "functions": {
-    "backend/**/*.py": {
-      "runtime": "python@3.11",
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
