@@ -29,6 +29,8 @@ describe('Meal Plan Creation & Management', () => {
       carbs: 1.1,
       fats: 11,
       state: 'N/A',
+      created_by: null,
+      created_at: new Date().toISOString(),
     },
     chicken: {
       id: 'chicken-breast',
@@ -40,6 +42,8 @@ describe('Meal Plan Creation & Management', () => {
       carbs: 0,
       fats: 3.6,
       state: 'N/A',
+      created_by: null,
+      created_at: new Date().toISOString(),
     },
     rice: {
       id: 'white-rice',
@@ -51,6 +55,8 @@ describe('Meal Plan Creation & Management', () => {
       carbs: 28,
       fats: 0.3,
       state: 'N/A',
+      created_by: null,
+      created_at: new Date().toISOString(),
     },
     olive_oil: {
       id: 'olive-oil',
@@ -62,6 +68,8 @@ describe('Meal Plan Creation & Management', () => {
       carbs: 0,
       fats: 10,
       state: 'N/A',
+      created_by: null,
+      created_at: new Date().toISOString(),
     },
   };
 
@@ -309,11 +317,11 @@ describe('Meal Plan Creation & Management', () => {
     });
 
     it('should prevent coaches from deleting meal plans created by athletes', () => {
-      const createdBy = athleteId; // Created by athlete, not coach
+      const createdBy: string = athleteId; // Created by athlete, not coach
       const isCoachOfAthlete = true;
 
       // Policy: is_coach_of(user_id) AND created_by = auth.uid()
-      const canDelete = isCoachOfAthlete && createdBy === coachId;
+      const canDelete = isCoachOfAthlete && (createdBy as string) === (coachId as string);
       expect(canDelete).toBe(false);
     });
   });
@@ -490,11 +498,11 @@ describe('Meal Plan Creation & Management', () => {
     });
 
     it('should prevent unauthorized updates', () => {
-      const mealPlanCreatedBy = coachId;
-      const currentUser = '00000000-0000-0000-0000-000000000000'; // Different user
+      const mealPlanCreatedBy: string = coachId;
+      const currentUser: string = '00000000-0000-0000-0000-000000000000'; // Different user
 
       // Only creator or athlete themselves can update
-      const canUpdate = currentUser === mealPlanCreatedBy || currentUser === athleteId;
+      const canUpdate = (currentUser as string) === (mealPlanCreatedBy as string) || (currentUser as string) === (athleteId as string);
 
       expect(canUpdate).toBe(false);
     });

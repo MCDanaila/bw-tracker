@@ -550,8 +550,8 @@ describe('AI Planner → Meal Plan Creation', () => {
     });
 
     it('should handle permission denied (not coach of athlete)', () => {
-      const currentUser = '00000000-0000-0000-0000-000000000000';
-      const createdBy = coachId;
+      const currentUser: string = '00000000-0000-0000-0000-000000000000';
+      const createdBy: string = coachId;
       const isAuthorized = currentUser === createdBy;
 
       expect(isAuthorized).toBe(false);
