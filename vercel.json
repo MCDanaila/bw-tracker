@@ -5,7 +5,11 @@
   "env": {
     "VITE_SUPABASE_URL": "@supabase_url",
     "VITE_SUPABASE_ANON_KEY": "@supabase_anon_key",
-    "VITE_BACKEND_URL": "@backend_url"
+    "VITE_BACKEND_URL": "@backend_url",
+    "SUPABASE_URL": "@supabase_url",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+    "GEMINI_API_KEY": "@gemini_api_key",
+    "FRONTEND_URL": "@frontend_url"
   },
   "functions": {
     "backend/**/*.py": {
@@ -17,7 +21,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/backend/api/$1"
+      "destination": "/backend/$1"
     }
   ]
 }

@@ -27,7 +27,7 @@ export async function apiPost<T>(
     throw new Error('Not authenticated');
   }
 
-  const url = `${BACKEND_URL}${path}`;
+  const url = `${BACKEND_URL}/api${path}`;
 
   const response = await fetch(url, {
     method: 'POST',
@@ -77,7 +77,7 @@ export async function apiPatch<T>(
     throw new Error('Not authenticated');
   }
 
-  const url = `${BACKEND_URL}${path}`;
+  const url = `${BACKEND_URL}/api${path}`;
 
   const response = await fetch(url, {
     method: 'PATCH',
@@ -112,7 +112,7 @@ export async function apiGet<T>(
     throw new Error('Not authenticated');
   }
 
-  const url = `${BACKEND_URL}${path}`;
+  const url = `${BACKEND_URL}/api${path}`;
 
   const response = await fetch(url, {
     method: 'GET',
