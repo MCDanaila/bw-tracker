@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "installCommand": "npm install && cd backend && pip install -e . && cd ..",
+  "installCommand": "npm install && cd backend && pip install -r requirements.txt && cd ..",
   "outputDirectory": "dist",
   "rewrites": [
     {
