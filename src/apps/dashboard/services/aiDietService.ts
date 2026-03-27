@@ -1,3 +1,4 @@
+import { apiPost } from '@/core/lib/apiClient';
 import { supabase } from '@/core/lib/supabase';
 import type { AiSuggestion } from '@/core/types/database';
 
@@ -43,33 +44,24 @@ export interface DietSuggestionResponse {
 }
 
 /**
- * Generate a diet suggestion using the Gemini-powered Edge Function
+ * Generate a diet suggestion by calling the FastAPI backend endpoint.
+ * The backend automatically handles JWT validation via the Authorization header.
  */
 export async function generateDietSuggestion(
   req: DietSuggestionRequest
 ): Promise<AiSuggestion> {
-  const { data, error } = await supabase.functions.invoke(
-    'generate-diet-suggestion',
-    {
-      body: req,
+  try {
+    const response = await apiPost<AiSuggestion>('/ai/generate-diet-suggestion', req);
+    return response;
+  } catch (error: any) {
+    // Re-throw with retry_after if present
+    if (error.retry_after) {
+      const newError = new Error(error.message);
+      (newError as any).retry_after = error.retry_after;
+      throw newError;
     }
-  );
-
-  if (error) {
     throw error;
   }
-
-  // The response contains the suggestion_id; you can optionally fetch the full row
-  // For now, return what the Edge Function provided
-  if (data?.error) {
-    const err = new Error(data.error);
-    (err as any).retry_after = data.retry_after;
-    throw err;
-  }
-
-  // Note: In a real implementation, you might want to fetch the full suggestion
-  // row from the database to return a complete AiSuggestion object
-  return data as AiSuggestion;
 }
 
 /**

@@ -6,6 +6,7 @@
 import { supabase } from './supabase';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const IS_LOCAL_DEV = BACKEND_URL?.includes('localhost');
 
 if (!BACKEND_URL) {
   console.warn('VITE_BACKEND_URL is not set. Backend API calls will fail.');
@@ -27,7 +28,7 @@ export async function apiPost<T>(
     throw new Error('Not authenticated');
   }
 
-  const url = `${BACKEND_URL}/api${path}`;
+  const url = `${BACKEND_URL}${IS_LOCAL_DEV ? '' : '/api'}${path}`;
 
   const response = await fetch(url, {
     method: 'POST',
@@ -77,7 +78,7 @@ export async function apiPatch<T>(
     throw new Error('Not authenticated');
   }
 
-  const url = `${BACKEND_URL}/api${path}`;
+  const url = `${BACKEND_URL}${IS_LOCAL_DEV ? '' : '/api'}${path}`;
 
   const response = await fetch(url, {
     method: 'PATCH',
@@ -112,7 +113,7 @@ export async function apiGet<T>(
     throw new Error('Not authenticated');
   }
 
-  const url = `${BACKEND_URL}/api${path}`;
+  const url = `${BACKEND_URL}${IS_LOCAL_DEV ? '' : '/api'}${path}`;
 
   const response = await fetch(url, {
     method: 'GET',

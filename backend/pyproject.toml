@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "bw-tracker-backend"
 version = "0.1.0"
 description = "FastAPI backend for bw-tracker fitness app"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 authors = [{name = "Mihaid", email = "coach@bw-tracker.app"}]
 dependencies = [
     "fastapi>=0.115.0",

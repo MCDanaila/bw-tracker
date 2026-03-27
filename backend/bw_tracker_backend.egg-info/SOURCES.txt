@@ -9,3 +9,4 @@ bw_tracker_backend.egg-info/SOURCES.txt
 bw_tracker_backend.egg-info/dependency_links.txt
 bw_tracker_backend.egg-info/requires.txt
 bw_tracker_backend.egg-info/top_level.txt
+tests/test_ai_endpoints.py

@@ -39,17 +39,26 @@ def create_app() -> FastAPI:
     )
 
     # CORS configuration
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=[
-            settings.frontend_url,
-            "http://localhost:3000",
-            "http://localhost:3001",
-        ],
-        allow_credentials=True,
-        allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-        allow_headers=["*"],
-    )
+    if settings.debug:
+        # In development, allow all origins
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=False,
+            allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+            allow_headers=["*"],
+        )
+    else:
+        # In production, be restrictive
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=[
+                settings.frontend_url,
+            ],
+            allow_credentials=True,
+            allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+            allow_headers=["*"],
+        )
 
     # Include routers
     app.include_router(health.router)
