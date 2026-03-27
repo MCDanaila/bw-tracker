@@ -7,7 +7,7 @@
  * - meal_adherence (user_id, day, meal_adherence_date, adherence_data)
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { calculateItemMacros } from '@/core/lib/mealMacros';
 import type { Food, MealPlan } from '@/core/types/database';
 
@@ -28,7 +28,7 @@ describe('Meal Plan Creation & Management', () => {
       protein: 13,
       carbs: 1.1,
       fats: 11,
-      state: 'active',
+      state: 'N/A',
     },
     chicken: {
       id: 'chicken-breast',
@@ -39,7 +39,7 @@ describe('Meal Plan Creation & Management', () => {
       protein: 31,
       carbs: 0,
       fats: 3.6,
-      state: 'active',
+      state: 'N/A',
     },
     rice: {
       id: 'white-rice',
@@ -50,7 +50,7 @@ describe('Meal Plan Creation & Management', () => {
       protein: 2.7,
       carbs: 28,
       fats: 0.3,
-      state: 'active',
+      state: 'N/A',
     },
     olive_oil: {
       id: 'olive-oil',
@@ -61,7 +61,7 @@ describe('Meal Plan Creation & Management', () => {
       protein: 0,
       carbs: 0,
       fats: 10,
-      state: 'active',
+      state: 'N/A',
     },
   };
 
@@ -293,8 +293,6 @@ describe('Meal Plan Creation & Management', () => {
     });
 
     it('should allow coaches to create meal plans for assigned athletes', () => {
-      const currentUserId = coachId;
-      const mealPlanUserId = athleteId;
       // Coach must be assigned to athlete (is_coach_of policy)
       const isCoachOfAthlete = true; // Assume validated via is_coach_of() RPC
 
@@ -302,24 +300,20 @@ describe('Meal Plan Creation & Management', () => {
     });
 
     it('should allow coaches to update athlete meal plans they created', () => {
-      const currentUserId = coachId;
-      const mealPlanUserId = athleteId;
       const createdBy = coachId;
       const isCoachOfAthlete = true;
 
       // Policy: is_coach_of(user_id) AND created_by = auth.uid()
-      const canUpdate = isCoachOfAthlete && createdBy === currentUserId;
+      const canUpdate = isCoachOfAthlete && createdBy === coachId;
       expect(canUpdate).toBe(true);
     });
 
     it('should prevent coaches from deleting meal plans created by athletes', () => {
-      const currentUserId = coachId;
-      const mealPlanUserId = athleteId;
       const createdBy = athleteId; // Created by athlete, not coach
       const isCoachOfAthlete = true;
 
       // Policy: is_coach_of(user_id) AND created_by = auth.uid()
-      const canDelete = isCoachOfAthlete && createdBy === currentUserId;
+      const canDelete = isCoachOfAthlete && createdBy === coachId;
       expect(canDelete).toBe(false);
     });
   });
@@ -497,13 +491,12 @@ describe('Meal Plan Creation & Management', () => {
 
     it('should prevent unauthorized updates', () => {
       const mealPlanCreatedBy = coachId;
-      const currentUser = athleteId;
-
-      // Athlete cannot update meal plan created by coach
-      const canUpdate = currentUser === mealPlanCreatedBy || currentUser === athleteId;
+      const currentUser = '00000000-0000-0000-0000-000000000000'; // Different user
 
       // Only creator or athlete themselves can update
-      expect(currentUser === athleteId).toBe(true);
+      const canUpdate = currentUser === mealPlanCreatedBy || currentUser === athleteId;
+
+      expect(canUpdate).toBe(false);
     });
   });
 

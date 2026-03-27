@@ -15,7 +15,7 @@
  * - ai_suggestion_applied_meals (suggestion_id, meal_plan_ids) [optional join table]
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import type { AiSuggestion } from '@/core/types/database';
 
 describe('AI Planner → Meal Plan Creation', () => {
@@ -480,23 +480,6 @@ describe('AI Planner → Meal Plan Creation', () => {
 
   describe('Validation During Application', () => {
     it('should validate all foods can be resolved before applying', () => {
-      const suggestion = {
-        weekly_plan: [
-          {
-            day: 'Monday',
-            meals: [
-              {
-                meal_name: 'Breakfast',
-                foods: [
-                  { name: 'Eggs', quantity_g: 150 }, // Can resolve
-                  { name: 'Unknown Food XYZ', quantity_g: 100 }, // Cannot resolve
-                ],
-              },
-            ],
-          },
-        ],
-      };
-
       const validation = {
         valid_foods: 1,
         unresolved_foods: 1,
@@ -510,15 +493,6 @@ describe('AI Planner → Meal Plan Creation', () => {
       const existingMealPlan = {
         user_id: athleteId,
         day_of_week: 'LUN',
-      };
-
-      const suggestionForSameDay = {
-        weekly_plan: [
-          {
-            day: 'Monday', // = LUN
-            meals: [],
-          },
-        ],
       };
 
       const conflict = existingMealPlan.day_of_week === 'LUN';
@@ -576,7 +550,7 @@ describe('AI Planner → Meal Plan Creation', () => {
     });
 
     it('should handle permission denied (not coach of athlete)', () => {
-      const currentUser = 'different-coach-id';
+      const currentUser = '00000000-0000-0000-0000-000000000000';
       const createdBy = coachId;
       const isAuthorized = currentUser === createdBy;
 
