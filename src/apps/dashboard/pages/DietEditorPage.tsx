@@ -203,8 +203,6 @@ function CoachDietEditor() {
 function SelfCoachedDietEditor({ userId }: { userId: string }) {
   const queryClient = useQueryClient();
 
-  if (!userId) return null;
-
   const { data: plans, isLoading } = useDietData(userId);
 
   const items = useMemo(() => {
@@ -254,6 +252,8 @@ function SelfCoachedDietEditor({ userId }: { userId: string }) {
       toast.error('Failed to save. Please try again.');
     }
   }, [userId, queryClient]);
+
+  if (!userId) return null;
 
   if (isLoading) {
     return (
