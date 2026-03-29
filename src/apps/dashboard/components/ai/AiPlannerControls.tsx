@@ -6,7 +6,7 @@ import { Badge } from '@/core/components/ui/badge';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/core/contexts/AuthContext';
-import { useAthletePreferences } from '../../hooks/useAthletePreferences';
+import { useAthletePreferences } from '@/core/hooks/useAthletePreferences';
 import { useGenerateDietSuggestion, useAiSuggestions } from '../../hooks/useAiDietSuggestions';
 import type { AiSuggestion } from '@/core/types/database';
 

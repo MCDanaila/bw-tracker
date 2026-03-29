@@ -8,13 +8,11 @@ export function useAthletePreferences(athleteId?: string) {
     queryKey: ['athletePreferences', athleteId],
     queryFn: async (): Promise<AthletePreferences | null> => {
       if (!athleteId) return null;
-
       const { data, error } = await supabase
         .from('athlete_preferences')
         .select('*')
         .eq('athlete_id', athleteId)
         .maybeSingle();
-
       if (error) throw error;
       return data as AthletePreferences | null;
     },
@@ -30,6 +28,8 @@ export function useSetAthletePreferences() {
   return useMutation({
     mutationFn: async (prefs: {
       athleteId: string;
+      diet_framework?: 'omnivore' | 'pescatarian' | 'vegetarian' | 'vegan';
+      meal_frequency?: number;
       allergies?: string[];
       intolerances?: string[];
       dietary_restrictions?: string[];
@@ -45,9 +45,7 @@ export function useSetAthletePreferences() {
       additional_notes?: string | null;
     }) => {
       if (!user?.id) throw new Error('Not authenticated');
-
       const { athleteId, ...prefsData } = prefs;
-
       const { data, error } = await supabase
         .from('athlete_preferences')
         .upsert(
@@ -61,7 +59,6 @@ export function useSetAthletePreferences() {
         )
         .select()
         .single();
-
       if (error) throw error;
       return data as AthletePreferences;
     },

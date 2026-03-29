@@ -13,7 +13,7 @@ import { useRecoveryScore } from '../hooks/useRecoveryScore';
 import { useComplianceRings } from '../hooks/useComplianceRings';
 import { useBiofeedbackRadar } from '../hooks/useBiofeedbackRadar';
 import { useCurrentGoal, useGoalHistory, useSetGoal } from '../hooks/useAthleteGoals';
-import { useAthletePreferences, useSetAthletePreferences } from '../hooks/useAthletePreferences';
+import { useAthletePreferences, useSetAthletePreferences } from '@/core/hooks/useAthletePreferences';
 import { StatCard } from '../components/StatCard';
 import { WeightTrendChart } from '../components/WeightTrendChart';
 import { RecoveryGauge } from '../components/RecoveryGauge';
