@@ -202,6 +202,9 @@ function CoachDietEditor() {
 
 function SelfCoachedDietEditor({ userId }: { userId: string }) {
   const queryClient = useQueryClient();
+
+  if (!userId) return null;
+
   const { data: plans, isLoading } = useDietData(userId);
 
   const items = useMemo(() => {
@@ -220,6 +223,8 @@ function SelfCoachedDietEditor({ userId }: { userId: string }) {
   }, [plans]);
 
   const handleSaveItems = useCallback(async (updatedItems: DietTemplateItem[]) => {
+    if (!userId) return;
+
     try {
       const { error: delErr } = await supabase
         .from('meal_plans')
@@ -246,7 +251,6 @@ function SelfCoachedDietEditor({ userId }: { userId: string }) {
       queryClient.invalidateQueries({ queryKey: ['diet-plans', userId] });
       toast.success('Diet plan saved.');
     } catch (err) {
-      console.error('Failed to save diet plan:', err);
       toast.error('Failed to save. Please try again.');
     }
   }, [userId, queryClient]);
