@@ -2,11 +2,9 @@ import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff, Calen
 import DailyLogHub from "./components/daily-flow/DailyLogHub";
 import SyncHeader from "./components/SyncHeader";
 import PendingLogs from "./components/PendingLogs";
-import Auth from "./components/Auth";
 import DietView from "./components/diet/DietView";
 import DashboardView from "./components/stats/DashboardView";
 import HistoryView from "./components/history/HistoryView";
-import Onboarding from "./components/Onboarding";
 import ProfileView from "./components/ProfileView";
 import { useAuth } from "@/core/contexts/AuthContext";
 import { useState, useEffect, useRef } from "react";
@@ -47,46 +45,9 @@ function App() {
   const { permission, requestPermission, scheduleDailyReminder } = useNotifications();
   const [remindersEnabled, setRemindersEnabled] = useState(false);
 
-  // Onboarding state
-  const [needsOnboarding, setNeedsOnboarding] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    async function checkProfile() {
-      if (!session?.user) {
-        setNeedsOnboarding(null);
-        return;
-      }
-
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('height, initial_weight')
-          .eq('id', session.user.id)
-          .single();
-
-        if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows found"
-          console.error('Error fetching profile:', error);
-          setNeedsOnboarding(false); // Fallback to main app on error rather than blocking
-        } else if (!data || !data.height || !data.initial_weight) {
-          // If no data, or missing key fields, they need onboarding
-          setNeedsOnboarding(true);
-        } else {
-          setNeedsOnboarding(false);
-        }
-      } catch (err) {
-        console.error('Unexpected error checking profile:', err);
-        setNeedsOnboarding(false);
-      }
-    }
-
-    if (!loading) {
-      checkProfile();
-    }
-  }, [session, loading]);
-
   // Default to History tab if today's log already exists
   useEffect(() => {
-    if (!session?.user?.id || needsOnboarding !== false) return;
+    if (!session?.user?.id) return;
 
     const userId = session.user.id;
 
@@ -112,22 +73,14 @@ function App() {
     }
 
     checkTodayLog();
-  }, [session, needsOnboarding]);
+  }, [session]);
 
-  if (loading || (session && needsOnboarding === null)) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="animate-spin text-primary" size={32} />
       </div>
     );
-  }
-
-  if (!session) {
-    return <Auth />;
-  }
-
-  if (needsOnboarding) {
-    return <Onboarding onComplete={() => setNeedsOnboarding(false)} />;
   }
 
   return (
