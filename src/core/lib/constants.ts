@@ -97,6 +97,18 @@ export const DAILY_LOG_INT_FIELDS = [
     'digestion_rating',
 ] as const;
 
+export const ALLERGENS = [
+  { id: 'lactose',   label: 'Lactose' },
+  { id: 'gluten',    label: 'Gluten' },
+  { id: 'nuts',      label: 'Nuts' },
+  { id: 'fish',      label: 'Fish' },
+  { id: 'eggs',      label: 'Eggs' },
+  { id: 'shellfish', label: 'Shellfish' },
+  { id: 'soy',       label: 'Soy' },
+] as const;
+
+export type AllergenId = typeof ALLERGENS[number]['id'];
+
 // Canonical default values — used by all 3 flow views and EditLogModal
 export function getDailyLogDefaults(existing?: Record<string, any>) {
     return {
