@@ -92,7 +92,7 @@ function App() {
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
             aria-label="Open settings"
             aria-expanded={isSettingsOpen}
-            className="w-8 h-8 rounded-full bg-primary/20 text-primary font-bold flex items-center justify-center hover:bg-primary/30 transition-colors text-sm" // Adjusted size for better fit
+            className="w-8 h-8 rounded-full bg-primary/20 text-primary font-bold flex items-center justify-center hover:bg-primary/30 transition-colors text-sm"
           >
             {user?.email?.charAt(0).toUpperCase()}
           </button>

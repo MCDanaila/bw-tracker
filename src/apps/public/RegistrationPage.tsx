@@ -491,8 +491,7 @@ export default function RegistrationPage() {
 
       setCompleting(true);
 
-      const session = signUpData.session;
-      const token = session?.access_token;
+      const token = signUpData.session?.access_token;
 
       const endpoint = `${API_BASE}/auth/complete-registration`;
 

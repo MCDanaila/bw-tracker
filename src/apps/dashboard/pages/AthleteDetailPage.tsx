@@ -654,7 +654,6 @@ function PreferencesTab({ athleteId }: { athleteId: string }) {
                   <Label htmlFor="cooking_skill">Cooking Skill</Label>
                   <select id="cooking_skill" {...register('cooking_skill')} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm">
                     <option value="">None</option>
-                    <option value="none">None</option>
                     <option value="basic">Basic</option>
                     <option value="intermediate">Intermediate</option>
                     <option value="advanced">Advanced</option>

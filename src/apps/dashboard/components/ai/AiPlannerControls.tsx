@@ -56,12 +56,12 @@ export default function AiPlannerControls({
       toast.success('Suggestion generated successfully');
       setQueryText('');
       onSuggestionGenerated?.(result.id);
-    } catch (error: any) {
-      console.error('Failed to generate suggestion:', error);
-      if (error.retry_after) {
-        toast.error(`Rate limited. Please try again in ${error.retry_after} seconds`);
+    } catch (error: unknown) {
+      const err = error as { retry_after?: number; message?: string };
+      if (err.retry_after) {
+        toast.error(`Rate limited. Please try again in ${err.retry_after} seconds`);
       } else {
-        toast.error(error.message || 'Failed to generate suggestion');
+        toast.error(err.message || 'Failed to generate suggestion');
       }
     }
   };
