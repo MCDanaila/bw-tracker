@@ -29,5 +29,6 @@ dist-ssr
 .vercel
 .env*.local
 backend/.env
-*.env
+backend/.gitignore
 .superpowers
+.claude
