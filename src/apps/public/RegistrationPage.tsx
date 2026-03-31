@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const LEONIDA_RED = '#b52619';
+const LEONIDA_RED = '#9E1316';
 const API_BASE = import.meta.env.VITE_BACKEND_URL ?? '';
 
 const AI_PLANS = ['self_coached_ai', 'coach_pro'];
@@ -29,36 +29,36 @@ const ACTIVITY_OPTIONS = [
 
 const INTENSITY_LEVELS = [
   { key: 'very_conservative', label: 'VERY SLOW' },
-  { key: 'conservative',      label: 'SLOW'      },
-  { key: 'moderate',          label: 'MODERATE'  },
-  { key: 'aggressive',        label: 'FAST'      },
-  { key: 'very_aggressive',   label: 'MAX'       },
+  { key: 'conservative', label: 'SLOW' },
+  { key: 'moderate', label: 'MODERATE' },
+  { key: 'aggressive', label: 'FAST' },
+  { key: 'very_aggressive', label: 'MAX' },
 ] as const;
 
 type GoalRateKey = typeof INTENSITY_LEVELS[number]['key'];
 
 const GOAL_RATE_DB_MAP: Record<GoalRateKey, 'conservative' | 'moderate' | 'aggressive'> = {
   very_conservative: 'conservative',
-  conservative:      'conservative',
-  moderate:          'moderate',
-  aggressive:        'aggressive',
-  very_aggressive:   'aggressive',
+  conservative: 'conservative',
+  moderate: 'moderate',
+  aggressive: 'aggressive',
+  very_aggressive: 'aggressive',
 };
 
 function getKcalDelta(goal: FormData['goal'], rate: GoalRateKey): string {
   const loseDeficits: Record<GoalRateKey, number> = {
     very_conservative: -150,
-    conservative:      -300,
-    moderate:          -500,
-    aggressive:        -750,
-    very_aggressive:   -1000,
+    conservative: -300,
+    moderate: -500,
+    aggressive: -750,
+    very_aggressive: -1000,
   };
   const gainSurplus: Record<GoalRateKey, number> = {
     very_conservative: +50,
-    conservative:      +150,
-    moderate:          +300,
-    aggressive:        +500,
-    very_aggressive:   +700,
+    conservative: +150,
+    moderate: +300,
+    aggressive: +500,
+    very_aggressive: +700,
   };
   if (goal === 'lose_fat') {
     const d = loseDeficits[rate];
@@ -138,9 +138,8 @@ function SegBtn({
     <button
       type="button"
       onClick={onClick}
-      className={`font-mono-manifesto text-xs uppercase tracking-widest py-2 px-3 rounded-none border border-black transition-colors cursor-pointer ${
-        selected ? 'bg-black text-white' : 'bg-white text-black'
-      } ${className}`}
+      className={`font-mono-manifesto text-xs uppercase tracking-widest py-2 px-3 rounded-none border border-black transition-colors cursor-pointer ${selected ? 'bg-black text-white' : 'bg-white text-black'
+        } ${className}`}
     >
       {label}
     </button>
@@ -922,11 +921,10 @@ function Step1({
                 key={u}
                 type="button"
                 onClick={toggleHeightUnit}
-                className={`font-mono-manifesto text-xs uppercase cursor-pointer bg-transparent border-0 ${
-                  formData.heightUnit === u
+                className={`font-mono-manifesto text-xs uppercase cursor-pointer bg-transparent border-0 ${formData.heightUnit === u
                     ? 'font-bold underline text-black'
                     : 'text-black/50'
-                }`}
+                  }`}
               >
                 {u.toUpperCase()}
               </button>
@@ -956,11 +954,10 @@ function Step1({
                 key={u}
                 type="button"
                 onClick={toggleWeightUnit}
-                className={`font-mono-manifesto text-xs uppercase cursor-pointer bg-transparent border-0 ${
-                  formData.weightUnit === u
+                className={`font-mono-manifesto text-xs uppercase cursor-pointer bg-transparent border-0 ${formData.weightUnit === u
                     ? 'font-bold underline text-black'
                     : 'text-black/50'
-                }`}
+                  }`}
               >
                 {u.toUpperCase()}
               </button>
@@ -1132,11 +1129,10 @@ function Step2({
               key={id}
               type="button"
               onClick={() => toggleAllergen(id)}
-              className={`font-mono-manifesto text-xs uppercase tracking-widest py-2 px-3 rounded-none border border-black cursor-pointer transition-colors ${
-                formData.hardNos.includes(id)
+              className={`font-mono-manifesto text-xs uppercase tracking-widest py-2 px-3 rounded-none border border-black cursor-pointer transition-colors ${formData.hardNos.includes(id)
                   ? 'bg-black text-white'
                   : 'bg-white text-black'
-              }`}
+                }`}
             >
               {label}
             </button>
@@ -1189,19 +1185,17 @@ function Step3({
                 key={id}
                 type="button"
                 onClick={() => update('activityLevel', id)}
-                className={`w-full flex items-center justify-between py-3 px-4 rounded-none border cursor-pointer transition-colors text-left ${
-                  selected
+                className={`w-full flex items-center justify-between py-3 px-4 rounded-none border cursor-pointer transition-colors text-left ${selected
                     ? 'bg-black text-white border-black'
                     : 'bg-white text-black border-black'
-                }`}
+                  }`}
               >
                 <span className="font-mono-manifesto text-xs uppercase tracking-widest font-bold">
                   {label}
                 </span>
                 <span
-                  className={`font-body text-sm ml-4 ${
-                    selected ? 'text-white/80' : 'text-black/60'
-                  }`}
+                  className={`font-body text-sm ml-4 ${selected ? 'text-white/80' : 'text-black/60'
+                    }`}
                 >
                   {desc}
                 </span>
