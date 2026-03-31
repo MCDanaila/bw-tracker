@@ -120,9 +120,9 @@ export function MealRow({
 
         <div className="flex items-center gap-1 text-xs text-muted-foreground tabular-nums ml-auto">
           <span>{Math.round(subtotals.kcal)} kcal</span>
-          <span className="text-blue-500">P:{Math.round(subtotals.p)}</span>
-          <span className="text-amber-500">C:{Math.round(subtotals.c)}</span>
-          <span className="text-red-500">F:{Math.round(subtotals.g)}</span>
+          <span className="text-chart-1">P:{Math.round(subtotals.p)}</span>
+          <span className="text-chart-2">C:{Math.round(subtotals.c)}</span>
+          <span className="text-chart-4">F:{Math.round(subtotals.g)}</span>
         </div>
 
         {!readOnly && (

@@ -45,9 +45,9 @@ export function FoodRowEditable({ item, onQuantityChange, onRemove, dragHandlePr
       {/* Macros */}
       <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground tabular-nums">
         <span>{Math.round(macros.kcal)} kcal</span>
-        <span className="text-blue-500">P:{Math.round(macros.p)}</span>
-        <span className="text-amber-500">C:{Math.round(macros.c)}</span>
-        <span className="text-red-500">F:{Math.round(macros.g)}</span>
+        <span className="text-chart-1">P:{Math.round(macros.p)}</span>
+        <span className="text-chart-2">C:{Math.round(macros.c)}</span>
+        <span className="text-chart-4">F:{Math.round(macros.g)}</span>
       </div>
 
       {/* Delete */}

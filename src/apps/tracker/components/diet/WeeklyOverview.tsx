@@ -42,8 +42,8 @@ export default function WeeklyOverview({ weeklyTotals, weeklyAverage, days }: We
 
     const chartConfigMacros = {
         protein: { label: "Protein (g)", color: "var(--chart-1)" },
-        carbs: { label: "Carbs (g)", color: "var(--chart-4)" },
-        fats: { label: "Fats (g)", color: "var(--chart-2)" },
+        carbs: { label: "Carbs (g)", color: "var(--chart-2)" },
+        fats: { label: "Fats (g)", color: "var(--chart-4)" },
     } satisfies ChartConfig;
 
     return (

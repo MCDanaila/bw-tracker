@@ -31,17 +31,17 @@ export function MacroSummaryBar({ calories, protein, carbs, fats, targetCalories
         {total > 0 && (
           <>
             <div
-              className="bg-blue-500 transition-all"
+              className="text-chart-1 transition-all"
               style={{ width: `${proteinPct}%` }}
               aria-label={`Protein: ${Math.round(proteinPct)}%`}
             />
             <div
-              className="bg-amber-500 transition-all"
+              className="text-chart-2 transition-all"
               style={{ width: `${carbsPct}%` }}
               aria-label={`Carbs: ${Math.round(carbsPct)}%`}
             />
             <div
-              className="bg-red-500 transition-all"
+              className="text-chart-4 transition-all"
               style={{ width: `${fatsPct}%` }}
               aria-label={`Fats: ${Math.round(fatsPct)}%`}
             />
@@ -55,9 +55,9 @@ export function MacroSummaryBar({ calories, protein, carbs, fats, targetCalories
           Kcal: {Math.round(calories)}
           {targetCalories ? ` / ${targetCalories}` : ''}
         </span>
-        <span className="text-blue-500">P: {Math.round(protein)}g</span>
-        <span className="text-amber-500">C: {Math.round(carbs)}g</span>
-        <span className="text-red-500">F: {Math.round(fats)}g</span>
+        <span className="text-chart-1">P: {Math.round(protein)}g</span>
+        <span className="text-chart-2">C: {Math.round(carbs)}g</span>
+        <span className="text-chart-4">F: {Math.round(fats)}g</span>
       </div>
     </div>
   );
