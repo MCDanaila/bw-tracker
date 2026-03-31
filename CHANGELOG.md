@@ -4,6 +4,66 @@ All notable changes to the BW Tracker project will be documented in this file.
 
 ## [Unreleased] - Current State
 
+### 🚀 Features (Onboarding & Public Pages — 2026-03-28)
+
+#### Public Pages (Performance Manifesto Design System)
+- **LandingPage** (`src/apps/public/LandingPage.tsx`): Full manifesto landing with 5 sections:
+  - Hero: full-bleed black gradient, oversized right-aligned LEONIDA wordmark, PERFORM. in `#b52619` red, 4px white section rules
+  - Method: `01 / 02 / 03` editorial grid (TRACK / ANALYSE / ADJUST)
+  - Plans: 4 cards with tonal stacking (self_coached → self_coached_ai → coach → coach_pro)
+  - Pull Quote: full-bleed black manifesto quote block
+  - Footer: links, legal copy
+  - Sticky glassmorphism nav (activates at 80px scroll), `LEONIDA_RED` constant, `SectionRule` shared component
+- **LoginPage** (`src/apps/public/LoginPage.tsx`): Manifesto sign-in form; role-based redirect (coach → `/dashboard`, others → `/tracker`)
+- **RegistrationPage** (`src/apps/public/RegistrationPage.tsx`): 4-step onboarding wizard targeting <60s completion
+  - Step 0 (Account): email duplicate check on blur (`POST /auth/check-email`), min-8 password
+  - Step 1 (BODY): SEX segmented buttons, DOB + auto-calculated age, height/weight sliders with metric/imperial toggle, GOAL segmented, collapsible workout intensity
+  - Step 2 (FUEL): diet framework chips, meals/day stepper, HARD NO'S chip multi-select (NONE pre-selected, mutual exclusion)
+  - Step 3 (DRIVE): lifestyle activity rows, gym days per week, FINISH in Leonida Red
+  - Plan badge (`?plan=` query param) and invitation badge (`?invite=` query param)
+  - Accept/Decline UI for existing sessions arriving from a coaching invite
+  - Animated scan-line completion state (CSS `@keyframes scan`, no spinner)
+
+#### Plan System
+- **4-tier plan**: `self_coached` | `self_coached_ai` | `coach` | `coach_pro`
+- `PLAN_ROLE_MAP` in FastAPI: maps plan → (role, ai_enabled) tuple
+- `profiles` gains: `plan`, `ai_enabled`, `dob`, `goal_rate`, `gym_days_per_week`
+
+#### Session-Aware Routing (`src/shell/AppRouter.tsx`)
+- `RootRedirect` component: loading state → spinner, unauthenticated → `LandingPage`, coach → `/dashboard`, others → `/tracker`
+- `UnauthenticatedOnly` guard wraps `/login` and `/register` — redirects authenticated users
+- No flash for already-authenticated users: `if (!role) return <Navigate to="/tracker" replace />`
+
+#### Backend: Auth Endpoints (`backend/app/routers/auth.py`)
+- `POST /auth/check-email` — public; checks `profiles.email` for duplicates before sign-up
+- `POST /auth/complete-registration` — authenticated; upserts `profiles` (plan, role, ai_enabled, dob, height, weight, etc.), upserts `athlete_preferences` (diet framework, meal frequency, allergies), links invitation token when present
+
+#### Backend: Invitation Endpoints (`backend/app/routers/invitations.py`)
+- `POST /invitations/send` — coach only; enforces per-plan athlete cap (5 for `coach`, 25 for `coach_pro`); sends invite email via Supabase Auth SMTP with `invite_token` + redirect URL in metadata
+- `GET /invitations/{token}` — public; returns coach name + invitee email, auto-expires overdue pending invitations
+- `GET /invitations` — coach only; lists all invitations for the calling coach
+- `DELETE /invitations/{id}` — coach only; cancels a pending invitation
+- `POST /invitations/accept` — authenticated user; validates email match, queries `profiles` for authoritative role (not JWT app_metadata), creates `coach_athletes` row
+
+#### Schema Migration (`supabase/migrations/003_onboarding.sql`)
+- `profiles`: added `plan`, `ai_enabled`, `dob`, `goal_rate`, `gym_days_per_week` columns
+- `athlete_preferences`: added `diet_framework`, `meal_frequency` columns
+- `invitations` table: token (UUID default), status enum, 7-day expiry default, RLS policies for coaches + public token lookup
+- `recompute_age()` trigger: auto-updates `profiles.age` from `dob` on INSERT/UPDATE
+- Unique index: one active coach per athlete (`coach_athletes WHERE status='active'`)
+
+#### TypeScript Types (`src/core/types/database.ts`)
+- `UserProfile`: added `plan`, `ai_enabled`, `dob`, `goal_rate`, `gym_days_per_week`
+- New `Invitation` interface: id, coach_id, invitee_email, token, status, created_at, expires_at
+- `AthletePreferences`: added `diet_framework`, `meal_frequency`
+
+#### Fonts & Theme (`src/index.css`, `package.json`)
+- Manifesto font tri-system: `font-display` (Newsreader), `font-body` (Source Serif 4), `font-mono-manifesto` (JetBrains Mono)
+- Installed `@fontsource/newsreader`, `@fontsource-variable/source-serif-4`, `@fontsource/jetbrains-mono`
+- Scoped to public pages only — tracker and dashboard keep Geist
+
+---
+
 ### 🤖 Features (AI Diet Planner RAG System — 2026-03-26)
 
 #### Phase 0: User Input Expansion & Bug Fixes
@@ -279,7 +339,7 @@ Updated and standardized contextual empty states across all lists and tables:
 - **Confirm Dialog:** Reusable confirmation dialog for destructive actions with destructive/default variants, loading state, and backdrop/Escape close.
 - **Empty State Component:** Reusable centered empty state with icon, title, description, and optional action button.
 - **Diet Template System (Coach):** Template list view with create/delete, card grid layout showing name, description, and last updated date. Click-through to full meal plan editor per template.
-- **Meal Plan Editor:** Compound editor component with 7-day tabs (LUN-DOM), collapsible meal sections, inline food quantity editing, drag-and-drop reorder within meals (`@dnd-kit/core` + `@dnd-kit/sortable`), real-time macro recalculation, daily macro summary bar, "Copy Day" dialog for cloning meals across days, unsaved changes warning via `beforeunload`, and save-all persistence.
+- **Meal Plan Editor:** Compound editor component with 7-day tabs (MON-SUN), collapsible meal sections, inline food quantity editing, drag-and-drop reorder within meals (`@dnd-kit/core` + `@dnd-kit/sortable`), real-time macro recalculation, daily macro summary bar, "Copy Day" dialog for cloning meals across days, unsaved changes warning via `beforeunload`, and save-all persistence.
 - **Macro Summary Bar:** Horizontal stacked bar showing protein (blue), carbs (amber), fats (red) proportional to calorie contribution, with text summary and optional target calorie comparison (green/amber/red color coding).
 - **Food Row Editable:** Inline-editable food row with drag handle, food name, quantity input, unit label, live macro display, and delete button.
 - **Meal Row:** Collapsible meal section with editable meal name, food list with drag-and-drop sorting, subtotal macros, add food button (opens existing `FoodSearchModal`), and delete meal confirmation.
@@ -289,7 +349,7 @@ Updated and standardized contextual empty states across all lists and tables:
 - **Foods Query Hook:** `useFoodsQuery` with server-side search, unit/state filtering, pagination via Supabase `.range()`, sorting, and exact count.
 
 ### 💅 Schema / Architecture
-- **DB Migration 003 — Diet Templates:** Created `diet_templates` and `diet_template_items` tables with RLS policies (coaches CRUD own templates, athletes have no access). Foreign key from `diet_template_items.food_id` to `foods.id`. Day-of-week CHECK constraint (`LUN`-`DOM`).
+- **DB Migration 003 — Diet Templates:** Created `diet_templates` and `diet_template_items` tables with RLS policies (coaches CRUD own templates, athletes have no access). Foreign key from `diet_template_items.food_id` to `foods.id`. Day-of-week CHECK constraint (`MON`-`SUN`).
 - **DB Migration 004 — Meal Plans Alter:** Added `created_by` (UUID, references auth.users) and `template_id` (UUID, references diet_templates, ON DELETE SET NULL) columns to `meal_plans`. Backfilled `created_by = user_id` for existing rows.
 - **DB Migration 005 — Foods Alter:** Added `created_by` (UUID) and `updated_at` (TIMESTAMPTZ) columns to `foods`. Added coach-specific RLS policy allowing coaches full CRUD on foods.
 - **TypeScript Types Updated:** Added `DietTemplate` and `DietTemplateItem` interfaces. Extended `Food` with `created_by` and `updated_at`. Extended `MealPlan` with `created_by` and `template_id`.
@@ -348,7 +408,7 @@ Updated and standardized contextual empty states across all lists and tables:
 ## [0.4.1] - Bug Fix Pass
 
 ### 🐛 Bug Fixes
-- **Calendar Cell Overlays Sticky Header:** The selected day cell in `HeatmapCalendar` used `z-10 scale-110`, matching the `z-10` on `SyncHeader`. Same z-index with the calendar cell later in DOM order caused it to paint on top of the sticky header when scrolling. Fixed by bumping `SyncHeader` to `z-20`.
+- **Calendar Cell Overlays Sticky Header:** The selected day cell in `HeatmapCalendar` used `z-10 scale-110`, matching the `z-10` on `SyncHeader`. Same z-index with the calendar cell later in SUN order caused it to paint on top of the sticky header when scrolling. Fixed by bumping `SyncHeader` to `z-20`.
 - **Today Dashboard Shows 0% After Sync:** `DailyLogHub` only read today's log from `localDB.syncQueue`. Once entries were synced and removed from the queue, `todayLog` was always `null` — leaving the Today dashboard at 0% with no summary card despite Supabase having full data. Fixed by adding a Supabase query for today's date as a fallback when no pending queue entry exists.
 - **Editing Pending Log Shows Wrong/Incomplete Data:** Each section save (Morning, Workout, EOD) creates a separate `syncQueue` entry. Editing from `PendingLogs` opened one specific entry, which was often missing data from later saves. Fixed by merging all pending entries for the same date (oldest → newest) before populating the `EditLogModal`, so the form always shows the complete accumulated state.
 

@@ -67,9 +67,9 @@ export function EndOfDayFlowView({ existingData, onBack, onSave }: EndOfDayFlowV
             }
 
             // Save water defaults
-            const currentDefaultsStr = localStorage.getItem("bw_tracker_smart_defaults");
+            const currentDefaultsStr = localStorage.getItem("leonida_smart_defaults");
             const currentDefaults = currentDefaultsStr ? JSON.parse(currentDefaultsStr) : {};
-            localStorage.setItem("bw_tracker_smart_defaults", JSON.stringify({
+            localStorage.setItem("leonida_smart_defaults", JSON.stringify({
                 ...currentDefaults,
                 water_liters: payload.water_liters,
             }));

@@ -159,7 +159,7 @@ function CoachOverview() {
 
 // ---- Helpers ----
 function buildTrainingDays(logs: Array<{ date: string; workout_session: string | null; gym_rpe: number | null; workout_duration: number | null }>) {
-  const dayLabels = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+  const dayLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
   const result = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date();

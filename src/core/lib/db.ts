@@ -13,11 +13,11 @@ export interface SyncAction {
     date?: string;             // Top-level indexed copy of payload.date for efficient lookups
 }
 
-export class BWTrackerDB extends Dexie {
+export class LeonidaDB extends Dexie {
     syncQueue!: Table<SyncAction>;
 
     constructor() {
-        super('BWTrackerDB');
+        super('LeonidaDB');
 
         // v1: original schema
         this.version(1).stores({
@@ -32,7 +32,7 @@ export class BWTrackerDB extends Dexie {
 }
 
 // Export a single instance of the database to use throughout the app
-export const localDB = new BWTrackerDB();
+export const localDB = new LeonidaDB();
 
 /**
  * Upsert a daily log to the sync queue, merging with any existing pending entry for the same date.

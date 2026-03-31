@@ -1184,7 +1184,7 @@ This phase builds the Food Database CRUD, the Diet Template Editor, and the diet
 - RLS: coaches can CRUD their own templates
 - RLS: athletes cannot see templates
 - Foreign key from `diet_template_items.food_id` to `foods.id` works
-- `day_of_week` CHECK constraint matches existing values: `'LUN','MAR','MER','GIO','VEN','SAB','DOM'`
+- `day_of_week` CHECK constraint matches existing values: `'MON','TUE','WED','THU','FRI','SAT','SUN'`
 
 **Dependencies**: P0-T01
 
@@ -1269,7 +1269,7 @@ export interface DietTemplate {
 export interface DietTemplateItem {
   id: string;
   template_id: string;
-  day_of_week: 'LUN' | 'MAR' | 'MER' | 'GIO' | 'VEN' | 'SAB' | 'DOM';
+  day_of_week: 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
   meal_name: string;
   food_id: string | null;
   target_quantity: number;
@@ -1770,7 +1770,7 @@ interface MealRowProps {
 interface CopyDayDialogProps {
   open: boolean;
   onClose: () => void;
-  sourceDay: string;                // e.g., "LUN"
+  sourceDay: string;                // e.g., "MON"
   onCopy: (targetDays: string[]) => void;
 }
 ```
@@ -1778,7 +1778,7 @@ interface CopyDayDialogProps {
 **Implementation**:
 - Uses shadcn `Dialog`
 - Title: "Copy [sourceDay] to..."
-- 7 checkboxes for each day (`LUN` through `DOM`, using Italian day codes matching the schema)
+- 7 checkboxes for each day (`MON` through `SUN`, using Italian day codes matching the schema)
 - Source day checkbox disabled
 - "Select All" / "Deselect All" toggle
 - Copy button and Cancel button
@@ -1810,7 +1810,7 @@ interface MealPlanEditorProps {
 ```
 
 **Implementation**:
-- Day tabs: LUN MAR MER GIO VEN SAB DOM (shadcn `Tabs` from `src/components/ui/tabs.tsx`)
+- Day tabs: MON TUE WED THU FRI SAT SUN (shadcn `Tabs` from `src/components/ui/tabs.tsx`)
 - Each day tab shows its meal rows (grouped by `meal_name`)
 - "+ Add Meal" button at bottom of each day
 - `MacroSummaryBar` showing daily totals at bottom of each day

@@ -50,7 +50,7 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
           <div className="flex items-center justify-between border-b border-border px-4 py-4">
             <div className="flex items-center gap-2">
               <Activity size={24} className="text-primary" />
-              <span className="text-lg font-bold">BW Tracker</span>
+              <span className="text-lg font-bold">Leonida</span>
             </div>
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X size={20} />

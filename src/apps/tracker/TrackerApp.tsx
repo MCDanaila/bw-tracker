@@ -1,4 +1,4 @@
-import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff, CalendarRange, UserCircle, Dumbbell } from "lucide-react";
+import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff, CalendarRange, UserCircle, Dumbbell, Sun, Moon } from "lucide-react";
 import DailyLogHub from "./components/daily-flow/DailyLogHub";
 import SyncHeader from "./components/SyncHeader";
 import PendingLogs from "./components/PendingLogs";
@@ -9,6 +9,7 @@ import ProfileView from "./components/ProfileView";
 import { useAuth } from "@/core/contexts/AuthContext";
 import { useState, useEffect, useRef } from "react";
 import { useNotifications } from '@/core/hooks/useNotifications';
+import { useTheme } from "@/core/hooks/useTheme";
 import { supabase } from "@/core/lib/supabase";
 import { localDB } from "@/core/lib/db";
 import { getLocalDateStr } from "@/core/lib/utils";
@@ -19,6 +20,7 @@ function App() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [currentTab, setCurrentTab] = useState<Tab>('tracker');
   const { session, loading, signOut, user } = useAuth();
+  const { isDark, toggle } = useTheme();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
@@ -105,6 +107,20 @@ function App() {
               </div>
 
               <div className="px-4 py-3 border-b border-border/50">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2 text-sm text-foreground">
+                    {isDark ? <Moon size={16} className="text-primary" /> : <Sun size={16} className="text-primary" />}
+                    <span>{isDark ? 'Dark Mode' : 'Light Mode'}</span>
+                  </div>
+                  <button
+                    onClick={toggle}
+                    className="relative inline-flex h-5 w-9 items-center rounded-full transition-colors bg-muted hover:bg-muted/80"
+                    aria-label="Toggle theme"
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-primary transition-transform ${isDark ? 'translate-x-4' : 'translate-x-1'} `} />
+                  </button>
+                </div>
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm text-foreground">
                     {remindersEnabled ? <Bell size={16} className="text-primary" /> : <BellOff size={16} className="text-muted-foreground" />}

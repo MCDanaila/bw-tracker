@@ -72,9 +72,9 @@ export function MorningFlowView({ existingData, yesterdayData, last7DaysAvg, onB
             }
 
             // Save smart defaults explicitly for Morning fields
-            const currentDefaultsStr = localStorage.getItem("bw_tracker_smart_defaults");
+            const currentDefaultsStr = localStorage.getItem("leonida_smart_defaults");
             const currentDefaults = currentDefaultsStr ? JSON.parse(currentDefaultsStr) : {};
-            localStorage.setItem("bw_tracker_smart_defaults", JSON.stringify({
+            localStorage.setItem("leonida_smart_defaults", JSON.stringify({
                 ...currentDefaults,
                 weight_fasting: payload.weight_fasting,
                 sleep_hours: payload.sleep_hours,

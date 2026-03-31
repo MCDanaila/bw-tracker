@@ -198,25 +198,25 @@ INSERT INTO public.diet_templates (id, coach_id, name, description, is_active) V
   ('20000000-0000-0000-0000-000000000002', 'f119519c-d96b-496f-89a2-4690406cd2ea', 'Cut Definizione Estiva', 'Template per fase di cut, focus protein high, ~2000 kcal.', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Generic template items for Bulk Massa Pulita (LUN example)
+-- Generic template items for Bulk Massa Pulita (MON example)
 INSERT INTO public.diet_template_items (template_id, day_of_week, meal_name, food_id, target_quantity, sort_order) VALUES
-  ('20000000-0000-0000-0000-000000000001', 'LUN', 'MEAL 1 (PRE)', 'fiocchi_avena',  100, 1),
-  ('20000000-0000-0000-0000-000000000001', 'LUN', 'MEAL 1 (PRE)', 'whey_protein',   30, 2),
-  ('20000000-0000-0000-0000-000000000001', 'LUN', 'MEAL 2',       'riso_basmati',  120, 3),
-  ('20000000-0000-0000-0000-000000000001', 'LUN', 'MEAL 2',       'petto_pollo',   200, 4),
-  ('20000000-0000-0000-0000-000000000001', 'LUN', 'MEAL 3 (POST)', 'banana',        120, 5),
-  ('20000000-0000-0000-0000-000000000001', 'LUN', 'MEAL 4',       'pasta_integrale',120, 6)
+  ('20000000-0000-0000-0000-000000000001', 'MON', 'MEAL 1 (PRE)', 'fiocchi_avena',  100, 1),
+  ('20000000-0000-0000-0000-000000000001', 'MON', 'MEAL 1 (PRE)', 'whey_protein',   30, 2),
+  ('20000000-0000-0000-0000-000000000001', 'MON', 'MEAL 2',       'riso_basmati',  120, 3),
+  ('20000000-0000-0000-0000-000000000001', 'MON', 'MEAL 2',       'petto_pollo',   200, 4),
+  ('20000000-0000-0000-0000-000000000001', 'MON', 'MEAL 3 (POST)', 'banana',        120, 5),
+  ('20000000-0000-0000-0000-000000000001', 'MON', 'MEAL 4',       'pasta_integrale',120, 6)
 ON CONFLICT (id) DO NOTHING;
 
 
 -- ============================================================
 -- 3. MEAL PLANS  (7 days × 5 meals)
 --    Macro targets (cut):  ~2200 kcal, 185g P, 220g C, 65g F
---    Days: LUN MAR MER GIO VEN SAB DOM
+--    Days: MON TUE WED THU FRI SAT SUN
 --    Meals: MEAL 1 (PRE) | MEAL 2 | MEAL 3 | MEAL 4 | MEAL 5
 --
---    Training days (LUN/MAR/MER/GIO/VEN): higher carb
---    Rest days (SAB/DOM): lower carb
+--    Training days (MON/TUE/WED/THU/FRI): higher carb
+--    Rest days (SAT/SUN): lower carb
 -- ============================================================
 
 -- We use deterministic UUIDs so adherence records can reference them reliably.
@@ -227,135 +227,135 @@ DECLARE
   uid UUID := '8ffaf05a-1e08-4ece-a31e-4b69843f2a3d';
 BEGIN
 
--- ── LUNEDÌ (Training — Push) ───────────────────────────────
+-- ── MONEDÌ (Training — Push) ───────────────────────────────
 INSERT INTO meal_plans (id, user_id, day_of_week, meal_name, food_id, target_quantity, created_by) VALUES
-  ('10000001-0000-0000-0000-000000000001', uid, 'LUN', 'MEAL 1 (PRE)', 'fiocchi_avena',      80,  uid),
-  ('10000001-0000-0000-0000-000000000002', uid, 'LUN', 'MEAL 1 (PRE)', 'albumi',            150,  uid),
-  ('10000001-0000-0000-0000-000000000003', uid, 'LUN', 'MEAL 1 (PRE)', 'banana',            100,  uid),
-  ('10000001-0000-0000-0000-000000000004', uid, 'LUN', 'MEAL 2',       'petto_pollo',       180,  uid),
-  ('10000001-0000-0000-0000-000000000005', uid, 'LUN', 'MEAL 2',       'riso_basmati',      100,  uid),
-  ('10000001-0000-0000-0000-000000000006', uid, 'LUN', 'MEAL 2',       'spinaci',           150,  uid),
-  ('10000001-0000-0000-0000-000000000007', uid, 'LUN', 'MEAL 3 (POST)','whey_protein',       40,  uid),
-  ('10000001-0000-0000-0000-000000000008', uid, 'LUN', 'MEAL 3 (POST)','banana',             80,  uid),
-  ('10000001-0000-0000-0000-000000000009', uid, 'LUN', 'MEAL 4',       'petto_pollo',       180,  uid),
-  ('10000001-0000-0000-0000-000000000010', uid, 'LUN', 'MEAL 4',       'patate',            200,  uid),
-  ('10000001-0000-0000-0000-000000000011', uid, 'LUN', 'MEAL 4',       'broccoli',          200,  uid),
-  ('10000001-0000-0000-0000-000000000012', uid, 'LUN', 'MEAL 4',       'olio_oliva',         10,  uid),
-  ('10000001-0000-0000-0000-000000000013', uid, 'LUN', 'MEAL 5 (SERA)','tonno_sgocciolato', 160,  uid),
-  ('10000001-0000-0000-0000-000000000014', uid, 'LUN', 'MEAL 5 (SERA)','yogurt_greco_0',    150,  uid),
-  ('10000001-0000-0000-0000-000000000015', uid, 'LUN', 'MEAL 5 (SERA)','mandorle',           20,  uid)
+  ('10000001-0000-0000-0000-000000000001', uid, 'MON', 'MEAL 1 (PRE)', 'fiocchi_avena',      80,  uid),
+  ('10000001-0000-0000-0000-000000000002', uid, 'MON', 'MEAL 1 (PRE)', 'albumi',            150,  uid),
+  ('10000001-0000-0000-0000-000000000003', uid, 'MON', 'MEAL 1 (PRE)', 'banana',            100,  uid),
+  ('10000001-0000-0000-0000-000000000004', uid, 'MON', 'MEAL 2',       'petto_pollo',       180,  uid),
+  ('10000001-0000-0000-0000-000000000005', uid, 'MON', 'MEAL 2',       'riso_basmati',      100,  uid),
+  ('10000001-0000-0000-0000-000000000006', uid, 'MON', 'MEAL 2',       'spinaci',           150,  uid),
+  ('10000001-0000-0000-0000-000000000007', uid, 'MON', 'MEAL 3 (POST)','whey_protein',       40,  uid),
+  ('10000001-0000-0000-0000-000000000008', uid, 'MON', 'MEAL 3 (POST)','banana',             80,  uid),
+  ('10000001-0000-0000-0000-000000000009', uid, 'MON', 'MEAL 4',       'petto_pollo',       180,  uid),
+  ('10000001-0000-0000-0000-000000000010', uid, 'MON', 'MEAL 4',       'patate',            200,  uid),
+  ('10000001-0000-0000-0000-000000000011', uid, 'MON', 'MEAL 4',       'broccoli',          200,  uid),
+  ('10000001-0000-0000-0000-000000000012', uid, 'MON', 'MEAL 4',       'olio_oliva',         10,  uid),
+  ('10000001-0000-0000-0000-000000000013', uid, 'MON', 'MEAL 5 (SERA)','tonno_sgocciolato', 160,  uid),
+  ('10000001-0000-0000-0000-000000000014', uid, 'MON', 'MEAL 5 (SERA)','yogurt_greco_0',    150,  uid),
+  ('10000001-0000-0000-0000-000000000015', uid, 'MON', 'MEAL 5 (SERA)','mandorle',           20,  uid)
 ON CONFLICT (id) DO UPDATE SET target_quantity = EXCLUDED.target_quantity;
 
 -- ── MARTEDÌ (Training — Pull) ──────────────────────────────
 INSERT INTO meal_plans (id, user_id, day_of_week, meal_name, food_id, target_quantity, created_by) VALUES
-  ('10000002-0000-0000-0000-000000000001', uid, 'MAR', 'MEAL 1 (PRE)', 'fiocchi_avena',      80,  uid),
-  ('10000002-0000-0000-0000-000000000002', uid, 'MAR', 'MEAL 1 (PRE)', 'uova_intere',       150,  uid),
-  ('10000002-0000-0000-0000-000000000003', uid, 'MAR', 'MEAL 1 (PRE)', 'pane_integrale',     60,  uid),
-  ('10000002-0000-0000-0000-000000000004', uid, 'MAR', 'MEAL 2',       'tonno_sgocciolato', 160,  uid),
-  ('10000002-0000-0000-0000-000000000005', uid, 'MAR', 'MEAL 2',       'pasta_integrale',   100,  uid),
-  ('10000002-0000-0000-0000-000000000006', uid, 'MAR', 'MEAL 2',       'zucchine',          150,  uid),
-  ('10000002-0000-0000-0000-000000000007', uid, 'MAR', 'MEAL 3 (POST)','whey_protein',       40,  uid),
-  ('10000002-0000-0000-0000-000000000008', uid, 'MAR', 'MEAL 3 (POST)','latte_parziale',    200,  uid),
-  ('10000002-0000-0000-0000-000000000009', uid, 'MAR', 'MEAL 4',       'salmone',           180,  uid),
-  ('10000002-0000-0000-0000-000000000010', uid, 'MAR', 'MEAL 4',       'riso_basmati',       80,  uid),
-  ('10000002-0000-0000-0000-000000000011', uid, 'MAR', 'MEAL 4',       'spinaci',           150,  uid),
-  ('10000002-0000-0000-0000-000000000012', uid, 'MAR', 'MEAL 4',       'olio_oliva',         10,  uid),
-  ('10000002-0000-0000-0000-000000000013', uid, 'MAR', 'MEAL 5 (SERA)','ricotta_magra',     200,  uid),
-  ('10000002-0000-0000-0000-000000000014', uid, 'MAR', 'MEAL 5 (SERA)','mandorle',           20,  uid),
-  ('10000002-0000-0000-0000-000000000015', uid, 'MAR', 'MEAL 5 (SERA)','mela',              150,  uid)
+  ('10000002-0000-0000-0000-000000000001', uid, 'TUE', 'MEAL 1 (PRE)', 'fiocchi_avena',      80,  uid),
+  ('10000002-0000-0000-0000-000000000002', uid, 'TUE', 'MEAL 1 (PRE)', 'uova_intere',       150,  uid),
+  ('10000002-0000-0000-0000-000000000003', uid, 'TUE', 'MEAL 1 (PRE)', 'pane_integrale',     60,  uid),
+  ('10000002-0000-0000-0000-000000000004', uid, 'TUE', 'MEAL 2',       'tonno_sgocciolato', 160,  uid),
+  ('10000002-0000-0000-0000-000000000005', uid, 'TUE', 'MEAL 2',       'pasta_integrale',   100,  uid),
+  ('10000002-0000-0000-0000-000000000006', uid, 'TUE', 'MEAL 2',       'zucchine',          150,  uid),
+  ('10000002-0000-0000-0000-000000000007', uid, 'TUE', 'MEAL 3 (POST)','whey_protein',       40,  uid),
+  ('10000002-0000-0000-0000-000000000008', uid, 'TUE', 'MEAL 3 (POST)','latte_parziale',    200,  uid),
+  ('10000002-0000-0000-0000-000000000009', uid, 'TUE', 'MEAL 4',       'salmone',           180,  uid),
+  ('10000002-0000-0000-0000-000000000010', uid, 'TUE', 'MEAL 4',       'riso_basmati',       80,  uid),
+  ('10000002-0000-0000-0000-000000000011', uid, 'TUE', 'MEAL 4',       'spinaci',           150,  uid),
+  ('10000002-0000-0000-0000-000000000012', uid, 'TUE', 'MEAL 4',       'olio_oliva',         10,  uid),
+  ('10000002-0000-0000-0000-000000000013', uid, 'TUE', 'MEAL 5 (SERA)','ricotta_magra',     200,  uid),
+  ('10000002-0000-0000-0000-000000000014', uid, 'TUE', 'MEAL 5 (SERA)','mandorle',           20,  uid),
+  ('10000002-0000-0000-0000-000000000015', uid, 'TUE', 'MEAL 5 (SERA)','mela',              150,  uid)
 ON CONFLICT (id) DO UPDATE SET target_quantity = EXCLUDED.target_quantity;
 
 -- ── MERCOLEDÌ (Training — Legs) ────────────────────────────
 INSERT INTO meal_plans (id, user_id, day_of_week, meal_name, food_id, target_quantity, created_by) VALUES
-  ('10000003-0000-0000-0000-000000000001', uid, 'MER', 'MEAL 1 (PRE)', 'fiocchi_avena',      90,  uid),
-  ('10000003-0000-0000-0000-000000000002', uid, 'MER', 'MEAL 1 (PRE)', 'albumi',            200,  uid),
-  ('10000003-0000-0000-0000-000000000003', uid, 'MER', 'MEAL 1 (PRE)', 'banana',            100,  uid),
-  ('10000003-0000-0000-0000-000000000004', uid, 'MER', 'MEAL 2',       'petto_pollo',       200,  uid),
-  ('10000003-0000-0000-0000-000000000005', uid, 'MER', 'MEAL 2',       'riso_basmati',      110,  uid),
-  ('10000003-0000-0000-0000-000000000006', uid, 'MER', 'MEAL 2',       'broccoli',          200,  uid),
-  ('10000003-0000-0000-0000-000000000007', uid, 'MER', 'MEAL 3 (POST)','whey_protein',       40,  uid),
-  ('10000003-0000-0000-0000-000000000008', uid, 'MER', 'MEAL 3 (POST)','banana',            100,  uid),
-  ('10000003-0000-0000-0000-000000000009', uid, 'MER', 'MEAL 4',       'petto_pollo',       180,  uid),
-  ('10000003-0000-0000-0000-000000000010', uid, 'MER', 'MEAL 4',       'patate',            250,  uid),
-  ('10000003-0000-0000-0000-000000000011', uid, 'MER', 'MEAL 4',       'zucchine',          150,  uid),
-  ('10000003-0000-0000-0000-000000000012', uid, 'MER', 'MEAL 4',       'olio_oliva',         10,  uid),
-  ('10000003-0000-0000-0000-000000000013', uid, 'MER', 'MEAL 5 (SERA)','tonno_sgocciolato', 160,  uid),
-  ('10000003-0000-0000-0000-000000000014', uid, 'MER', 'MEAL 5 (SERA)','yogurt_greco_0',    200,  uid),
-  ('10000003-0000-0000-0000-000000000015', uid, 'MER', 'MEAL 5 (SERA)','mandorle',           20,  uid)
+  ('10000003-0000-0000-0000-000000000001', uid, 'WED', 'MEAL 1 (PRE)', 'fiocchi_avena',      90,  uid),
+  ('10000003-0000-0000-0000-000000000002', uid, 'WED', 'MEAL 1 (PRE)', 'albumi',            200,  uid),
+  ('10000003-0000-0000-0000-000000000003', uid, 'WED', 'MEAL 1 (PRE)', 'banana',            100,  uid),
+  ('10000003-0000-0000-0000-000000000004', uid, 'WED', 'MEAL 2',       'petto_pollo',       200,  uid),
+  ('10000003-0000-0000-0000-000000000005', uid, 'WED', 'MEAL 2',       'riso_basmati',      110,  uid),
+  ('10000003-0000-0000-0000-000000000006', uid, 'WED', 'MEAL 2',       'broccoli',          200,  uid),
+  ('10000003-0000-0000-0000-000000000007', uid, 'WED', 'MEAL 3 (POST)','whey_protein',       40,  uid),
+  ('10000003-0000-0000-0000-000000000008', uid, 'WED', 'MEAL 3 (POST)','banana',            100,  uid),
+  ('10000003-0000-0000-0000-000000000009', uid, 'WED', 'MEAL 4',       'petto_pollo',       180,  uid),
+  ('10000003-0000-0000-0000-000000000010', uid, 'WED', 'MEAL 4',       'patate',            250,  uid),
+  ('10000003-0000-0000-0000-000000000011', uid, 'WED', 'MEAL 4',       'zucchine',          150,  uid),
+  ('10000003-0000-0000-0000-000000000012', uid, 'WED', 'MEAL 4',       'olio_oliva',         10,  uid),
+  ('10000003-0000-0000-0000-000000000013', uid, 'WED', 'MEAL 5 (SERA)','tonno_sgocciolato', 160,  uid),
+  ('10000003-0000-0000-0000-000000000014', uid, 'WED', 'MEAL 5 (SERA)','yogurt_greco_0',    200,  uid),
+  ('10000003-0000-0000-0000-000000000015', uid, 'WED', 'MEAL 5 (SERA)','mandorle',           20,  uid)
 ON CONFLICT (id) DO UPDATE SET target_quantity = EXCLUDED.target_quantity;
 
 -- ── GIOVEDÌ (Training — Push) ──────────────────────────────
 INSERT INTO meal_plans (id, user_id, day_of_week, meal_name, food_id, target_quantity, created_by) VALUES
-  ('10000004-0000-0000-0000-000000000001', uid, 'GIO', 'MEAL 1 (PRE)', 'fiocchi_avena',      80,  uid),
-  ('10000004-0000-0000-0000-000000000002', uid, 'GIO', 'MEAL 1 (PRE)', 'albumi',            150,  uid),
-  ('10000004-0000-0000-0000-000000000003', uid, 'GIO', 'MEAL 1 (PRE)', 'mela',              150,  uid),
-  ('10000004-0000-0000-0000-000000000004', uid, 'GIO', 'MEAL 2',       'petto_pollo',       180,  uid),
-  ('10000004-0000-0000-0000-000000000005', uid, 'GIO', 'MEAL 2',       'pasta_integrale',   100,  uid),
-  ('10000004-0000-0000-0000-000000000006', uid, 'GIO', 'MEAL 2',       'spinaci',           150,  uid),
-  ('10000004-0000-0000-0000-000000000007', uid, 'GIO', 'MEAL 3 (POST)','whey_protein',       40,  uid),
-  ('10000004-0000-0000-0000-000000000008', uid, 'GIO', 'MEAL 3 (POST)','banana',             80,  uid),
-  ('10000004-0000-0000-0000-000000000009', uid, 'GIO', 'MEAL 4',       'salmone',           180,  uid),
-  ('10000004-0000-0000-0000-000000000010', uid, 'GIO', 'MEAL 4',       'riso_basmati',       90,  uid),
-  ('10000004-0000-0000-0000-000000000011', uid, 'GIO', 'MEAL 4',       'broccoli',          200,  uid),
-  ('10000004-0000-0000-0000-000000000012', uid, 'GIO', 'MEAL 4',       'olio_oliva',         10,  uid),
-  ('10000004-0000-0000-0000-000000000013', uid, 'GIO', 'MEAL 5 (SERA)','ricotta_magra',     200,  uid),
-  ('10000004-0000-0000-0000-000000000014', uid, 'GIO', 'MEAL 5 (SERA)','mandorle',           20,  uid),
-  ('10000004-0000-0000-0000-000000000015', uid, 'GIO', 'MEAL 5 (SERA)','mela',              150,  uid)
+  ('10000004-0000-0000-0000-000000000001', uid, 'THU', 'MEAL 1 (PRE)', 'fiocchi_avena',      80,  uid),
+  ('10000004-0000-0000-0000-000000000002', uid, 'THU', 'MEAL 1 (PRE)', 'albumi',            150,  uid),
+  ('10000004-0000-0000-0000-000000000003', uid, 'THU', 'MEAL 1 (PRE)', 'mela',              150,  uid),
+  ('10000004-0000-0000-0000-000000000004', uid, 'THU', 'MEAL 2',       'petto_pollo',       180,  uid),
+  ('10000004-0000-0000-0000-000000000005', uid, 'THU', 'MEAL 2',       'pasta_integrale',   100,  uid),
+  ('10000004-0000-0000-0000-000000000006', uid, 'THU', 'MEAL 2',       'spinaci',           150,  uid),
+  ('10000004-0000-0000-0000-000000000007', uid, 'THU', 'MEAL 3 (POST)','whey_protein',       40,  uid),
+  ('10000004-0000-0000-0000-000000000008', uid, 'THU', 'MEAL 3 (POST)','banana',             80,  uid),
+  ('10000004-0000-0000-0000-000000000009', uid, 'THU', 'MEAL 4',       'salmone',           180,  uid),
+  ('10000004-0000-0000-0000-000000000010', uid, 'THU', 'MEAL 4',       'riso_basmati',       90,  uid),
+  ('10000004-0000-0000-0000-000000000011', uid, 'THU', 'MEAL 4',       'broccoli',          200,  uid),
+  ('10000004-0000-0000-0000-000000000012', uid, 'THU', 'MEAL 4',       'olio_oliva',         10,  uid),
+  ('10000004-0000-0000-0000-000000000013', uid, 'THU', 'MEAL 5 (SERA)','ricotta_magra',     200,  uid),
+  ('10000004-0000-0000-0000-000000000014', uid, 'THU', 'MEAL 5 (SERA)','mandorle',           20,  uid),
+  ('10000004-0000-0000-0000-000000000015', uid, 'THU', 'MEAL 5 (SERA)','mela',              150,  uid)
 ON CONFLICT (id) DO UPDATE SET target_quantity = EXCLUDED.target_quantity;
 
 -- ── VENERDÌ (Training — Pull) ──────────────────────────────
 INSERT INTO meal_plans (id, user_id, day_of_week, meal_name, food_id, target_quantity, created_by) VALUES
-  ('10000005-0000-0000-0000-000000000001', uid, 'VEN', 'MEAL 1 (PRE)', 'fiocchi_avena',      80,  uid),
-  ('10000005-0000-0000-0000-000000000002', uid, 'VEN', 'MEAL 1 (PRE)', 'uova_intere',       150,  uid),
-  ('10000005-0000-0000-0000-000000000003', uid, 'VEN', 'MEAL 1 (PRE)', 'pane_integrale',     60,  uid),
-  ('10000005-0000-0000-0000-000000000004', uid, 'VEN', 'MEAL 2',       'petto_pollo',       180,  uid),
-  ('10000005-0000-0000-0000-000000000005', uid, 'VEN', 'MEAL 2',       'riso_basmati',       90,  uid),
-  ('10000005-0000-0000-0000-000000000006', uid, 'VEN', 'MEAL 2',       'zucchine',          150,  uid),
-  ('10000005-0000-0000-0000-000000000007', uid, 'VEN', 'MEAL 3 (POST)','whey_protein',       40,  uid),
-  ('10000005-0000-0000-0000-000000000008', uid, 'VEN', 'MEAL 3 (POST)','latte_parziale',    200,  uid),
-  ('10000005-0000-0000-0000-000000000009', uid, 'VEN', 'MEAL 4',       'tonno_sgocciolato', 160,  uid),
-  ('10000005-0000-0000-0000-000000000010', uid, 'VEN', 'MEAL 4',       'patate',            200,  uid),
-  ('10000005-0000-0000-0000-000000000011', uid, 'VEN', 'MEAL 4',       'spinaci',           150,  uid),
-  ('10000005-0000-0000-0000-000000000012', uid, 'VEN', 'MEAL 4',       'olio_oliva',         10,  uid),
-  ('10000005-0000-0000-0000-000000000013', uid, 'VEN', 'MEAL 5 (SERA)','yogurt_greco_0',    200,  uid),
-  ('10000005-0000-0000-0000-000000000014', uid, 'VEN', 'MEAL 5 (SERA)','mandorle',           20,  uid),
-  ('10000005-0000-0000-0000-000000000015', uid, 'VEN', 'MEAL 5 (SERA)','mela',              150,  uid)
+  ('10000005-0000-0000-0000-000000000001', uid, 'FRI', 'MEAL 1 (PRE)', 'fiocchi_avena',      80,  uid),
+  ('10000005-0000-0000-0000-000000000002', uid, 'FRI', 'MEAL 1 (PRE)', 'uova_intere',       150,  uid),
+  ('10000005-0000-0000-0000-000000000003', uid, 'FRI', 'MEAL 1 (PRE)', 'pane_integrale',     60,  uid),
+  ('10000005-0000-0000-0000-000000000004', uid, 'FRI', 'MEAL 2',       'petto_pollo',       180,  uid),
+  ('10000005-0000-0000-0000-000000000005', uid, 'FRI', 'MEAL 2',       'riso_basmati',       90,  uid),
+  ('10000005-0000-0000-0000-000000000006', uid, 'FRI', 'MEAL 2',       'zucchine',          150,  uid),
+  ('10000005-0000-0000-0000-000000000007', uid, 'FRI', 'MEAL 3 (POST)','whey_protein',       40,  uid),
+  ('10000005-0000-0000-0000-000000000008', uid, 'FRI', 'MEAL 3 (POST)','latte_parziale',    200,  uid),
+  ('10000005-0000-0000-0000-000000000009', uid, 'FRI', 'MEAL 4',       'tonno_sgocciolato', 160,  uid),
+  ('10000005-0000-0000-0000-000000000010', uid, 'FRI', 'MEAL 4',       'patate',            200,  uid),
+  ('10000005-0000-0000-0000-000000000011', uid, 'FRI', 'MEAL 4',       'spinaci',           150,  uid),
+  ('10000005-0000-0000-0000-000000000012', uid, 'FRI', 'MEAL 4',       'olio_oliva',         10,  uid),
+  ('10000005-0000-0000-0000-000000000013', uid, 'FRI', 'MEAL 5 (SERA)','yogurt_greco_0',    200,  uid),
+  ('10000005-0000-0000-0000-000000000014', uid, 'FRI', 'MEAL 5 (SERA)','mandorle',           20,  uid),
+  ('10000005-0000-0000-0000-000000000015', uid, 'FRI', 'MEAL 5 (SERA)','mela',              150,  uid)
 ON CONFLICT (id) DO UPDATE SET target_quantity = EXCLUDED.target_quantity;
 
 -- ── SABATO (Rest — lower carb) ─────────────────────────────
 INSERT INTO meal_plans (id, user_id, day_of_week, meal_name, food_id, target_quantity, created_by) VALUES
-  ('10000006-0000-0000-0000-000000000001', uid, 'SAB', 'MEAL 1',       'uova_intere',       200,  uid),
-  ('10000006-0000-0000-0000-000000000002', uid, 'SAB', 'MEAL 1',       'pane_integrale',     60,  uid),
-  ('10000006-0000-0000-0000-000000000003', uid, 'SAB', 'MEAL 2',       'petto_pollo',       200,  uid),
-  ('10000006-0000-0000-0000-000000000004', uid, 'SAB', 'MEAL 2',       'spinaci',           200,  uid),
-  ('10000006-0000-0000-0000-000000000005', uid, 'SAB', 'MEAL 2',       'olio_oliva',         15,  uid),
-  ('10000006-0000-0000-0000-000000000006', uid, 'SAB', 'MEAL 3',       'tonno_sgocciolato', 160,  uid),
-  ('10000006-0000-0000-0000-000000000007', uid, 'SAB', 'MEAL 3',       'ricotta_magra',     150,  uid),
-  ('10000006-0000-0000-0000-000000000008', uid, 'SAB', 'MEAL 3',       'mela',              150,  uid),
-  ('10000006-0000-0000-0000-000000000009', uid, 'SAB', 'MEAL 4',       'salmone',           180,  uid),
-  ('10000006-0000-0000-0000-000000000010', uid, 'SAB', 'MEAL 4',       'broccoli',          250,  uid),
-  ('10000006-0000-0000-0000-000000000011', uid, 'SAB', 'MEAL 4',       'olio_oliva',         12,  uid),
-  ('10000006-0000-0000-0000-000000000012', uid, 'SAB', 'MEAL 5 (SERA)','yogurt_greco_0',    200,  uid),
-  ('10000006-0000-0000-0000-000000000013', uid, 'SAB', 'MEAL 5 (SERA)','mandorle',           25,  uid)
+  ('10000006-0000-0000-0000-000000000001', uid, 'SAT', 'MEAL 1',       'uova_intere',       200,  uid),
+  ('10000006-0000-0000-0000-000000000002', uid, 'SAT', 'MEAL 1',       'pane_integrale',     60,  uid),
+  ('10000006-0000-0000-0000-000000000003', uid, 'SAT', 'MEAL 2',       'petto_pollo',       200,  uid),
+  ('10000006-0000-0000-0000-000000000004', uid, 'SAT', 'MEAL 2',       'spinaci',           200,  uid),
+  ('10000006-0000-0000-0000-000000000005', uid, 'SAT', 'MEAL 2',       'olio_oliva',         15,  uid),
+  ('10000006-0000-0000-0000-000000000006', uid, 'SAT', 'MEAL 3',       'tonno_sgocciolato', 160,  uid),
+  ('10000006-0000-0000-0000-000000000007', uid, 'SAT', 'MEAL 3',       'ricotta_magra',     150,  uid),
+  ('10000006-0000-0000-0000-000000000008', uid, 'SAT', 'MEAL 3',       'mela',              150,  uid),
+  ('10000006-0000-0000-0000-000000000009', uid, 'SAT', 'MEAL 4',       'salmone',           180,  uid),
+  ('10000006-0000-0000-0000-000000000010', uid, 'SAT', 'MEAL 4',       'broccoli',          250,  uid),
+  ('10000006-0000-0000-0000-000000000011', uid, 'SAT', 'MEAL 4',       'olio_oliva',         12,  uid),
+  ('10000006-0000-0000-0000-000000000012', uid, 'SAT', 'MEAL 5 (SERA)','yogurt_greco_0',    200,  uid),
+  ('10000006-0000-0000-0000-000000000013', uid, 'SAT', 'MEAL 5 (SERA)','mandorle',           25,  uid)
 ON CONFLICT (id) DO UPDATE SET target_quantity = EXCLUDED.target_quantity;
 
 -- ── DOMENICA (Rest — refeed optional) ─────────────────────
 INSERT INTO meal_plans (id, user_id, day_of_week, meal_name, food_id, target_quantity, created_by) VALUES
-  ('10000007-0000-0000-0000-000000000001', uid, 'DOM', 'MEAL 1',       'fiocchi_avena',      70,  uid),
-  ('10000007-0000-0000-0000-000000000002', uid, 'DOM', 'MEAL 1',       'latte_parziale',    200,  uid),
-  ('10000007-0000-0000-0000-000000000003', uid, 'DOM', 'MEAL 1',       'banana',            100,  uid),
-  ('10000007-0000-0000-0000-000000000004', uid, 'DOM', 'MEAL 2',       'petto_pollo',       200,  uid),
-  ('10000007-0000-0000-0000-000000000005', uid, 'DOM', 'MEAL 2',       'riso_basmati',       80,  uid),
-  ('10000007-0000-0000-0000-000000000006', uid, 'DOM', 'MEAL 2',       'zucchine',          150,  uid),
-  ('10000007-0000-0000-0000-000000000007', uid, 'DOM', 'MEAL 2',       'olio_oliva',         10,  uid),
-  ('10000007-0000-0000-0000-000000000008', uid, 'DOM', 'MEAL 3',       'tonno_sgocciolato', 160,  uid),
-  ('10000007-0000-0000-0000-000000000009', uid, 'DOM', 'MEAL 3',       'yogurt_greco_0',    150,  uid),
-  ('10000007-0000-0000-0000-000000000010', uid, 'DOM', 'MEAL 3',       'mela',              150,  uid),
-  ('10000007-0000-0000-0000-000000000011', uid, 'DOM', 'MEAL 4',       'salmone',           200,  uid),
-  ('10000007-0000-0000-0000-000000000012', uid, 'DOM', 'MEAL 4',       'patate',            180,  uid),
-  ('10000007-0000-0000-0000-000000000013', uid, 'DOM', 'MEAL 4',       'broccoli',          200,  uid),
-  ('10000007-0000-0000-0000-000000000014', uid, 'DOM', 'MEAL 4',       'olio_oliva',         10,  uid),
-  ('10000007-0000-0000-0000-000000000015', uid, 'DOM', 'MEAL 5 (SERA)','ricotta_magra',     200,  uid)
+  ('10000007-0000-0000-0000-000000000001', uid, 'SUN', 'MEAL 1',       'fiocchi_avena',      70,  uid),
+  ('10000007-0000-0000-0000-000000000002', uid, 'SUN', 'MEAL 1',       'latte_parziale',    200,  uid),
+  ('10000007-0000-0000-0000-000000000003', uid, 'SUN', 'MEAL 1',       'banana',            100,  uid),
+  ('10000007-0000-0000-0000-000000000004', uid, 'SUN', 'MEAL 2',       'petto_pollo',       200,  uid),
+  ('10000007-0000-0000-0000-000000000005', uid, 'SUN', 'MEAL 2',       'riso_basmati',       80,  uid),
+  ('10000007-0000-0000-0000-000000000006', uid, 'SUN', 'MEAL 2',       'zucchine',          150,  uid),
+  ('10000007-0000-0000-0000-000000000007', uid, 'SUN', 'MEAL 2',       'olio_oliva',         10,  uid),
+  ('10000007-0000-0000-0000-000000000008', uid, 'SUN', 'MEAL 3',       'tonno_sgocciolato', 160,  uid),
+  ('10000007-0000-0000-0000-000000000009', uid, 'SUN', 'MEAL 3',       'yogurt_greco_0',    150,  uid),
+  ('10000007-0000-0000-0000-000000000010', uid, 'SUN', 'MEAL 3',       'mela',              150,  uid),
+  ('10000007-0000-0000-0000-000000000011', uid, 'SUN', 'MEAL 4',       'salmone',           200,  uid),
+  ('10000007-0000-0000-0000-000000000012', uid, 'SUN', 'MEAL 4',       'patate',            180,  uid),
+  ('10000007-0000-0000-0000-000000000013', uid, 'SUN', 'MEAL 4',       'broccoli',          200,  uid),
+  ('10000007-0000-0000-0000-000000000014', uid, 'SUN', 'MEAL 4',       'olio_oliva',         10,  uid),
+  ('10000007-0000-0000-0000-000000000015', uid, 'SUN', 'MEAL 5 (SERA)','ricotta_magra',     200,  uid)
 ON CONFLICT (id) DO UPDATE SET target_quantity = EXCLUDED.target_quantity;
 
 END $$;
@@ -366,13 +366,13 @@ END $$;
 --
 --    Base date: TODAY - 90 days
 --    Weekly pattern (0=Mon … 6=Sun):
---      0 LUN → Push  ✓ gym
---      1 MAR → Pull  ✓ gym
---      2 MER → Legs  ✓ gym
---      3 GIO → Push  ✓ gym
---      4 VEN → Pull  ✓ gym
---      5 SAB → REST
---      6 DOM → REST
+--      0 MON → Push  ✓ gym
+--      1 TUE → Pull  ✓ gym
+--      2 WED → Legs  ✓ gym
+--      3 THU → Push  ✓ gym
+--      4 FRI → Pull  ✓ gym
+--      5 SAT → REST
+--      6 SUN → REST
 --
 --    Weight: 82.0 → ~79.0 over 90 days + ±0.4 daily noise
 --    HRV:    55–72 baseline ± noise, dips after hard days
@@ -432,7 +432,7 @@ DECLARE
     'Un po'' stanco, ma allenamento completato',
     'Sonno scarso ieri, energie al minimo',
     'Peso stabile, dieta rispettata',
-    'Bella giornata, passo lungo',
+    'Bella giornata, passo MONgo',
     'Crampi al polpaccio durante squat',
     'Nuovo PR alla panca piana',
     'Weekend fuori città, passi alti',
@@ -686,19 +686,19 @@ DECLARE
   meals_completed INTEGER;
 
   -- Map Postgres DOW to Italian day codes
-  dow_map   TEXT[]  := ARRAY['DOM','LUN','MAR','MER','GIO','VEN','SAB'];  -- index 0=Sun
+  dow_map   TEXT[]  := ARRAY['SUN','MON','TUE','WED','THU','FRI','SAT'];  -- index 0=Sun
 
   day_code  TEXT;
   mp_id     UUID;
   meal_seq  INTEGER;  -- 1..15 rows per day
 
   -- Meal plan ID prefix table (deterministic UUIDs from section 3)
-  -- prefix_map[1]=LUN … prefix_map[7]=DOM
+  -- prefix_map[1]=MON … prefix_map[7]=SUN
   prefix_map TEXT[] := ARRAY[
     '10000001','10000002','10000003','10000004','10000005','10000006','10000007'
   ];
   prefix TEXT;
-  -- LUN/MAR/MER/GIO/VEN have 15 rows; SAB has 13; DOM has 15
+  -- MON/TUE/WED/THU/FRI have 15 rows; SAT has 13; SUN has 15
   row_count INTEGER;
 BEGIN
   FOR i IN 0..29 LOOP
@@ -721,18 +721,18 @@ BEGIN
       ELSE                                    8   -- cheat: roughly half
     END;
 
-    -- Map day_code to prefix index (LUN=1 … DOM=7)
+    -- Map day_code to prefix index (MON=1 … SUN=7)
     prefix := CASE day_code
-      WHEN 'LUN' THEN prefix_map[1]
-      WHEN 'MAR' THEN prefix_map[2]
-      WHEN 'MER' THEN prefix_map[3]
-      WHEN 'GIO' THEN prefix_map[4]
-      WHEN 'VEN' THEN prefix_map[5]
-      WHEN 'SAB' THEN prefix_map[6]
-      WHEN 'DOM' THEN prefix_map[7]
+      WHEN 'MON' THEN prefix_map[1]
+      WHEN 'TUE' THEN prefix_map[2]
+      WHEN 'WED' THEN prefix_map[3]
+      WHEN 'THU' THEN prefix_map[4]
+      WHEN 'FRI' THEN prefix_map[5]
+      WHEN 'SAT' THEN prefix_map[6]
+      WHEN 'SUN' THEN prefix_map[7]
     END;
 
-    row_count := CASE day_code WHEN 'SAB' THEN 13 ELSE 15 END;
+    row_count := CASE day_code WHEN 'SAT' THEN 13 ELSE 15 END;
 
     FOR meal_seq IN 1..row_count LOOP
       mp_id := (prefix || '-0000-0000-0000-' || LPAD(meal_seq::TEXT, 12, '0'))::UUID;
@@ -799,9 +799,9 @@ BEGIN
     FOR i IN 0..6 LOOP
       INSERT INTO meal_plans (user_id, day_of_week, meal_name, food_id, target_quantity, created_by)
       VALUES 
-        (u, (ARRAY['LUN','MAR','MER','GIO','VEN','SAB','DOM'])[i+1], 'Pasto 1', 'fiocchi_avena', 80, u),
-        (u, (ARRAY['LUN','MAR','MER','GIO','VEN','SAB','DOM'])[i+1], 'Pasto 2', 'petto_pollo', 150, u),
-        (u, (ARRAY['LUN','MAR','MER','GIO','VEN','SAB','DOM'])[i+1], 'Pasto 3', 'riso_basmati', 100, u)
+        (u, (ARRAY['MON','TUE','WED','THU','FRI','SAT','SUN'])[i+1], 'Pasto 1', 'fiocchi_avena', 80, u),
+        (u, (ARRAY['MON','TUE','WED','THU','FRI','SAT','SUN'])[i+1], 'Pasto 2', 'petto_pollo', 150, u),
+        (u, (ARRAY['MON','TUE','WED','THU','FRI','SAT','SUN'])[i+1], 'Pasto 3', 'riso_basmati', 100, u)
       ON CONFLICT DO NOTHING;
     END LOOP;
 
@@ -838,7 +838,7 @@ BEGIN
       INSERT INTO meal_adherence (user_id, date, meal_plan_id, is_completed)
       SELECT u, d, id, true
       FROM meal_plans
-      WHERE user_id = u AND day_of_week = (ARRAY['DOM','LUN','MAR','MER','GIO','VEN','SAB'])[EXTRACT(DOW FROM d)::INTEGER + 1]
+      WHERE user_id = u AND day_of_week = (ARRAY['SUN','MON','TUE','WED','THU','FRI','SAT'])[EXTRACT(DOW FROM d)::INTEGER + 1]
       ON CONFLICT DO NOTHING;
     END LOOP;
 

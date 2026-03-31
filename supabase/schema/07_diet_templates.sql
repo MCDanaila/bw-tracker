@@ -17,7 +17,7 @@ CREATE TABLE diet_template_items (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   template_id UUID NOT NULL REFERENCES diet_templates(id) ON DELETE CASCADE,
   day_of_week TEXT NOT NULL
-    CHECK (day_of_week IN ('LUN','MAR','MER','GIO','VEN','SAB','DOM')),
+    CHECK (day_of_week IN ('MON','TUE','WED','THU','FRI','SAT','SUN')),
   meal_name TEXT NOT NULL,
   food_id TEXT REFERENCES foods(id),
   target_quantity NUMERIC NOT NULL DEFAULT 0,

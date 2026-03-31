@@ -50,7 +50,7 @@ export default function DailyLogHub() {
                     setTodayLog(supabaseToday as DailyLog);
                     setPendingDefaults(null);
                 } else {
-                    const smartDefaultsJson = localStorage.getItem("bw_tracker_smart_defaults");
+                    const smartDefaultsJson = localStorage.getItem("leonida_smart_defaults");
                     if (smartDefaultsJson) {
                         try {
                             const parsed = JSON.parse(smartDefaultsJson);

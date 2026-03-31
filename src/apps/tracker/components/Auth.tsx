@@ -1,3 +1,8 @@
+/**
+ * @deprecated This component is no longer used.
+ * Login is now handled by /login route (src/apps/public/LoginPage.tsx).
+ * This file is kept temporarily to avoid breaking git history.
+ */
 import { useState } from 'react';
 import { supabase } from '@/core/lib/supabase';
 import { Mail, Lock, LogIn, UserPlus } from 'lucide-react';
@@ -46,7 +51,7 @@ export default function Auth() {
         <div className="min-h-screen bg-background flex flex-col justify-center items-center p-4">
             <div className="w-full max-w-md bg-card rounded-2xl shadow-sm border border-border/50 p-8 text-card-foreground">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-foreground mb-2">BW Tracker</h1>
+                    <h1 className="text-3xl font-bold text-foreground mb-2">Leonida</h1>
                     <p className="text-muted-foreground">
                         {isLogin ? 'Welcome back! Please sign in.' : 'Create your account.'}
                     </p>

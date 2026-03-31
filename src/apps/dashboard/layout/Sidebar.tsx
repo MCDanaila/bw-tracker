@@ -16,7 +16,7 @@ export function Sidebar({ collapsed }: SidebarProps) {
       {/* Logo */}
       <div className={`flex items-center gap-2 border-b border-border px-4 py-4 ${collapsed ? 'justify-center' : ''}`}>
         <Activity size={24} className="text-primary shrink-0" />
-        {!collapsed && <span className="text-lg font-bold">BW Tracker</span>}
+        {!collapsed && <span className="text-lg font-bold">Leonida</span>}
       </div>
 
       {/* Athlete Selector (coach only, full sidebar only) */}

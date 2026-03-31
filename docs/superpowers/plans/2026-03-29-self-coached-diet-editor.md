@@ -199,7 +199,7 @@ Navigate to **Diet** in the dashboard sidebar.
 
 Verify:
 1. Page title shows "My Diet Plan" (not "Diet Templates")
-2. Day tabs (LUN–DOM) are visible
+2. Day tabs (MON-SUN) are visible
 3. **"Add Meal" button** appears at the bottom of each day tab
 4. If existing meal plan rows exist: they are shown with edit controls (rename, delete, add food, quantity inputs)
 5. **"Save Changes"** button appears in the top-right of the editor (enabled when dirty)

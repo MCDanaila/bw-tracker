@@ -14,6 +14,23 @@ export interface UserProfile {
     salt_goal: number | null;
     email: string | null;
     role: 'athlete' | 'self_coached' | 'coach';
+    // Onboarding fields
+    plan: 'self_coached' | 'self_coached_ai' | 'coach' | 'coach_pro';
+    ai_enabled: boolean;
+    dob: string | null;
+    goal_rate: 'conservative' | 'moderate' | 'aggressive';
+    gym_days_per_week: number | null;
+}
+
+export interface Invitation {
+    id: string;
+    coach_id: string;
+    invitee_email: string;
+    token: string;
+    status: 'pending' | 'accepted' | 'expired' | 'cancelled';
+    created_at: string;
+    expires_at: string;
+    coach_name?: string; // Not a DB column, may be joined
 }
 
 export interface Food {
@@ -34,7 +51,7 @@ export interface Food {
 export interface MealPlan {
     id: string;
     user_id: string;
-    day_of_week: 'LUN' | 'MAR' | 'MER' | 'GIO' | 'VEN' | 'SAB' | 'DOM';
+    day_of_week: 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
     meal_name: string;
     food_id: string | null;
     target_quantity: number;
@@ -59,7 +76,7 @@ export interface DietTemplate {
 export interface DietTemplateItem {
     id: string;
     template_id: string;
-    day_of_week: 'LUN' | 'MAR' | 'MER' | 'GIO' | 'VEN' | 'SAB' | 'DOM';
+    day_of_week: 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
     meal_name: string;
     food_id: string | null;
     target_quantity: number;
@@ -163,6 +180,8 @@ export interface AthleteGoal {
 export interface AthletePreferences {
     athlete_id: string;
     set_by: string;
+    diet_framework: 'omnivore' | 'pescatarian' | 'vegetarian' | 'vegan';
+    meal_frequency: number;
     allergies: string[];
     intolerances: string[];
     dietary_restrictions: string[];

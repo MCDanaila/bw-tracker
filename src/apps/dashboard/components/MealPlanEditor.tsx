@@ -9,7 +9,7 @@ import { MacroSummaryBar } from './MacroSummaryBar';
 import { CopyDayDialog } from './CopyDayDialog';
 import FoodSearchModal from '@/apps/tracker/components/diet/FoodSearchModal';
 
-const DAYS = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'] as const;
+const DAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'] as const;
 
 interface MealPlanEditorProps {
   templateId: string;
@@ -20,7 +20,7 @@ interface MealPlanEditorProps {
 
 export function MealPlanEditor({ templateId, items: initialItems, onSave, readOnly }: MealPlanEditorProps) {
   const [localItems, setLocalItems] = useState<Array<DietTemplateItem & { foods?: Food | null }>>(initialItems);
-  const [activeDay, setActiveDay] = useState<string>('LUN');
+  const [activeDay, setActiveDay] = useState<string>('MON');
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [copyDayOpen, setCopyDayOpen] = useState(false);

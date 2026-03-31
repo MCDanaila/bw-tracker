@@ -71,9 +71,9 @@ export function TrainingFlowView({ existingData, yesterdayData, onBack, onSave }
             }
 
             // Save smart defaults explicitly for Training fields (e.g. steps)
-            const currentDefaultsStr = localStorage.getItem("bw_tracker_smart_defaults");
+            const currentDefaultsStr = localStorage.getItem("leonida_smart_defaults");
             const currentDefaults = currentDefaultsStr ? JSON.parse(currentDefaultsStr) : {};
-            localStorage.setItem("bw_tracker_smart_defaults", JSON.stringify({
+            localStorage.setItem("leonida_smart_defaults", JSON.stringify({
                 ...currentDefaults,
                 steps: payload.steps,
             }));

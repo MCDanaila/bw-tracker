@@ -2,6 +2,15 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource/newsreader";
+@import "@fontsource-variable/source-serif-4";
+@import "@fontsource/jetbrains-mono";
+
+@theme {
+  --font-display: 'Newsreader', Georgia, serif;
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --font-mono-manifesto: 'JetBrains Mono', 'Courier New', monospace;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -142,10 +151,12 @@ body {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
   }
 
   body {
     @apply bg-background text-foreground;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   }
 
   html {

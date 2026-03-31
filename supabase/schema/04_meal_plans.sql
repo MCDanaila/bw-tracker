@@ -8,7 +8,7 @@ CREATE TABLE meal_plans (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   day_of_week TEXT NOT NULL
-    CHECK (day_of_week IN ('LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM')),
+    CHECK (day_of_week IN ('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN')),
   meal_name TEXT NOT NULL,
   food_id TEXT REFERENCES foods(id) ON DELETE SET NULL,
   target_quantity NUMERIC NOT NULL,

@@ -30,14 +30,14 @@ export function useNotifications() {
         if (enabled && permission === 'granted') {
             if ('serviceWorker' in navigator) {
                 const registration = await navigator.serviceWorker.ready;
-                registration.showNotification('BW Tracker', {
+                registration.showNotification('Leonida', {
                     body: "Don't forget to log your weight and daily metrics today!",
                     icon: '/pwa-192x192.png',
                     vibrate: [200, 100, 200],
                     tag: 'daily-reminder',
                 } as NotificationOptions);
             } else {
-                new Notification('BW Tracker', {
+                new Notification('Leonida', {
                     body: "Don't forget to log your weight and daily metrics today!",
                     icon: '/pwa-192x192.png'
                 });

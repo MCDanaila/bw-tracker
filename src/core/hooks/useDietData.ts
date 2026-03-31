@@ -4,7 +4,7 @@ import { useAuth } from '@/core/contexts/AuthContext';
 import type { MealPlan } from '@/core/types/database';
 import { calculateItemMacros } from '@/core/lib/mealMacros';
 
-export type DayOfWeek = 'LUN' | 'MAR' | 'MER' | 'GIO' | 'VEN' | 'SAB' | 'DOM';
+export type DayOfWeek = 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
 
 export interface DailyMacros {
     day: DayOfWeek;
@@ -67,7 +67,7 @@ export const useDietData = (userId?: string) => {
 };
 
 export const useWeeklyOverview = (mealPlans: MealPlan[] = []) => {
-    const days: DayOfWeek[] = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'];
+    const days: DayOfWeek[] = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
     // Initialize empty week
     const defaultDay = (day: DayOfWeek): DailyMacros => ({

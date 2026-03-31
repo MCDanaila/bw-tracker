@@ -10,7 +10,7 @@ export default function DietView() {
 
     // Get current day of week in Italian abbreviation
     const getCurrentDayOfWeek = (): DayOfWeek => {
-        const days: DayOfWeek[] = ['DOM', 'LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB'];
+        const days: DayOfWeek[] = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
         const date = new Date();
         // getDay() returns 0 for Sunday
         return days[date.getDay()];

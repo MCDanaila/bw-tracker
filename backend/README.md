@@ -6,18 +6,32 @@ FastAPI backend service for bw-tracker, handling AI operations, transactional mu
 
 ### Prerequisites
 - Python 3.11+
-- pip or uv
+- [uv](https://docs.astral.sh/uv/) (recommended) or pip
 
 ### Installation
+
+**With uv (recommended):**
 
 ```bash
 cd backend
 
-# Install in development mode
-pip install -e .
+# Create and activate a virtual environment
+uv venv
+source .venv/bin/activate   # macOS/Linux
+# .venv\Scripts\activate    # Windows
 
-# Or with uv
+# Install dependencies
 uv pip install -e .
+```
+
+**With pip:**
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate   # macOS/Linux
+# .venv\Scripts\activate    # Windows
+pip install -e .
 ```
 
 ### Configuration
@@ -31,17 +45,30 @@ cp .env.example .env
 Required environment variables:
 - `SUPABASE_URL` — Your Supabase project URL
 - `SUPABASE_SERVICE_ROLE_KEY` — Service role key (from Supabase dashboard)
+- `SUPABASE_JWT_SECRET` — JWT secret (from Supabase dashboard → Project Settings → API → JWT Secret)
 - `GEMINI_API_KEY` — Google Gemini API key
 - `FRONTEND_URL` — Frontend URL (for CORS, default: http://localhost:3000)
 
 ### Running Locally
 
-```bash
-# Start the development server
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+Run from inside the `backend/` directory. Make sure the venv is active first:
 
-# Or directly
-uvicorn app.main:app --reload
+```bash
+cd backend
+source .venv/bin/activate   # macOS/Linux — REQUIRED before running uvicorn
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+If you skip activation, the system Python will be used (missing packages). Verify you're using the right uvicorn:
+
+```bash
+which uvicorn   # should show .../backend/.venv/bin/uvicorn
+```
+
+Alternatively, run without activating via the venv path directly:
+
+```bash
+.venv/bin/uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 The API will be available at `http://localhost:8000`
@@ -56,6 +83,17 @@ All endpoints require authentication via Supabase JWT token in the `Authorizatio
 
 ### Health
 - `GET /health` — Health check (no auth required)
+
+### Auth & Onboarding
+- `POST /auth/check-email` — Check if email is already registered (no auth required)
+- `POST /auth/complete-registration` — Save profile + preferences after sign-up (requires auth)
+
+### Invitations
+- `POST /invitations/send` — Send coaching invitation email (requires coach role)
+- `GET /invitations/{token}` — Get invitation details by token (no auth required)
+- `GET /invitations` — List all invitations for calling coach (requires coach role)
+- `DELETE /invitations/{id}` — Cancel a pending invitation (requires coach role)
+- `POST /invitations/accept` — Accept a coaching invitation (requires auth)
 
 ### AI Operations
 - `POST /ai/generate-diet-suggestion` — Generate diet suggestion (requires coach role)
@@ -80,6 +118,8 @@ app/
 ├── dependencies.py        # Auth middleware & JWT verification
 ├── routers/               # API endpoint routers
 │   ├── health.py
+│   ├── auth.py
+│   ├── invitations.py
 │   ├── ai.py
 │   ├── diet.py
 │   ├── goals.py

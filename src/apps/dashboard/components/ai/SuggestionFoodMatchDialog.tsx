@@ -12,13 +12,13 @@ import type { AiSuggestion, MealPlan } from '@/core/types/database';
 
 // Day name mapping: English → Italian abbreviations
 const DAY_MAP: Record<string, MealPlan['day_of_week']> = {
-  Monday: 'LUN',
-  Tuesday: 'MAR',
-  Wednesday: 'MER',
-  Thursday: 'GIO',
-  Friday: 'VEN',
-  Saturday: 'SAB',
-  Sunday: 'DOM',
+  Monday: 'MON',
+  Tuesday: 'TUE',
+  Wednesday: 'WED',
+  Thursday: 'THU',
+  Friday: 'FRI',
+  Saturday: 'SAT',
+  Sunday: 'SUN',
 };
 
 interface SuggestionFoodMatchDialogProps {

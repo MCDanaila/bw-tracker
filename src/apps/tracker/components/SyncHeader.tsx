@@ -27,7 +27,7 @@ export default function SyncHeader() {
     return (
         <header className="bg-card/95 backdrop-blur border-b border-border/50 p-4 sticky top-0 z-20 flex justify-between items-center text-card-foreground">
             <div>
-                <h1 className="text-xl font-bold text-foreground">BW Tracker</h1>
+                <h1 className="text-xl font-bold text-foreground">Leonida</h1>
 
                 {pendingCount === 0 ? (
                     <p className="text-xs text-primary font-medium flex items-center gap-1 mt-1">

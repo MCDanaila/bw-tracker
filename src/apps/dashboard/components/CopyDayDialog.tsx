@@ -9,15 +9,15 @@ import {
 import { Button } from '@/core/components/ui/button';
 import { Label } from '@/core/components/ui/label';
 
-const DAYS = ['LUN', 'MAR', 'MER', 'GIO', 'VEN', 'SAB', 'DOM'] as const;
+const DAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'] as const;
 const DAY_LABELS: Record<string, string> = {
-  LUN: 'Luned\u00ec',
-  MAR: 'Marted\u00ec',
-  MER: 'Mercoled\u00ec',
-  GIO: 'Gioved\u00ec',
-  VEN: 'Venerd\u00ec',
-  SAB: 'Sabato',
-  DOM: 'Domenica',
+  MON: 'Monday',
+  TUE: 'Tuesday',
+  WED: 'Wednesday',
+  THU: 'Thursday',
+  FRI: 'Friday',
+  SAT: 'Saturday',
+  SUN: 'Sunday',
 };
 
 interface CopyDayDialogProps {
@@ -78,13 +78,12 @@ export function CopyDayDialog({ open, onClose, sourceDay, onCopy }: CopyDayDialo
             {DAYS.map(day => (
               <Label
                 key={day}
-                className={`flex items-center gap-2 rounded-md border p-2.5 cursor-pointer transition-colors ${
-                  day === sourceDay
+                className={`flex items-center gap-2 rounded-md border p-2.5 cursor-pointer transition-colors ${day === sourceDay
                     ? 'opacity-40 cursor-not-allowed'
                     : selected.has(day)
-                    ? 'border-primary bg-primary/5'
-                    : 'hover:bg-muted'
-                }`}
+                      ? 'border-primary bg-primary/5'
+                      : 'hover:bg-muted'
+                  }`}
               >
                 <input
                   type="checkbox"

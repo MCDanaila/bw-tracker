@@ -1,5 +1,5 @@
 {
-  "name": "bw-tracker",
+  "name": "leonida-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -18,6 +18,9 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@fontsource-variable/geist": "^5.2.8",
+    "@fontsource-variable/source-serif-4": "^5.2.9",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/newsreader": "^5.2.10",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@supabase/supabase-js": "^2.98.0",
     "@tailwindcss/vite": "^4.2.1",
