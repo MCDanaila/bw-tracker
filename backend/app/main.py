@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse
 from .config import settings
 from .lib.supabase_client import close_supabase_client
 from .routers import health, ai, diet, goals, knowledge, auth, invitations
+from app.services.graph_rag import build_graph
 
 # Configure logging
 logging.basicConfig(
@@ -23,6 +24,8 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Application lifespan events (startup/shutdown)."""
     logger.info("bw-tracker backend starting up...")
+    app.state.graph_rag = build_graph()
+    logger.info("Graph RAG workflow initialized")
     yield
     logger.info("bw-tracker backend shutting down...")
     await close_supabase_client()

@@ -1,11 +1,12 @@
 """AI-related endpoints (diet suggestions, document embedding)."""
 
 import logging
-from typing import Annotated
+from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Header
+from fastapi import APIRouter, Depends, HTTPException, Header, Request
+from pydantic import BaseModel
 
-from app.dependencies import CurrentUser, get_current_user, UserSupabaseDep
+from app.dependencies import CurrentUser, get_current_user, UserSupabaseDep, CoachDep
 from app.schemas.ai import GenerateSuggestionRequest, GenerateSuggestionResponse
 from app.services.ai_generation import generate_diet_payload
 
@@ -73,3 +74,77 @@ async def generate_diet_suggestion(
             status_code=400 if "preferences" in str(e).lower() else 500,
             detail=str(e)
         )
+
+
+class GraphSuggestionRequest(BaseModel):
+    athlete_id: str
+    query_text: str
+
+
+class GraphSuggestionResponse(BaseModel):
+    suggestion_id: Optional[str] = None
+    suggestion_text: str
+    suggestion_json: Optional[dict] = None
+    graph_hops_count: int = 0
+
+
+@router.post(
+    "/generate-diet-suggestion-graph",
+    response_model=GraphSuggestionResponse,
+    summary="Generate AI diet suggestion (Graph RAG)",
+    description=(
+        "Generate a personalized diet suggestion using the Graph RAG pipeline. "
+        "Performs multi-hop entity traversal over the coach's knowledge graph "
+        "in addition to standard vector retrieval."
+    ),
+)
+async def generate_diet_suggestion_graph(
+    request: GraphSuggestionRequest,
+    http_request: Request,
+    current_user: CoachDep,
+    supabase: UserSupabaseDep,
+) -> GraphSuggestionResponse:
+    graph_rag = getattr(http_request.app.state, "graph_rag", None)
+    if graph_rag is None:
+        raise HTTPException(status_code=503, detail="Graph RAG not initialized")
+
+    initial_state = {
+        "athlete_id": request.athlete_id,
+        "query_text": request.query_text,
+        "coach_id": current_user.id,
+        "supabase": supabase,
+        "athlete_profile": None,
+        "athlete_goal": None,
+        "athlete_prefs": None,
+        "recent_logs": [],
+        "query_type": None,
+        "seed_entity_names": [],
+        "vector_chunks": [],
+        "graph_entities": [],
+        "graph_hops": [],
+        "final_context": None,
+        "context_trace": [],
+        "generation_result": None,
+        "error": None,
+        "retry_count": 0,
+    }
+
+    try:
+        final_state = await graph_rag.ainvoke(initial_state)
+    except Exception as e:
+        logger.error(f"Graph RAG invocation failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+    if final_state.get("error"):
+        err = final_state["error"]
+        if err == "rate_limited":
+            raise HTTPException(status_code=429, detail="Rate limit exceeded")
+        raise HTTPException(status_code=500, detail=err)
+
+    result = final_state.get("generation_result") or {}
+    return GraphSuggestionResponse(
+        suggestion_id=result.get("suggestion_id"),
+        suggestion_text=result.get("text", ""),
+        suggestion_json=result.get("json"),
+        graph_hops_count=result.get("graph_hops_count", 0),
+    )
