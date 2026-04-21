@@ -9,6 +9,8 @@ import {
   Database,
   FileStack,
   Sparkles,
+  Activity,
+  Dumbbell,
 } from 'lucide-react';
 import { useRole } from '@/core/contexts/RoleContext';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/core/components/ui/tooltip';
@@ -44,6 +46,11 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
     (item) => !item.coachOnly || capabilities.canManageAthletes
   );
 
+  const crossAppLinks = [
+    ...(capabilities.canLog ? [{ label: 'Tracker', href: '/tracker', icon: <Activity size={20} /> }] : []),
+    { label: 'Workout', href: '/workout', icon: <Dumbbell size={20} /> },
+  ];
+
   return (
     <TooltipProvider delay={0}>
       <nav className="flex flex-col gap-2 px-3 py-3">
@@ -78,6 +85,34 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
           }
 
           return <div key={item.to}>{link}</div>;
+        })}
+
+        <div className="my-1 border-t border-border" />
+
+        {crossAppLinks.map((item) => {
+          const link = (
+            <a
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-3 rounded-md px-4 py-2.5 text-sm font-medium transition-colors text-muted-foreground hover:bg-accent hover:text-accent-foreground ${collapsed ? 'justify-center px-2' : ''}`}
+            >
+              {item.icon}
+              {!collapsed && <span>{item.label}</span>}
+            </a>
+          );
+
+          if (collapsed) {
+            return (
+              <Tooltip key={item.href}>
+                <TooltipTrigger render={link} />
+                <TooltipContent side="right">
+                  {item.label}
+                </TooltipContent>
+              </Tooltip>
+            );
+          }
+
+          return <div key={item.href}>{link}</div>;
         })}
       </nav>
     </TooltipProvider>

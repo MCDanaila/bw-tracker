@@ -1,9 +1,10 @@
-import { Dumbbell, Clock, BookOpen, BarChart3, LogOut, Loader2 } from 'lucide-react';
+import { Dumbbell, Clock, BookOpen, BarChart3, LogOut, Loader2, Activity, LayoutDashboard } from 'lucide-react';
 import LogWorkoutView from './components/log/LogWorkoutView';
 import WorkoutHistoryView from './components/history/WorkoutHistoryView';
 import ProgramsView from './components/programs/ProgramsView';
 import WorkoutStatsView from './components/stats/WorkoutStatsView';
 import { useAuth } from '@/core/contexts/AuthContext';
+import { useRole } from '@/core/contexts/RoleContext';
 import { useState } from 'react';
 
 type Tab = 'log' | 'history' | 'programs' | 'stats';
@@ -11,6 +12,7 @@ type Tab = 'log' | 'history' | 'programs' | 'stats';
 function WorkoutApp() {
   const [currentTab, setCurrentTab] = useState<Tab>('log');
   const { session, loading, signOut } = useAuth();
+  const { capabilities } = useRole();
 
   if (loading) {
     return (
@@ -92,6 +94,26 @@ function WorkoutApp() {
           <BarChart3 size={24} />
           <span className="text-xs font-medium">Stats</span>
         </button>
+        {capabilities.canLog && (
+          <a
+            href="/tracker"
+            className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-150"
+            title="Go to Tracker"
+          >
+            <Activity size={24} />
+            <span className="text-xs font-medium">Tracker</span>
+          </a>
+        )}
+        {capabilities.canViewDashboard && (
+          <a
+            href="/dashboard"
+            className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-150"
+            title="Go to Dashboard"
+          >
+            <LayoutDashboard size={24} />
+            <span className="text-xs font-medium">Dashboard</span>
+          </a>
+        )}
       </nav>
     </div>
   );

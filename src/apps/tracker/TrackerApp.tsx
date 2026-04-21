@@ -1,4 +1,5 @@
 import { Activity, Apple, LayoutDashboard, Loader2, LogOut, Bell, BellOff, CalendarRange, UserCircle, Dumbbell, Sun, Moon } from "lucide-react";
+import { useRole } from "@/core/contexts/RoleContext";
 import DailyLogHub from "./components/daily-flow/DailyLogHub";
 import SyncHeader from "./components/SyncHeader";
 import PendingLogs from "./components/PendingLogs";
@@ -20,6 +21,7 @@ function App() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [currentTab, setCurrentTab] = useState<Tab>('tracker');
   const { session, loading, signOut, user } = useAuth();
+  const { capabilities } = useRole();
   const { isDark, toggle } = useTheme();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -234,6 +236,16 @@ function App() {
           <Dumbbell size={22} />
           <span className="text-xs mt-0.5 font-medium">Workout</span>
         </a>
+        {capabilities.canViewDashboard && (
+          <a
+            href="/dashboard"
+            className="flex flex-col items-center justify-center min-h-[44px] min-w-[44px] flex-1 pt-2 pb-1 text-muted-foreground hover:text-foreground transition-colors duration-150"
+            title="Go to Dashboard"
+          >
+            <LayoutDashboard size={22} />
+            <span className="text-xs mt-0.5 font-medium">Dashboard</span>
+          </a>
+        )}
       </nav>
     </div>
   );

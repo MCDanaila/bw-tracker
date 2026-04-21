@@ -3,7 +3,7 @@
 import logging
 
 from langgraph.graph import END, StateGraph
-from langgraph.graph.graph import CompiledGraph
+from langgraph.graph.state import CompiledStateGraph
 
 from app.services.graph_rag.nodes import (
     classify_query,
@@ -19,7 +19,7 @@ from app.services.graph_rag.state import GraphRAGState
 logger = logging.getLogger(__name__)
 
 
-def build_graph() -> CompiledGraph:
+def build_graph() -> CompiledStateGraph:
     """Build and compile the Graph RAG StateGraph.
 
     Call once at application startup and store on app.state.

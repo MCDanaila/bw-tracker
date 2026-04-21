@@ -5,7 +5,7 @@ FastAPI backend service for bw-tracker, handling AI operations, transactional mu
 ## Quick Start (Local Development)
 
 ### Prerequisites
-- Python 3.11+
+- Python 3.11–3.13 (recommended; 3.14 works but triggers a Pydantic v1 compatibility warning from langchain-core)
 - [uv](https://docs.astral.sh/uv/) (recommended) or pip
 
 ### Installation
@@ -16,11 +16,11 @@ FastAPI backend service for bw-tracker, handling AI operations, transactional mu
 cd backend
 
 # Create and activate a virtual environment
-uv venv
+uv venv --python 3.13   # pin to 3.13 to avoid Pydantic v1 compat warning on 3.14
 source .venv/bin/activate   # macOS/Linux
 # .venv\Scripts\activate    # Windows
 
-# Install dependencies
+# Install all dependencies (including LangGraph, LangChain, Gemini)
 uv pip install -e .
 ```
 
@@ -28,11 +28,22 @@ uv pip install -e .
 
 ```bash
 cd backend
-python -m venv .venv
+python3.13 -m venv .venv
 source .venv/bin/activate   # macOS/Linux
 # .venv\Scripts\activate    # Windows
 pip install -e .
 ```
+
+### Key Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| `fastapi` + `uvicorn[standard]` | HTTP server |
+| `supabase` | DB + auth client |
+| `langgraph>=1.0.0` | Graph RAG workflow orchestration |
+| `langchain-google-genai` | Gemini LLM integration |
+| `langchain-community` | Vector store + retriever utilities |
+| `python-jose[cryptography]` | JWT verification |
 
 ### Configuration
 
