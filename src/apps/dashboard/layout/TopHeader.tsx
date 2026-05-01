@@ -1,9 +1,9 @@
 import { Menu } from 'lucide-react';
-import { useAuth } from '@/core/contexts/AuthContext';
 import { useRole } from '@/core/contexts/RoleContext';
 import { Button } from '@/core/components/ui/button';
 import { Badge } from '@/core/components/ui/badge';
 import { Breadcrumbs } from './Breadcrumbs';
+import { AvatarMenu } from '@/core/components/AvatarMenu';
 
 interface TopHeaderProps {
   onToggleSidebar: () => void;
@@ -11,9 +11,7 @@ interface TopHeaderProps {
 }
 
 export function TopHeader({ onToggleSidebar }: TopHeaderProps) {
-  const { user } = useAuth();
   const { capabilities } = useRole();
-  const avatarLetter = (user?.email?.[0] ?? '?').toUpperCase();
 
   return (
     <header className="flex h-14 items-center gap-4 border-b border-border bg-card px-4">
@@ -40,9 +38,7 @@ export function TopHeader({ onToggleSidebar }: TopHeaderProps) {
             Coach
           </Badge>
         )}
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-          {avatarLetter}
-        </div>
+        <AvatarMenu />
       </div>
     </header>
   );

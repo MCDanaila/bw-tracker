@@ -1,17 +1,18 @@
-import { Dumbbell, Clock, BookOpen, BarChart3, LogOut, Loader2, Activity, LayoutDashboard } from 'lucide-react';
+import { Dumbbell, Clock, BookOpen, Loader2, Activity, LayoutDashboard, Library } from 'lucide-react';
 import LogWorkoutView from './components/log/LogWorkoutView';
 import WorkoutHistoryView from './components/history/WorkoutHistoryView';
 import ProgramsView from './components/programs/ProgramsView';
-import WorkoutStatsView from './components/stats/WorkoutStatsView';
+import ExercisesView from './components/exercises/ExercisesView';
+import { AppHeader } from '@/core/components/AppHeader';
 import { useAuth } from '@/core/contexts/AuthContext';
 import { useRole } from '@/core/contexts/RoleContext';
 import { useState } from 'react';
 
-type Tab = 'log' | 'history' | 'programs' | 'stats';
+type Tab = 'log' | 'history' | 'programs' | 'exercises';
 
 function WorkoutApp() {
   const [currentTab, setCurrentTab] = useState<Tab>('log');
-  const { session, loading, signOut } = useAuth();
+  const { session, loading } = useAuth();
   const { capabilities } = useRole();
 
   if (loading) {
@@ -30,88 +31,59 @@ function WorkoutApp() {
     );
   }
 
+  const tabs = [
+    { tab: 'log' as Tab, icon: <Dumbbell size={22} />, label: 'Log' },
+    { tab: 'history' as Tab, icon: <Clock size={22} />, label: 'History' },
+    { tab: 'programs' as Tab, icon: <BookOpen size={22} />, label: 'Programs' },
+    { tab: 'exercises' as Tab, icon: <Library size={22} />, label: 'Exercises' },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Top Header */}
-      <div className="bg-card border-b border-border flex justify-between items-center px-4 py-3">
-        <span className="font-bold text-foreground text-lg">Workout Log</span>
-        <button
-          onClick={signOut}
-          className="text-destructive hover:bg-destructive/10 p-2 rounded-lg transition-colors"
-          title="Logout"
-        >
-          <LogOut size={20} />
-        </button>
-      </div>
+      <AppHeader title="Workout" />
 
       {/* Main Content Area */}
       <main className="p-4 pb-24">
-        {currentTab === 'log' && <LogWorkoutView />}
-        {currentTab === 'history' && <WorkoutHistoryView />}
-        {currentTab === 'programs' && <ProgramsView />}
-        {currentTab === 'stats' && <WorkoutStatsView />}
+        {currentTab === 'log'       && <LogWorkoutView />}
+        {currentTab === 'history'   && <WorkoutHistoryView />}
+        {currentTab === 'programs'  && <ProgramsView />}
+        {currentTab === 'exercises' && <ExercisesView />}
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 w-full bg-card border-t border-border flex justify-around p-3 pb-safe z-10">
-        <button
-          onClick={() => setCurrentTab('log')}
-          className={`flex flex-col items-center gap-1 ${
-            currentTab === 'log' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-          }`}
-          title="Log Workout"
+      <nav className="fixed bottom-0 w-full bg-card/95 backdrop-blur border-t border-border flex justify-around z-10" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+        {tabs.map(({ tab, icon, label }) => {
+          const active = currentTab === tab;
+          return (
+            <button
+              key={tab}
+              onClick={() => setCurrentTab(tab)}
+              className={`flex flex-col items-center justify-center min-h-[44px] min-w-[44px] flex-1 pt-2 pb-1 relative transition-colors duration-150 cursor-pointer ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              {active && (
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-primary" />
+              )}
+              {icon}
+              <span className={`text-xs mt-0.5 font-medium ${active ? 'font-semibold' : ''}`}>{label}</span>
+            </button>
+          );
+        })}
+        <a
+          href="/tracker"
+          className="flex flex-col items-center justify-center min-h-[44px] min-w-[44px] flex-1 pt-2 pb-1 text-muted-foreground hover:text-foreground transition-colors duration-150"
+          title="Go to Tracker"
         >
-          <Dumbbell size={24} />
-          <span className="text-xs font-medium">Log</span>
-        </button>
-        <button
-          onClick={() => setCurrentTab('history')}
-          className={`flex flex-col items-center gap-1 ${
-            currentTab === 'history' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-          }`}
-          title="Workout History"
-        >
-          <Clock size={24} />
-          <span className="text-xs font-medium">History</span>
-        </button>
-        <button
-          onClick={() => setCurrentTab('programs')}
-          className={`flex flex-col items-center gap-1 ${
-            currentTab === 'programs' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-          }`}
-          title="Programs"
-        >
-          <BookOpen size={24} />
-          <span className="text-xs font-medium">Programs</span>
-        </button>
-        <button
-          onClick={() => setCurrentTab('stats')}
-          className={`flex flex-col items-center gap-1 ${
-            currentTab === 'stats' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-          }`}
-          title="Stats"
-        >
-          <BarChart3 size={24} />
-          <span className="text-xs font-medium">Stats</span>
-        </button>
-        {capabilities.canLog && (
-          <a
-            href="/tracker"
-            className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-150"
-            title="Go to Tracker"
-          >
-            <Activity size={24} />
-            <span className="text-xs font-medium">Tracker</span>
-          </a>
-        )}
+          <Activity size={22} />
+          <span className="text-xs mt-0.5 font-medium">Tracker</span>
+        </a>
         {capabilities.canViewDashboard && (
           <a
             href="/dashboard"
-            className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-150"
+            className="flex flex-col items-center justify-center min-h-[44px] min-w-[44px] flex-1 pt-2 pb-1 text-muted-foreground hover:text-foreground transition-colors duration-150"
             title="Go to Dashboard"
           >
-            <LayoutDashboard size={24} />
-            <span className="text-xs font-medium">Dashboard</span>
+            <LayoutDashboard size={22} />
+            <span className="text-xs mt-0.5 font-medium">Dashboard</span>
           </a>
         )}
       </nav>
