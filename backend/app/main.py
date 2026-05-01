@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse
 from .config import settings
 from .lib.supabase_client import close_supabase_client
 from .routers import health, ai, diet, goals, knowledge, auth, invitations
+from .workout.router import router as workout_router
 from app.services.graph_rag import build_graph
 
 # Configure logging
@@ -71,6 +72,7 @@ def create_app() -> FastAPI:
     app.include_router(knowledge.router)
     app.include_router(auth.router)
     app.include_router(invitations.router)
+    app.include_router(workout_router)
 
     # Global exception handler for HTTPException
     @app.exception_handler(Exception)
