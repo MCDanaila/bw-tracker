@@ -199,7 +199,7 @@ export default function EditLogModal({ log, onClose, initialSection }: EditLogMo
                                     value={sleepHours > 0 ? ([6, 6.5, 7, 7.5, 8].includes(sleepHours) ? sleepHours : -1) : null}
                                     onChange={(v) => setValue("sleep_hours", v, { shouldDirty: true })}
                                 />
-                                {(![6, 6.5, 7, 7.5, 8].includes(sleepHours) && sleepHours !== 0) && (
+                                {(sleepHours != null && sleepHours !== 0 && ![6, 6.5, 7, 7.5, 8].includes(sleepHours)) && (
                                     <Stepper
                                         label="Custom Sleep (hrs)"
                                         value={sleepHours !== -1 ? sleepHours : 0}

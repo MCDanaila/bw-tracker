@@ -147,8 +147,8 @@ export function MorningFlowView({ existingData, yesterdayData, last7DaysAvg, onB
                                 value={sleepHours > 0 ? ([6, 6.5, 7, 7.5, 8].includes(sleepHours) ? sleepHours : -1) : null}
                                 onChange={(v) => { setValue("sleep_hours", v, { shouldDirty: true }) }}
                             />
-                            {(![6, 6.5, 7, 7.5, 8].includes(sleepHours) && sleepHours !== 0) && (
-                                <Stepper label="Custom Sleep (hrs)" value={sleepHours != -1 ? sleepHours : (last7DaysAvg?.sleep_hours || 0)} onChange={(v) => setValue("sleep_hours", v, { shouldDirty: true })} step={0.5} min={0} max={24} />
+                            {(sleepHours != null && sleepHours !== 0 && ![6, 6.5, 7, 7.5, 8].includes(sleepHours)) && (
+                                <Stepper label="Custom Sleep (hrs)" value={sleepHours !== -1 ? sleepHours : (last7DaysAvg?.sleep_hours || 0)} onChange={(v) => setValue("sleep_hours", v, { shouldDirty: true })} step={0.5} min={0} max={24} />
                             )}
                             {last7DaysAvg?.sleep_hours && (
                                 <p className="text-xs text-muted-foreground mt-2 ml-1 font-medium">7-day avg: {last7DaysAvg.sleep_hours}h</p>

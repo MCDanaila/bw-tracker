@@ -10,7 +10,7 @@ const getDecimalPlaces = (n: number): number => {
 };
 
 export interface StepperProps {
-    value: number;
+    value: number | null | undefined;
     onChange: (value: number) => void;
     min?: number;
     max?: number;
@@ -30,10 +30,11 @@ export function Stepper({
     className,
     disabled = false,
 }: StepperProps) {
-    const [inputValue, setInputValue] = useState(Number(value).toFixed(getDecimalPlaces(step)));
+    const safeValue = value ?? 0;
+    const [inputValue, setInputValue] = useState(Number(safeValue).toFixed(getDecimalPlaces(step)));
 
     useEffect(() => {
-        setInputValue(Number(value).toFixed(getDecimalPlaces(step)));
+        setInputValue(Number(value ?? 0).toFixed(getDecimalPlaces(step)));
     }, [value, step]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,14 +55,14 @@ export function Stepper({
     };
 
     const handleDecrement = () => {
-        if (value > min) {
-            onChange(Math.max(min, value - step));
+        if (safeValue > min) {
+            onChange(Math.max(min, safeValue - step));
         }
     };
 
     const handleIncrement = () => {
-        if (value < max) {
-            onChange(Math.min(max, value + step));
+        if (safeValue < max) {
+            onChange(Math.min(max, safeValue + step));
         }
     };
 
@@ -83,7 +84,7 @@ export function Stepper({
                     size="icon"
                     className="h-full rounded-none px-3 bg-muted/50 hover:bg-muted text-muted-foreground w-12"
                     onClick={handleDecrement}
-                    disabled={disabled || value <= min}
+                    disabled={disabled || safeValue <= min}
                     aria-label={decrementLabel}
                 >
                     <Minus size={16} />
@@ -105,7 +106,7 @@ export function Stepper({
                     size="icon"
                     className="h-full rounded-none px-3 bg-muted/50 hover:bg-muted text-muted-foreground w-12"
                     onClick={handleIncrement}
-                    disabled={disabled || value >= max}
+                    disabled={disabled || safeValue >= max}
                     aria-label={incrementLabel}
                 >
                     <Plus size={16} />

@@ -1,6 +1,7 @@
 import Dexie, { type Table } from 'dexie';
 import { getLocalDateStr } from './utils';
 import { supabase } from './supabase';
+import { DAILY_LOG_INT_FIELDS } from './constants';
 
 // Define what a pending action looks like
 export interface SyncAction {
@@ -73,14 +74,19 @@ export async function upsertTodayQueueEntry(payload: any): Promise<void> {
  * Returns 'synced' or 'queued' so callers can react accordingly.
  */
 export async function saveDailyLog(payload: any): Promise<'synced' | 'queued'> {
+  const sanitized = { ...payload };
+  for (const field of DAILY_LOG_INT_FIELDS) {
+    const v = sanitized[field];
+    sanitized[field] = v === '' || v === null || v === undefined ? null : Number(v);
+  }
   try {
     const { error } = await supabase
       .from('daily_logs')
-      .upsert(payload, { onConflict: 'user_id, date' });
+      .upsert(sanitized, { onConflict: 'user_id, date' });
     if (error) throw error;
     return 'synced';
   } catch {
-    await upsertTodayQueueEntry(payload);
+    await upsertTodayQueueEntry(sanitized);
     return 'queued';
   }
 }
