@@ -3,6 +3,7 @@ import { Search, X } from 'lucide-react';
 import { useExercises } from '../../hooks/useExercises';
 import ExerciseCard from './ExerciseCard';
 import ExerciseDetailModal from './ExerciseDetailModal';
+import FilterChipRow from './FilterChipRow';
 import type { Exercise, MuscleGroup, Equipment } from '../../types/exercise';
 import { ALL_MUSCLE_GROUPS, ALL_EQUIPMENT, EQUIPMENT_LABELS, SPECIFIC_TO_GROUP } from '../../types/exercise';
 
@@ -62,55 +63,58 @@ export default function ExercisesView() {
 
   return (
     <div className="space-y-3">
-      {/* Search */}
-      <div className="relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Search exercises…"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full h-10 pl-9 pr-9 rounded-xl border border-input bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-        />
-        {search && (
-          <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2">
-            <X size={14} className="text-muted-foreground" />
-          </button>
-        )}
-      </div>
+      {/* Sticky search + filters — top-12 clears the 48px AppHeader */}
+      <div className="sticky top-12 z-10 bg-background pt-0.5 pb-2 -mx-4 px-4 space-y-2">
+        {/* Search */}
+        <div className="relative">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search exercises…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full h-10 pl-9 pr-9 rounded-xl border border-input bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+          />
+          {search && (
+            <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2">
+              <X size={14} className="text-muted-foreground" />
+            </button>
+          )}
+        </div>
 
-      {/* Muscle group filter chips */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-        {ALL_MUSCLE_GROUPS.map(g => (
-          <button
-            key={g}
-            onClick={() => toggleMuscle(g)}
-            className={`shrink-0 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
-              muscleFilter === g
-                ? GROUP_ACTIVE[g]
-                : 'border-border text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            {g}
-          </button>
-        ))}
-      </div>
+        {/* Muscle group filter chips */}
+        <FilterChipRow>
+          {ALL_MUSCLE_GROUPS.map(g => (
+            <button
+              key={g}
+              onClick={() => toggleMuscle(g)}
+              className={`shrink-0 text-[11px] font-medium px-2.5 py-0.5 rounded-full border transition-colors ${
+                muscleFilter === g
+                  ? GROUP_ACTIVE[g]
+                  : 'border-border text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {g}
+            </button>
+          ))}
+        </FilterChipRow>
 
-      {/* Equipment filter chips */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-        {ALL_EQUIPMENT.map(eq => (
-          <button
-            key={eq}
-            onClick={() => toggleEquip(eq)}
-            className={`shrink-0 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
-              equipFilter === eq
-                ? 'bg-foreground text-background border-foreground'
-                : 'border-border text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            {EQUIPMENT_LABELS[eq]}
-          </button>
-        ))}
+        {/* Equipment filter chips */}
+        <FilterChipRow>
+          {ALL_EQUIPMENT.map(eq => (
+            <button
+              key={eq}
+              onClick={() => toggleEquip(eq)}
+              className={`shrink-0 text-[11px] font-medium px-2.5 py-0.5 rounded-full border transition-colors ${
+                equipFilter === eq
+                  ? 'bg-foreground text-background border-foreground'
+                  : 'border-border text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {EQUIPMENT_LABELS[eq]}
+            </button>
+          ))}
+        </FilterChipRow>
       </div>
 
       {/* Active filters summary */}
