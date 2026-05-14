@@ -122,25 +122,43 @@ barbabietole-sgocciolato,Barbabietole,100.0,g,37.0,1.7,7.2,0.1,Peso sgocciolato
 funghi-crudo,Funghi,100.0,g,22.0,2.1,2.6,0.4,Peso da Crudo
 mix-di-verdure-crudo,Mix di Verdure,100.0,g,89.0,2.2,10.6,4.2,Peso da Crudo
 gerogli-di-soia-crudo,Gerogli di Soia,100.0,g,31.0,2.9,3.8,0.5,Peso da Crudo
-creatine-monohydrate-sgocciolato,Creatine Monohydrate,100.0,g,0.0,0.0,0.0,0.0,Peso sgocciolato
-ciclodestrine-hbcd-sgocciolato,Ciclodestrine (HBCD),100.0,g,381.0,0.0,97.0,0.0,Peso sgocciolato
-essential-amino-acids,Essential Amino Acids,100.0,g,0.0,0.0,0.0,0.0,N/A
-magnesio-bisglicinato,Magnesio Bisglicinato,1.0,caps,0.0,0.0,0.0,0.0,N/A
-vitamina-c,Vitamina C,100.0,g,0.0,0.0,0.0,0.0,N/A
-probiotici,Probiotici,100.0,g,0.0,0.0,0.0,0.0,N/A
-multivitaminico,Multivitaminico,100.0,g,0.0,0.0,0.0,0.0,N/A
-omega-3,Omega 3,100.0,g,900.0,0.0,0.0,9.0,N/A
-liver-stack,Liver Stack,100.0,g,0.0,0.0,0.0,0.0,N/A
-bergamotto,Bergamotto,100.0,g,0.0,0.0,0.0,0.0,N/A
-carne-di-cavallo-crudo,Carne di Cavallo,100.0,g,102.0,21.0,0.0,2.0,Peso da Crudo
-verdura-generico,Verdura (generico),100.0,g,18.0,1.8,1.8,0.4,N/A
-hydra-performance,Hydra Performance,30.0,g,69.0,0.0,17.2,0.0,N/A
-intsulin,inTSUlin,1.0,caps,0.0,0.0,0.0,0.0,N/A
-sleep-aid,Sleep AID,1.0,caps,0.0,0.0,0.0,0.0,N/A
-berberina,Berberina,1.0,caps,0.0,0.0,0.0,0.0,N/A
-probiotic-plus,Probiotic Plus,1.0,compr,0.0,0.0,0.0,0.0,N/A
-greens,Greens,1.0,g,0.0,0.0,0.0,0.0,N/A
-mueslei,Mueslei,100.0,g,369.0,12.0,63.0,5.8,N/A
-fighi-secchi,Fighi Secchi,100.0,g,282.0,3.5,58.0,2.7,N/A
-lecitina-di-soia,Lecitina di soia,100.0,g,766.0,0.0,7.7,81.7,N/A
-seitan,Seitan,100.0,g,183.0,34.0,1.5,4.5,N/A
+essential-amino-acids,Essential Amino Acids,100.0,g,0.0,0.0,0.0,0.0,
+magnesio-bisglicinato,Magnesio Bisglicinato,1.0,caps,0.0,0.0,0.0,0.0,
+vitamina-c,Vitamina C,100.0,g,0.0,0.0,0.0,0.0,
+probiotici,Probiotici,100.0,g,0.0,0.0,0.0,0.0,
+multivitaminico,Multivitaminico,100.0,g,0.0,0.0,0.0,0.0,
+omega-3,Omega 3,100.0,g,900.0,0.0,0.0,9.0,
+liver-stack,Liver Stack,100.0,g,0.0,0.0,0.0,0.0,
+bergamotto,Bergamotto,100.0,g,0.0,0.0,0.0,0.0,
+verdura-generico,Verdura (generico),100.0,g,18.0,1.8,1.8,0.4,
+hydra-performance,Hydra Performance,30.0,g,69.0,0.0,17.2,0.0,
+intsulin,inTSUlin,1.0,caps,0.0,0.0,0.0,0.0,
+sleep-aid,Sleep AID,1.0,caps,0.0,0.0,0.0,0.0,
+berberina,Berberina,1.0,caps,0.0,0.0,0.0,0.0,
+probiotic-plus,Probiotic Plus,1.0,compr,0.0,0.0,0.0,0.0,
+greens,Greens,1.0,g,0.0,0.0,0.0,0.0,
+mueslei,Mueslei,100.0,g,369.0,12.0,63.0,5.8,
+fighi-secchi,Fighi Secchi,100.0,g,282.0,3.5,58.0,2.7,
+lecitina-di-soia,Lecitina di soia,100.0,g,766.0,0.0,7.7,81.7,
+seitan,Seitan,100.0,g,183.0,34.0,1.5,4.5,
+affettato-magro-crudo,Affettato Magro,100.0,g,110.0,22.0,1.0,2.0,Peso da Crudo
+biscotti-secchi-confezionato,Biscotti Secchi,100.0,g,430.0,7.0,75.0,11.0,Peso confezionato
+corn-flakes-confezionato,Corn Flakes,100.0,g,378.0,7.0,84.0,0.9,Peso confezionato
+cous-cous-crudo,Cous Cous,100.0,g,376.0,12.8,77.4,0.6,Peso da Crudo
+farina-di-avena-crudo,Farina di Avena,100.0,g,374.0,10.9,64.0,8.1,Peso da Crudo
+farro-crudo,Farro,100.0,g,335.0,15.1,67.1,2.5,Peso da Crudo
+fette-biscottate-confezionato,Fette Biscottate,100.0,g,408.0,11.0,72.0,7.0,Peso confezionato
+frutta-generico,Frutta (generico),100.0,g,55.0,0.8,12.0,0.3,
+lupini-cotti,Lupini Cotti,100.0,g,114.0,16.4,7.0,2.4,Peso da Cotto
+mandorle-confezionato,Mandorle,100.0,g,584.0,20.9,7.0,53.0,Peso confezionato
+pane-bianco-confezionato,Pane Bianco,100.0,g,265.0,8.7,49.0,3.2,Peso confezionato
+pane-di-segale-confezionato,Pane di Segale,100.0,g,259.0,8.5,48.0,3.3,Peso confezionato
+parmigiano-reggiano-confezionato,Parmigiano Reggiano,100.0,g,402.0,32.0,0.0,30.0,Peso confezionato
+pasta-di-semula-crudo,Pasta di Semola,100.0,g,338.0,11.9,68.0,2.0,Peso da Crudo
+pesce-bianco-crudo,Pesce Bianco,100.0,g,75.0,17.5,0.0,0.6,Peso da Crudo
+petto-di-tacchino-crudo,Petto di Tacchino,100.0,g,105.0,22.6,0.0,1.6,Peso da Crudo
+polenta-crudo,Polenta,100.0,g,362.0,8.1,77.0,1.2,Peso da Crudo
+seitan-crudo,Seitan,100.0,g,183.0,34.0,1.5,4.5,Peso da Crudo
+skyr-crudo,Skyr,100.0,g,58.0,10.6,3.9,0.0,Peso da Crudo
+tempeh-crudo,Tempeh,100.0,g,193.0,20.3,7.6,10.8,Peso da Crudo
+tonno-al-naturale-sgocciolato,Tonno al Naturale,100.0,g,109.0,25.0,0.0,1.0,Peso sgocciolato
