@@ -1,34 +1,47 @@
-/**
- * LogWorkoutView - Tab 1: Log a new workout session
- *
- * Work In Progress
- *
- * Planned features:
- * - Select or create a workout program
- * - Log exercises with sets, reps, weight, and RPE
- * - Auto-save to offline queue (Dexie)
- * - Sync to backend when online
- * - Voice notes for exercise comments
- */
+import { useState } from 'react';
+import { Dumbbell } from 'lucide-react';
+import type { FreeWorkoutLog } from '../../types/workout-log';
+import ActiveFreeWorkout from './ActiveFreeWorkout';
+
+function createNewWorkout(): FreeWorkoutLog {
+  return {
+    sessionId: crypto.randomUUID(),
+    startedAt: new Date(),
+    exercises: [],
+  };
+}
 
 export default function LogWorkoutView() {
-  return (
-    <div className="space-y-4">
-      <div className="bg-card border border-border rounded-lg p-6 text-center">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Log Workout</h2>
-        <p className="text-muted-foreground mb-4">
-          Log your training session with exercises, sets, reps, and RPE
-        </p>
-        <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-lg font-medium">
-          🚧 Work In Progress
-        </div>
-      </div>
+  const [workout, setWorkout] = useState<FreeWorkoutLog | null>(null);
 
-      <div className="bg-status-warning/10 border border-status-warning/20 rounded-lg p-4">
-        <p className="text-status-warning text-sm">
-          <strong>Planned:</strong> Form to log exercises with sets/reps/weight/RPE, offline queue integration, and syncing
+  if (workout) {
+    return (
+      <ActiveFreeWorkout
+        log={workout}
+        onChange={setWorkout}
+        onFinish={() => setWorkout(null)}
+        onCancel={() => setWorkout(null)}
+      />
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center py-20 px-6 text-center space-y-5">
+      <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+        <Dumbbell size={28} className="text-primary" />
+      </div>
+      <div>
+        <h2 className="text-xl font-bold text-foreground">Start a Workout</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Pick exercises, add sets, log your lifts.
         </p>
       </div>
+      <button
+        onClick={() => setWorkout(createNewWorkout())}
+        className="px-8 py-3 bg-primary text-primary-foreground rounded-xl font-semibold active:scale-[0.98] transition-transform"
+      >
+        Start Workout
+      </button>
     </div>
   );
 }
