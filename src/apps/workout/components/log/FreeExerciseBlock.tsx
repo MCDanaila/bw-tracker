@@ -21,6 +21,7 @@ const GROUP_COLORS: Record<string, string> = {
   Arms:        'text-orange-500',
   Legs:        'text-green-500',
   Core:        'text-yellow-600',
+  Cardio:      'text-pink-500',
   'Full Body': 'text-muted-foreground',
   Other:       'text-muted-foreground',
 };
