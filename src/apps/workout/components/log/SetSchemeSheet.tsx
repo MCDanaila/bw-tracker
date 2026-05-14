@@ -28,9 +28,8 @@ export default function SetSchemeSheet({ open, onClose, onConfirm }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full bg-card rounded-t-2xl p-6 space-y-5">
+    <div className="fixed inset-0 z-50 flex items-end bg-black/50" onClick={onClose}>
+      <div className="w-full bg-card rounded-t-2xl p-6 space-y-5" onClick={e => e.stopPropagation()}>
         <h3 className="font-semibold text-foreground text-lg">Add Sets</h3>
 
         {/* Scheme type selector */}
